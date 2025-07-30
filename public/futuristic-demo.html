@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zippy Streetwear - Futuristic UI Demo</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-text">ZIPPY</div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo-text" data-text="ZIPPY">ZIPPY</div>
+                <div class="logo-glow"></div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active">Home</a></li>
+                <li><a href="#" class="nav-link">Products</a></li>
+                <li><a href="#" class="nav-link">Exchange</a></li>
+                <li><a href="#" class="nav-link">Community</a></li>
+                <li><a href="#" class="nav-link">About</a></li>
+            </ul>
+            
+            <div class="nav-actions">
+                <button class="search-btn" onclick="openSearch()">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">3</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Modal -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-container">
+            <button class="close-btn" onclick="closeSearch()">
+                <i class="fas fa-times"></i>
+            </button>
+            <input type="text" class="search-input" placeholder="Search for futuristic streetwear...">
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background"></div>
+        <div class="grid-overlay"></div>
+        <div class="neon-lines">
+            <div class="neon-line"></div>
+            <div class="neon-line"></div>
+            <div class="neon-line"></div>
+            <div class="neon-line"></div>
+        </div>
+        
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="title-line glitch-text" data-text="FUTURISTIC">FUTURISTIC</span>
+                <span class="title-line glitch-text" data-text="STREETWEAR">STREETWEAR</span>
+                <span class="title-line glitch-text" data-text="PLATFORM">PLATFORM</span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                Experience the future of fashion with our cutting-edge clothing exchange platform
+            </p>
+            
+            <div class="hero-actions">
+                <a href="#" class="cta-btn primary">
+                    Explore Products
+                    <div class="btn-glow"></div>
+                </a>
+                <a href="#" class="cta-btn secondary">
+                    Start Exchange
+                    <div class="btn-glow"></div>
+                </a>
+            </div>
+        </div>
+        
+        <div class="hero-visual">
+            <div class="floating-elements">
+                <div class="floating-item"></div>
+                <div class="floating-item"></div>
+                <div class="floating-item"></div>
+                <div class="floating-item"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section class="featured-products">
+        <div class="container">
+            <h2 class="section-title glitch-text" data-text="FEATURED PRODUCTS">FEATURED PRODUCTS</h2>
+            
+            <div class="products-grid">
+                <!-- Product Card 1 -->
+                <div class="product-card glass-card">
+                    <img src="https://via.placeholder.com/300x250/00ffff/000000?text=Neon+Hoodie" alt="Neon Hoodie" class="product-image">
+                    <h3 class="product-title">Neon Cyber Hoodie</h3>
+                    <p class="product-price">$129.99</p>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+                
+                <!-- Product Card 2 -->
+                <div class="product-card glass-card">
+                    <img src="https://via.placeholder.com/300x250/ff00ff/000000?text=Glitch+Jacket" alt="Glitch Jacket" class="product-image">
+                    <h3 class="product-title">Digital Glitch Jacket</h3>
+                    <p class="product-price">$199.99</p>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+                
+                <!-- Product Card 3 -->
+                <div class="product-card glass-card">
+                    <img src="https://via.placeholder.com/300x250/00ff00/000000?text=Quantum+Shirt" alt="Quantum Shirt" class="product-image">
+                    <h3 class="product-title">Quantum Tech Shirt</h3>
+                    <p class="product-price">$89.99</p>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+                
+                <!-- Product Card 4 -->
+                <div class="product-card glass-card">
+                    <img src="https://via.placeholder.com/300x250/00ffff/000000?text=Holographic+Pants" alt="Holographic Pants" class="product-image">
+                    <h3 class="product-title">Holographic Pants</h3>
+                    <p class="product-price">$149.99</p>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+                
+                <!-- Product Card 5 -->
+                <div class="product-card glass-card">
+                    <img src="https://via.placeholder.com/300x250/ff00ff/000000?text=Cyber+Shoes" alt="Cyber Shoes" class="product-image">
+                    <h3 class="product-title">Cyber Runner Shoes</h3>
+                    <p class="product-price">$179.99</p>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+                
+                <!-- Product Card 6 -->
+                <div class="product-card glass-card">
+                    <img src="https://via.placeholder.com/300x250/00ff00/000000?text=Neural+Cap" alt="Neural Cap" class="product-image">
+                    <h3 class="product-title">Neural Network Cap</h3>
+                    <p class="product-price">$69.99</p>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exchange Preview Section -->
+    <section class="exchange-preview">
+        <div class="container">
+            <div class="preview-content">
+                <h2 class="section-title glitch-text" data-text="CLOTHING EXCHANGE">CLOTHING EXCHANGE</h2>
+                <p class="preview-text">
+                    Trade your streetwear with other fashion enthusiasts. Our AI-powered matching system 
+                    finds the perfect exchanges for your style.
+                </p>
+                
+                <div class="exchange-animation">
+                    <div class="exchange-arrow"></div>
+                    <div class="exchange-arrow"></div>
+                    <div class="exchange-arrow"></div>
+                </div>
+                
+                <div class="exchange-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">1,247</span>
+                        <span class="stat-label">Exchanges</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">892</span>
+                        <span class="stat-label">Users</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">98.5%</span>
+                        <span class="stat-label">Success Rate</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Active</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="section-title glitch-text" data-text="SHOP BY CATEGORY">SHOP BY CATEGORY</h2>
+            
+            <div class="categories-grid">
+                <div class="category-card glass-card">
+                    <div class="category-icon">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <h3>Hoodies & Sweatshirts</h3>
+                    <p>Futuristic comfort with neon accents</p>
+                </div>
+                
+                <div class="category-card glass-card">
+                    <div class="category-icon">
+                        <i class="fas fa-socks"></i>
+                    </div>
+                    <h3>Jackets & Outerwear</h3>
+                    <p>Cyberpunk-inspired outer layers</p>
+                </div>
+                
+                <div class="category-card glass-card">
+                    <div class="category-icon">
+                        <i class="fas fa-shoe-prints"></i>
+                    </div>
+                    <h3>Footwear</h3>
+                    <p>Advanced tech meets street style</p>
+                </div>
+                
+                <div class="category-card glass-card">
+                    <div class="category-icon">
+                        <i class="fas fa-hat-cowboy"></i>
+                    </div>
+                    <h3>Accessories</h3>
+                    <p>Complete your futuristic look</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Demo Section -->
+    <section class="interactive-demo">
+        <div class="container">
+            <h2 class="section-title glitch-text" data-text="INTERACTIVE FEATURES">INTERACTIVE FEATURES</h2>
+            
+            <div class="demo-grid">
+                <!-- Hover Effects Demo -->
+                <div class="demo-card glass-card">
+                    <h3>Hover Effects</h3>
+                    <p>Hover over any card to see the neon glow effects</p>
+                    <div class="demo-buttons">
+                        <button class="demo-btn cyan">Cyan Glow</button>
+                        <button class="demo-btn pink">Pink Glow</button>
+                        <button class="demo-btn green">Green Glow</button>
+                    </div>
+                </div>
+                
+                <!-- Glitch Text Demo -->
+                <div class="demo-card glass-card">
+                    <h3>Glitch Text</h3>
+                    <p class="glitch-text" data-text="GLITCH EFFECT">GLITCH EFFECT</p>
+                    <p>Watch the text glitch and distort</p>
+                </div>
+                
+                <!-- Animated Elements -->
+                <div class="demo-card glass-card">
+                    <h3>Animated Elements</h3>
+                    <div class="animated-elements">
+                        <div class="pulse-circle cyan"></div>
+                        <div class="pulse-circle pink"></div>
+                        <div class="pulse-circle green"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Zippy Streetwear</h3>
+                    <p>The future of fashion is here. Experience cutting-edge streetwear with our innovative exchange platform.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Products</h4>
+                    <ul>
+                        <li><a href="#">Hoodies</a></li>
+                        <li><a href="#">Jackets</a></li>
+                        <li><a href="#">Footwear</a></li>
+                        <li><a href="#">Accessories</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Exchange</h4>
+                    <ul>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Matching System</a></li>
+                        <li><a href="#">Success Stories</a></li>
+                        <li><a href="#">Community</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Zippy Streetwear. All rights reserved. | Futuristic UI Demo</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Loading animation
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loadingOverlay').classList.add('hidden');
+                }, 500);
+            }, 2000);
+        });
+
+        // Search modal functionality
+        function openSearch() {
+            document.getElementById('searchModal').classList.add('active');
+            document.querySelector('.search-input').focus();
+        }
+
+        function closeSearch() {
+            document.getElementById('searchModal').classList.remove('active');
+        }
+
+        // Close search modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeSearch();
+            }
+        });
+
+        // Close search modal on outside click
+        document.getElementById('searchModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSearch();
+            }
+        });
+
+        // Demo button hover effects
+        document.querySelectorAll('.demo-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                const color = this.classList.contains('cyan') ? 'cyan' : 
+                             this.classList.contains('pink') ? 'pink' : 'green';
+                this.style.boxShadow = `var(--glow-${color})`;
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.boxShadow = 'none';
+            });
+        });
+
+        // Add glitch effect to all glitch-text elements
+        document.querySelectorAll('.glitch-text').forEach(element => {
+            element.setAttribute('data-text', element.textContent);
+        });
+
+        // Animated scroll effects
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards for animation
+        document.querySelectorAll('.product-card, .category-card, .demo-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.hero-background');
+            const speed = scrolled * 0.5;
+            parallax.style.transform = `translateY(${speed}px)`;
+        });
+
+        // Add floating animation to demo elements
+        document.querySelectorAll('.pulse-circle').forEach((circle, index) => {
+            circle.style.animationDelay = `${index * 0.5}s`;
+        });
+    </script>
+
+    <style>
+        /* Additional demo-specific styles */
+        .interactive-demo {
+            padding: 4rem 0;
+            background: rgba(255, 0, 255, 0.05);
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .demo-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .demo-card h3 {
+            color: var(--accent-neon-cyan);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .demo-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid;
+            background: transparent;
+            color: var(--text-light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .demo-btn.cyan {
+            border-color: var(--accent-neon-cyan);
+            color: var(--accent-neon-cyan);
+        }
+
+        .demo-btn.pink {
+            border-color: var(--accent-neon-pink);
+            color: var(--accent-neon-pink);
+        }
+
+        .demo-btn.green {
+            border-color: var(--accent-neon-green);
+            color: var(--accent-neon-green);
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .animated-elements {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .pulse-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .pulse-circle.cyan {
+            background: var(--accent-neon-cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .pulse-circle.pink {
+            background: var(--accent-neon-pink);
+            box-shadow: var(--glow-pink);
+        }
+
+        .pulse-circle.green {
+            background: var(--accent-neon-green);
+            box-shadow: var(--glow-green);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .demo-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .animated-elements {
+                gap: 1rem;
+            }
+        }
+    </style>
+</body>
+</html> 

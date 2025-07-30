@@ -365,19 +365,36 @@
             }
 
             function loadUserInfo() {
-                // Mock user data
-                const userData = {
-                    name: 'Cyber User',
-                    email: 'user@zippy.com',
-                    joinDate: '2024',
-                    exchangeRating: '4.8',
-                    avatar: '/images/avatar.jpg'
-                };
+                // ננסה לקבל את המשתמש מהאפליקציה הגלובלית
+                let user = (window.ZippyApp && typeof window.ZippyApp.currentUser === 'function')
+                    ? window.ZippyApp.currentUser()
+                    : null;
 
-                document.getElementById('userName').textContent = userData.name;
-                document.getElementById('userEmail').textContent = userData.email;
-                document.getElementById('joinDate').textContent = userData.joinDate;
-                document.getElementById('exchangeRating').textContent = userData.exchangeRating;
+                if (!user) {
+                    // ננסה לבדוק התחברות מהשרת
+                    fetch('/api/auth/verify-token')
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data && data.user) {
+                                setUserInfo(data.user);
+                            } else {
+                                window.location.href = '/';
+                            }
+                        })
+                        .catch(() => window.location.href = '/');
+                } else {
+                    setUserInfo(user);
+                }
+
+                function setUserInfo(userData) {
+                    document.getElementById('userName').textContent = userData.username || userData.name || 'User';
+                    document.getElementById('userEmail').textContent = userData.email || '';
+                    document.getElementById('joinDate').textContent = userData.joinDate || '';
+                    document.getElementById('exchangeRating').textContent = userData.exchangeRating || (userData.profile && userData.profile.exchangeRating) || '';
+                    if (userData.avatar) {
+                        document.getElementById('userAvatar').src = userData.avatar;
+                    }
+                }
             }
 
             function loadRecentActivity() {

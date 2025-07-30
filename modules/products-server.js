@@ -3,6 +3,47 @@ const persist = require('./persist_module');
 
 const router = express.Router();
 
+// Middleware to require authentication
+const requireAuth = async (req, res, next) => {
+  try {
+    const user = await persist.getUserFromToken(req);
+    if (!user || user.role !== 'admin') {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+    req.user = user;
+    next();
+  } catch (error) {
+    res.status(401).json({ error: 'Authentication required' });
+  }
+};
+
+// Validation middleware
+const validateProduct = (req, res, next) => {
+  const { title, description, price, category, brand } = req.body;
+  
+  if (!title || title.trim().length < 3) {
+    return res.status(400).json({ error: 'Title must be at least 3 characters' });
+  }
+  
+  if (!description || description.trim().length < 10) {
+    return res.status(400).json({ error: 'Description must be at least 10 characters' });
+  }
+  
+  if (!price || isNaN(price) || parseFloat(price) <= 0) {
+    return res.status(400).json({ error: 'Valid price is required' });
+  }
+  
+  if (!category || category.trim().length === 0) {
+    return res.status(400).json({ error: 'Category is required' });
+  }
+  
+  if (!brand || brand.trim().length === 0) {
+    return res.status(400).json({ error: 'Brand is required' });
+  }
+  
+  next();
+};
+
 // Get all products with optional filtering
 router.get('/', async (req, res) => {
   try {
@@ -15,6 +56,7 @@ router.get('/', async (req, res) => {
       size, 
       condition,
       exchangeable,
+      inStock,
       sortBy = 'createdAt',
       sortOrder = 'desc',
       limit = 50,
@@ -73,6 +115,14 @@ router.get('/', async (req, res) => {
     if (exchangeable !== undefined) {
       const isExchangeable = exchangeable === 'true';
       products = products.filter(product => product.exchangeable === isExchangeable);
+    }
+    
+    // Filter by stock availability
+    if (inStock === 'true') {
+      products = products.filter(product => {
+        const totalStock = Object.values(product.stock).reduce((sum, count) => sum + count, 0);
+        return totalStock > 0;
+      });
     }
     
     // Sorting
@@ -136,7 +186,15 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Product not found' });
     }
     
-    res.json({ product });
+    // Calculate total stock
+    const totalStock = Object.values(product.stock).reduce((sum, count) => sum + count, 0);
+    const productWithStock = {
+      ...product,
+      totalStock,
+      inStock: totalStock > 0
+    };
+    
+    res.json({ product: productWithStock });
     
   } catch (error) {
     console.error('Product fetch error:', error);
@@ -264,41 +322,186 @@ router.get('/:id/stock', async (req, res) => {
   }
 });
 
-// Admin routes (require authentication)
-const requireAuth = async (req, res, next) => {
+// Update product stock (admin only)
+router.put('/:id/stock', requireAuth, async (req, res) => {
   try {
-    const user = await persist.getUserFromToken(req);
-    if (!user || user.role !== 'admin') {
-      return res.status(403).json({ error: 'Admin access required' });
+    const { id } = req.params;
+    const { stock } = req.body;
+    
+    if (!stock || typeof stock !== 'object') {
+      return res.status(400).json({ error: 'Stock data is required' });
     }
-    req.user = user;
-    next();
+    
+    const products = await persist.readData(persist.productsFile);
+    const productIndex = products.findIndex(p => p.id === id);
+    
+    if (productIndex === -1) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    
+    // Update stock
+    products[productIndex].stock = { ...products[productIndex].stock, ...stock };
+    products[productIndex].updatedAt = new Date().toISOString();
+    
+    await persist.writeData(persist.productsFile, products);
+    
+    // Log activity
+    await persist.logActivity(req.user.id, 'stock_update', { 
+      productId: id, 
+      title: products[productIndex].title,
+      stock
+    });
+    
+    res.json({
+      message: 'Stock updated successfully',
+      product: products[productIndex]
+    });
+    
   } catch (error) {
-    res.status(401).json({ error: 'Authentication required' });
+    console.error('Stock update error:', error);
+    res.status(500).json({ error: 'Failed to update stock' });
   }
-};
+});
+
+// Bulk update products (admin only)
+router.put('/bulk', requireAuth, async (req, res) => {
+  try {
+    const { products: updates } = req.body;
+    
+    if (!Array.isArray(updates)) {
+      return res.status(400).json({ error: 'Products array is required' });
+    }
+    
+    const allProducts = await persist.readData(persist.productsFile);
+    const updatedProducts = [];
+    const errors = [];
+    
+    for (const update of updates) {
+      const { id, ...updateData } = update;
+      const productIndex = allProducts.findIndex(p => p.id === id);
+      
+      if (productIndex === -1) {
+        errors.push({ id, error: 'Product not found' });
+        continue;
+      }
+      
+      allProducts[productIndex] = {
+        ...allProducts[productIndex],
+        ...updateData,
+        updatedAt: new Date().toISOString()
+      };
+      
+      updatedProducts.push(allProducts[productIndex]);
+    }
+    
+    await persist.writeData(persist.productsFile, allProducts);
+    
+    // Log activity
+    await persist.logActivity(req.user.id, 'bulk_product_update', { 
+      updatedCount: updatedProducts.length,
+      errorCount: errors.length
+    });
+    
+    res.json({
+      message: 'Bulk update completed',
+      updated: updatedProducts.length,
+      errors: errors.length,
+      details: errors.length > 0 ? errors : undefined
+    });
+    
+  } catch (error) {
+    console.error('Bulk update error:', error);
+    res.status(500).json({ error: 'Failed to update products' });
+  }
+});
+
+// Get low stock products (admin only)
+router.get('/admin/low-stock', requireAuth, async (req, res) => {
+  try {
+    const { threshold = 5 } = req.query;
+    const products = await persist.readData(persist.productsFile);
+    
+    const lowStockProducts = products.filter(product => {
+      const totalStock = Object.values(product.stock).reduce((sum, count) => sum + count, 0);
+      return totalStock <= parseInt(threshold);
+    });
+    
+    res.json({
+      products: lowStockProducts,
+      threshold: parseInt(threshold),
+      count: lowStockProducts.length
+    });
+    
+  } catch (error) {
+    console.error('Low stock fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch low stock products' });
+  }
+});
+
+// Get product statistics (admin only)
+router.get('/admin/stats', requireAuth, async (req, res) => {
+  try {
+    const products = await persist.readData(persist.productsFile);
+    
+    const stats = {
+      total: products.length,
+      byCategory: {},
+      byBrand: {},
+      stockLevels: {
+        inStock: 0,
+        lowStock: 0,
+        outOfStock: 0
+      },
+      priceRange: {
+        min: Math.min(...products.map(p => p.price)),
+        max: Math.max(...products.map(p => p.price)),
+        average: products.reduce((sum, p) => sum + p.price, 0) / products.length
+      }
+    };
+    
+    products.forEach(product => {
+      // Category stats
+      stats.byCategory[product.category] = (stats.byCategory[product.category] || 0) + 1;
+      
+      // Brand stats
+      stats.byBrand[product.brand] = (stats.byBrand[product.brand] || 0) + 1;
+      
+      // Stock levels
+      const totalStock = Object.values(product.stock).reduce((sum, count) => sum + count, 0);
+      if (totalStock === 0) {
+        stats.stockLevels.outOfStock++;
+      } else if (totalStock <= 5) {
+        stats.stockLevels.lowStock++;
+      } else {
+        stats.stockLevels.inStock++;
+      }
+    });
+    
+    res.json(stats);
+    
+  } catch (error) {
+    console.error('Stats fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch product statistics' });
+  }
+});
 
 // Create new product (admin only)
-router.post('/', requireAuth, async (req, res) => {
+router.post('/', requireAuth, validateProduct, async (req, res) => {
   try {
     const { title, description, price, category, brand, sizes, stock, exchangeable, condition, images } = req.body;
-    
-    if (!title || !description || !price || !category || !brand) {
-      return res.status(400).json({ error: 'Missing required fields' });
-    }
     
     const products = await persist.readData(persist.productsFile);
     
     const newProduct = {
       id: persist.generateId('prod'),
-      title,
-      description,
+      title: title.trim(),
+      description: description.trim(),
       price: parseFloat(price),
       images: images || [],
-      category,
+      category: category.trim(),
       sizes: sizes || [],
       stock: stock || {},
-      brand,
+      brand: brand.trim(),
       exchangeable: exchangeable !== undefined ? exchangeable : true,
       condition: condition || 'new',
       createdAt: new Date().toISOString()
@@ -325,7 +528,7 @@ router.post('/', requireAuth, async (req, res) => {
 });
 
 // Update product (admin only)
-router.put('/:id', requireAuth, async (req, res) => {
+router.put('/:id', requireAuth, validateProduct, async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
@@ -394,6 +597,52 @@ router.delete('/:id', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('Product deletion error:', error);
     res.status(500).json({ error: 'Failed to delete product' });
+  }
+});
+
+// Bulk delete products (admin only)
+router.delete('/bulk', requireAuth, async (req, res) => {
+  try {
+    const { ids } = req.body;
+    
+    if (!Array.isArray(ids)) {
+      return res.status(400).json({ error: 'Product IDs array is required' });
+    }
+    
+    const products = await persist.readData(persist.productsFile);
+    const deletedProducts = [];
+    const errors = [];
+    
+    for (const id of ids) {
+      const productIndex = products.findIndex(p => p.id === id);
+      
+      if (productIndex === -1) {
+        errors.push({ id, error: 'Product not found' });
+        continue;
+      }
+      
+      deletedProducts.push(products[productIndex]);
+      products.splice(productIndex, 1);
+    }
+    
+    await persist.writeData(persist.productsFile, products);
+    
+    // Log activity
+    await persist.logActivity(req.user.id, 'bulk_product_delete', { 
+      deletedCount: deletedProducts.length,
+      errorCount: errors.length
+    });
+    
+    res.json({
+      message: 'Bulk delete completed',
+      deleted: deletedProducts.length,
+      errors: errors.length,
+      details: errors.length > 0 ? errors : undefined
+    });
+    
+  } catch (error) {
+    console.error('Bulk delete error:', error);
+    res.status(500).json({ error: 'Failed to delete products' });
   }
 });
 

@@ -1,1 +1,62 @@
-[]
+[
+  {
+    "id": "act-1753901439178-w9x9i6h5q",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "register",
+    "details": {
+      "username": "amitcohen",
+      "email": "amitcohen@gmail.com",
+      "ip": "::ffff:127.0.0.1"
+    },
+    "timestamp": "2025-07-30T18:50:39.178Z",
+    "ip": "::ffff:127.0.0.1"
+  },
+  {
+    "id": "act-1753901451462-tmu27xihn",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "::ffff:127.0.0.1"
+    },
+    "timestamp": "2025-07-30T18:50:51.462Z",
+    "ip": "::ffff:127.0.0.1"
+  },
+  {
+    "id": "act-1753901456783-crzlnxi8j",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "::ffff:127.0.0.1"
+    },
+    "timestamp": "2025-07-30T18:50:56.783Z",
+    "ip": "::ffff:127.0.0.1"
+  },
+  {
+    "id": "act-1753901540131-befp4681l",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "::ffff:127.0.0.1"
+    },
+    "timestamp": "2025-07-30T18:52:20.131Z",
+    "ip": "::ffff:127.0.0.1"
+  },
+  {
+    "id": "act-1753901545190-coiwdnud3",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "::ffff:127.0.0.1"
+    },
+    "timestamp": "2025-07-30T18:52:25.190Z",
+    "ip": "::ffff:127.0.0.1"
+  }
+]

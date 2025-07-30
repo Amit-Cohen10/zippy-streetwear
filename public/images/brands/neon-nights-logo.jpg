@@ -1,0 +1,14 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff00ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00ffff;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect x="25" y="25" width="70" height="70" rx="15" fill="url(#neonGradient)" stroke="#ff00ff" stroke-width="2"/>
+  <text x="60" y="45" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#ffffff">NEON</text>
+  <text x="60" y="60" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#ffffff">NIGHTS</text>
+  <circle cx="45" cy="75" r="2" fill="#ff00ff"/>
+  <circle cx="60" cy="75" r="2" fill="#00ffff"/>
+  <circle cx="75" cy="75" r="2" fill="#ff00ff"/>
+</svg> 

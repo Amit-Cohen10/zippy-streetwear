@@ -4,30 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Detail - Zippy Streetwear</title>
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="/styles/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="cyberpunk-background">
-        <div class="grid-overlay"></div>
-        <div class="neon-particles"></div>
-    </div>
-
     <!-- Navigation -->
-    <nav class="cyber-nav">
+    <nav class="navbar">
         <div class="nav-container">
-            <div class="nav-brand">
-                <a href="/" class="logo">ZIPPY</a>
+            <div class="nav-logo">
+                <h1 class="logo-text">ZIPPY</h1>
+                <div class="logo-glow"></div>
             </div>
-            <div class="nav-links">
+            <div class="nav-menu">
                 <a href="/" class="nav-link">Home</a>
-                <a href="/products" class="nav-link">Shop</a>
+                <a href="/products" class="nav-link active">Shop</a>
                 <a href="/exchange" class="nav-link">Exchange</a>
                 <a href="/community" class="nav-link">Community</a>
                 <a href="/brands" class="nav-link">Brands</a>
-                <a href="/dashboard" class="nav-link">Dashboard</a>
             </div>
             <div class="nav-actions">
+                <button class="search-btn" id="searchBtn">
+                    <span class="search-icon">🔍</span>
+                </button>
                 <button class="cart-btn" id="cartBtn">
                     <span class="cart-icon">🛒</span>
                     <span class="cart-count" id="cartCount">0</span>
@@ -38,575 +36,262 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="product-detail">
+    <main class="product-detail-page">
         <div class="container">
             <!-- Breadcrumb -->
-            <section class="breadcrumb">
-                <nav class="breadcrumb-nav">
-                    <a href="/" class="breadcrumb-link">Home</a>
-                    <span class="breadcrumb-separator">/</span>
-                    <a href="/products" class="breadcrumb-link">Products</a>
-                    <span class="breadcrumb-separator">/</span>
-                    <span class="breadcrumb-current" id="productName">Product Name</span>
-                </nav>
-            </section>
+            <div class="breadcrumb">
+                <a href="/products" class="breadcrumb-link">Shop</a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current" id="productName">Product</span>
+            </div>
 
-            <!-- Product Display -->
-            <section class="product-display">
-                <div class="product-gallery">
-                    <div class="main-image">
-                        <img src="" alt="Product Image" id="mainImage" onerror="this.src='/images/placeholder.jpg'">
+            <!-- Product Section -->
+            <div class="product-detail-container">
+                <!-- Product Images -->
+                <div class="product-images-section">
+                    <div class="main-image-container">
+                        <img src="" alt="" id="mainProductImage" class="main-product-image">
                         <div class="image-overlay">
-                            <button class="zoom-btn" id="zoomBtn">🔍</button>
+                            <div class="zoom-indicator">🔍 Click to zoom</div>
                         </div>
                     </div>
                     <div class="thumbnail-gallery" id="thumbnailGallery">
-                        <!-- Thumbnails will be populated here -->
+                        <!-- Thumbnails will be loaded here -->
                     </div>
                 </div>
 
-                <div class="product-info">
+                <!-- Product Info -->
+                <div class="product-info-section">
                     <div class="product-header">
-                        <h1 class="product-title" id="productTitle">Product Title</h1>
-                        <div class="product-meta">
-                            <span class="product-brand" id="productBrand">Brand Name</span>
-                            <span class="product-sku" id="productSku">SKU: 12345</span>
+                        <h1 class="product-title" id="productTitle">Product Name</h1>
+                        <div class="product-price" id="productPrice">0 NIS</div>
+                        <div class="product-status" id="productStatus"></div>
+                    </div>
+
+                    <div class="product-description">
+                        <p class="description-text" id="productDescription">
+                            Experience the future of streetwear with this cutting-edge design. 
+                            Crafted with premium materials and featuring our signature cyberpunk aesthetic.
+                        </p>
+                    </div>
+
+                    <!-- Size Selection -->
+                    <div class="size-selection">
+                        <h3 class="section-title">Select Size</h3>
+                        <div class="size-options" id="sizeOptions">
+                            <button class="size-btn" data-size="XS">XS</button>
+                            <button class="size-btn" data-size="S">S</button>
+                            <button class="size-btn active" data-size="M">M</button>
+                            <button class="size-btn" data-size="L">L</button>
+                            <button class="size-btn" data-size="XL">XL</button>
+                            <button class="size-btn" data-size="XXL">XXL</button>
                         </div>
-                        <div class="product-rating">
-                            <div class="stars">
-                                <span class="star">⭐</span>
-                                <span class="star">⭐</span>
-                                <span class="star">⭐</span>
-                                <span class="star">⭐</span>
-                                <span class="star">⭐</span>
-                            </div>
-                            <span class="rating-count">(24 reviews)</span>
+                        <div class="size-guide">
+                            <a href="#" class="size-guide-link">Size Guide</a>
                         </div>
                     </div>
 
-                    <div class="product-pricing">
-                        <div class="price-container">
-                            <span class="current-price" id="currentPrice">$129.99</span>
-                            <span class="original-price" id="originalPrice">$159.99</span>
-                            <span class="discount-badge">Save 19%</span>
-                        </div>
-                        <div class="exchange-badge" id="exchangeBadge">
-                            <span class="badge-icon">🔄</span>
-                            <span class="badge-text">Available for Exchange</span>
+                    <!-- Quantity Selection -->
+                    <div class="quantity-selection">
+                        <h3 class="section-title">Quantity</h3>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" id="decreaseQuantity">-</button>
+                            <input type="number" value="1" min="1" max="10" class="quantity-input" id="quantityInput">
+                            <button class="quantity-btn" id="increaseQuantity">+</button>
                         </div>
                     </div>
 
-                    <div class="product-options">
-                        <div class="size-selection">
-                            <h3>Select Size</h3>
-                            <div class="size-options" id="sizeOptions">
-                                <!-- Size options will be populated here -->
-                            </div>
-                            <div class="size-guide">
-                                <button class="size-guide-btn" id="sizeGuideBtn">Size Guide</button>
-                            </div>
-                        </div>
-
-                        <div class="quantity-selection">
-                            <h3>Quantity</h3>
-                            <div class="quantity-controls">
-                                <button class="quantity-btn" id="decreaseQuantity">-</button>
-                                <input type="number" id="quantity" class="quantity-input" value="1" min="1" max="10">
-                                <button class="quantity-btn" id="increaseQuantity">+</button>
-                            </div>
-                        </div>
-
-                        <div class="product-actions">
-                            <button class="cyber-btn primary large" id="addToCartBtn">
-                                <span class="btn-icon">🛒</span>
-                                Add to Cart
-                            </button>
-                            <button class="cyber-btn secondary" id="addToWishlistBtn">
-                                <span class="btn-icon">❤️</span>
-                                Add to Wishlist
-                            </button>
-                            <button class="cyber-btn secondary" id="exchangeBtn">
-                                <span class="btn-icon">🔄</span>
-                                Exchange
-                            </button>
-                        </div>
+                    <!-- Action Buttons -->
+                    <div class="product-actions">
+                        <button class="add-to-cart-btn" id="addToCartBtn">
+                            <span class="btn-text">Add to Cart</span>
+                            <span class="btn-icon">🛒</span>
+                        </button>
+                        <button class="buy-now-btn" id="buyNowBtn">
+                            <span class="btn-text">Buy Now</span>
+                            <span class="btn-icon">⚡</span>
+                        </button>
                     </div>
 
-                    <div class="product-details">
-                        <div class="detail-tabs">
-                            <button class="tab-btn active" data-tab="description">Description</button>
-                            <button class="tab-btn" data-tab="specifications">Specifications</button>
-                            <button class="tab-btn" data-tab="reviews">Reviews</button>
-                            <button class="tab-btn" data-tab="exchange">Exchange Info</button>
-                        </div>
-                        <div class="tab-content active" id="description">
-                            <p class="product-description" id="productDescription">
-                                Detailed product description will be loaded here...
-                            </p>
-                        </div>
-                        <div class="tab-content" id="specifications">
-                            <div class="specs-list" id="specsList">
-                                <!-- Specifications will be populated here -->
+                    <!-- Product Features -->
+                    <div class="product-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">🚚</div>
+                            <div class="feature-text">
+                                <h4>Free Shipping</h4>
+                                <p>On orders over 200 NIS</p>
                             </div>
                         </div>
-                        <div class="tab-content" id="reviews">
-                            <div class="reviews-container" id="reviewsContainer">
-                                <!-- Reviews will be populated here -->
+                        <div class="feature-item">
+                            <div class="feature-icon">🔄</div>
+                            <div class="feature-text">
+                                <h4>Easy Returns</h4>
+                                <p>30-day return policy</p>
                             </div>
                         </div>
-                        <div class="tab-content" id="exchange">
-                            <div class="exchange-info" id="exchangeInfo">
-                                <!-- Exchange information will be populated here -->
+                        <div class="feature-item">
+                            <div class="feature-icon">🛡️</div>
+                            <div class="feature-text">
+                                <h4>Secure Payment</h4>
+                                <p>100% secure checkout</p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
+
+            <!-- Product Details Tabs -->
+            <div class="product-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="description">Description</button>
+                    <button class="tab-btn" data-tab="specifications">Specifications</button>
+                    <button class="tab-btn" data-tab="reviews">Reviews</button>
+                    <button class="tab-btn" data-tab="exchange">Exchange</button>
+                </div>
+
+                <div class="tab-content">
+                    <!-- Description Tab -->
+                    <div class="tab-panel active" id="description">
+                        <div class="description-content">
+                            <h3>Product Description</h3>
+                            <p>This futuristic streetwear piece embodies the essence of cyberpunk culture. 
+                            Designed with cutting-edge technology and premium materials, each item features 
+                            our signature neon accents and innovative design elements.</p>
+                            
+                            <h4>Features:</h4>
+                            <ul>
+                                <li>Premium cotton blend fabric</li>
+                                <li>Neon accent details</li>
+                                <li>Cyberpunk-inspired graphics</li>
+                                <li>Comfortable fit</li>
+                                <li>Durable construction</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Specifications Tab -->
+                    <div class="tab-panel" id="specifications">
+                        <div class="specifications-content">
+                            <h3>Product Specifications</h3>
+                            <div class="spec-grid">
+                                <div class="spec-item">
+                                    <span class="spec-label">Material:</span>
+                                    <span class="spec-value">Premium Cotton Blend</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Weight:</span>
+                                    <span class="spec-value">280g</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Fit:</span>
+                                    <span class="spec-value">Regular</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Care:</span>
+                                    <span class="spec-value">Machine wash cold</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reviews Tab -->
+                    <div class="tab-panel" id="reviews">
+                        <div class="reviews-content">
+                            <h3>Customer Reviews</h3>
+                            <div class="review-stats">
+                                <div class="rating">4.8 ⭐</div>
+                                <div class="review-count">Based on 127 reviews</div>
+                            </div>
+                            <div class="reviews-list">
+                                <div class="review-item">
+                                    <div class="review-header">
+                                        <span class="reviewer-name">CyberUser_42</span>
+                                        <span class="review-rating">⭐⭐⭐⭐⭐</span>
+                                    </div>
+                                    <p class="review-text">Amazing quality and design! The neon details are incredible.</p>
+                                </div>
+                                <div class="review-item">
+                                    <div class="review-header">
+                                        <span class="reviewer-name">NeonLover</span>
+                                        <span class="review-rating">⭐⭐⭐⭐⭐</span>
+                                    </div>
+                                    <p class="review-text">Perfect fit and the cyberpunk aesthetic is on point!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exchange Tab -->
+                    <div class="tab-panel" id="exchange">
+                        <div class="exchange-content">
+                            <h3>Exchange Program</h3>
+                            <p>Join our innovative clothing exchange program! Trade your old Zippy items 
+                            for new ones and help reduce fashion waste.</p>
+                            <button class="exchange-btn">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Related Products -->
-            <section class="related-products">
+            <div class="related-products">
                 <h2 class="section-title">You Might Also Like</h2>
-                <div class="related-grid" id="relatedGrid">
-                    <!-- Related products will be populated here -->
+                <div class="related-grid" id="relatedProducts">
+                    <!-- Related products will be loaded here -->
                 </div>
-            </section>
+            </div>
         </div>
     </main>
 
-    <!-- Size Guide Modal -->
-    <div class="modal" id="sizeGuideModal">
-        <div class="modal-content cyber-modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Size Guide</h2>
-                <button class="modal-close" id="closeSizeGuide">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="size-guide-content">
-                    <table class="size-table">
-                        <thead>
-                            <tr>
-                                <th>Size</th>
-                                <th>Chest (cm)</th>
-                                <th>Waist (cm)</th>
-                                <th>Length (cm)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>S</td>
-                                <td>86-91</td>
-                                <td>71-76</td>
-                                <td>68</td>
-                            </tr>
-                            <tr>
-                                <td>M</td>
-                                <td>91-96</td>
-                                <td>76-81</td>
-                                <td>70</td>
-                            </tr>
-                            <tr>
-                                <td>L</td>
-                                <td>96-101</td>
-                                <td>81-86</td>
-                                <td>72</td>
-                            </tr>
-                            <tr>
-                                <td>XL</td>
-                                <td>101-106</td>
-                                <td>86-91</td>
-                                <td>74</td>
-                            </tr>
-                        </tbody>
-                    </table>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Zippy</h3>
+                    <p>Futuristic streetwear platform with innovative clothing exchange.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📱</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="/products">All Products</a></li>
+                        <li><a href="/exchange">Exchange Hub</a></li>
+                        <li><a href="/brands">Brands</a></li>
+                        <li><a href="/style-guide">Style Guide</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="/community">Community Feed</a></li>
+                        <li><a href="/sustainability">Sustainability</a></li>
+                        <li><a href="/fitting-room">Virtual Fitting</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Auth Modal -->
-    <div class="modal" id="authModal">
-        <div class="modal-content cyber-modal">
-            <div class="modal-header">
-                <h2 class="modal-title" id="authTitle">Login</h2>
-                <button class="modal-close" id="closeAuthModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="authForm" class="auth-form">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" class="cyber-input" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" class="cyber-input" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="rememberMe">
-                            <span class="checkmark"></span>
-                            Remember me
-                        </label>
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" class="cyber-btn primary">Login</button>
-                    </div>
-                    <div class="auth-switch">
-                        <span id="authSwitchText">Don't have an account?</span>
-                        <button type="button" class="link-btn" id="authSwitchBtn">Register</button>
-                    </div>
-                </form>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Zippy. All rights reserved.</p>
             </div>
         </div>
-    </div>
+    </footer>
 
-    <!-- Cart Modal -->
-    <div class="modal" id="cartModal">
-        <div class="modal-content cyber-modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Shopping Cart</h2>
-                <button class="modal-close" id="closeCartModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="cartItems" class="cart-items">
-                    <!-- Cart items will be populated here -->
-                </div>
-                <div class="cart-summary">
-                    <div class="cart-total">
-                        <span>Total:</span>
-                        <span id="cartTotal">$0.00</span>
-                    </div>
-                    <button class="cyber-btn primary" id="checkoutBtn">Checkout</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="scripts/auth.js"></script>
-    <script src="scripts/cart.js"></script>
-    <script src="scripts/main.js"></script>
-    <script>
-        // Product Detail specific functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id') || '1';
-            
-            const tabBtns = document.querySelectorAll('.tab-btn');
-            const tabContents = document.querySelectorAll('.tab-content');
-            const addToCartBtn = document.getElementById('addToCartBtn');
-            const addToWishlistBtn = document.getElementById('addToWishlistBtn');
-            const exchangeBtn = document.getElementById('exchangeBtn');
-            const sizeGuideBtn = document.getElementById('sizeGuideBtn');
-            const closeSizeGuide = document.getElementById('closeSizeGuide');
-            const sizeGuideModal = document.getElementById('sizeGuideModal');
-            const quantityInput = document.getElementById('quantity');
-            const decreaseQuantity = document.getElementById('decreaseQuantity');
-            const increaseQuantity = document.getElementById('increaseQuantity');
-
-            // Event listeners
-            tabBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const targetTab = btn.dataset.tab;
-                    switchTab(targetTab);
-                });
-            });
-
-            addToCartBtn.addEventListener('click', addToCart);
-            addToWishlistBtn.addEventListener('click', addToWishlist);
-            exchangeBtn.addEventListener('click', initiateExchange);
-            sizeGuideBtn.addEventListener('click', () => sizeGuideModal.style.display = 'flex');
-            closeSizeGuide.addEventListener('click', () => sizeGuideModal.style.display = 'none');
-            decreaseQuantity.addEventListener('click', () => {
-                const currentValue = parseInt(quantityInput.value);
-                if (currentValue > 1) quantityInput.value = currentValue - 1;
-            });
-            increaseQuantity.addEventListener('click', () => {
-                const currentValue = parseInt(quantityInput.value);
-                if (currentValue < 10) quantityInput.value = currentValue + 1;
-            });
-
-            // Load product data
-            loadProductData(productId);
-
-            function loadProductData(productId) {
-                // Mock product data
-                const products = {
-                    '1': {
-                        id: 1,
-                        name: 'Neon Cyber Hoodie',
-                        brand: 'Zippy Originals',
-                        price: 129.99,
-                        originalPrice: 159.99,
-                        sku: 'ZIP001',
-                        description: 'Futuristic streetwear hoodie with LED trim and neon accents. Perfect for the cyberpunk aesthetic with premium materials and cutting-edge design.',
-                        images: [
-                            '/images/products/hoodie-1.jpg',
-                            '/images/products/hoodie-2.jpg',
-                            '/images/products/hoodie-3.jpg',
-                            '/images/products/hoodie-4.jpg'
-                        ],
-                        sizes: ['S', 'M', 'L', 'XL'],
-                        exchangeable: true,
-                        specifications: {
-                            'Material': 'Premium cotton blend with LED elements',
-                            'Fit': 'Regular fit with slight oversize',
-                            'Features': 'LED trim, neon accents, reflective details',
-                            'Care': 'Machine wash cold, tumble dry low',
-                            'Origin': 'Designed in Neo Tokyo, Made in Japan'
-                        },
-                        reviews: [
-                            {
-                                author: 'CyberStylist',
-                                rating: 5,
-                                comment: 'Amazing quality and the LED effects are incredible!',
-                                date: '2024-01-15'
-                            },
-                            {
-                                author: 'StreetGuru',
-                                rating: 4,
-                                comment: 'Great fit and the neon details really pop.',
-                                date: '2024-01-10'
-                            }
-                        ]
-                    },
-                    '2': {
-                        id: 2,
-                        name: 'Glitch Art Tee',
-                        brand: 'Street Tech',
-                        price: 49.99,
-                        originalPrice: 59.99,
-                        sku: 'ST002',
-                        description: 'Digital distortion graphic t-shirt with glitch art design. High-quality print with vibrant colors and streetwear aesthetic.',
-                        images: [
-                            '/images/products/tee-1.jpg',
-                            '/images/products/tee-2.jpg',
-                            '/images/products/tee-3.jpg'
-                        ],
-                        sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-                        exchangeable: true,
-                        specifications: {
-                            'Material': '100% cotton',
-                            'Fit': 'Oversized fit',
-                            'Features': 'Digital print, glitch art design',
-                            'Care': 'Machine wash cold, inside out',
-                            'Origin': 'Designed in LA, Made in USA'
-                        },
-                        reviews: []
-                    }
-                };
-
-                const product = products[productId] || products['1'];
-                displayProduct(product);
-            }
-
-            function displayProduct(product) {
-                // Update product information
-                document.getElementById('productName').textContent = product.name;
-                document.getElementById('productTitle').textContent = product.name;
-                document.getElementById('productBrand').textContent = product.brand;
-                document.getElementById('productSku').textContent = `SKU: ${product.sku}`;
-                document.getElementById('currentPrice').textContent = `$${product.price}`;
-                document.getElementById('originalPrice').textContent = `$${product.originalPrice}`;
-                document.getElementById('productDescription').textContent = product.description;
-
-                // Update main image
-                const mainImage = document.getElementById('mainImage');
-                mainImage.src = product.images[0];
-                mainImage.alt = product.name;
-
-                // Create thumbnail gallery
-                const thumbnailGallery = document.getElementById('thumbnailGallery');
-                thumbnailGallery.innerHTML = product.images.map((image, index) => `
-                    <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="changeMainImage('${image}')">
-                        <img src="${image}" alt="${product.name}" onerror="this.src='/images/placeholder.jpg'">
-                    </div>
-                `).join('');
-
-                // Create size options
-                const sizeOptions = document.getElementById('sizeOptions');
-                sizeOptions.innerHTML = product.sizes.map(size => `
-                    <button class="size-option" data-size="${size}">${size}</button>
-                `).join('');
-
-                // Add size selection functionality
-                const sizeButtons = document.querySelectorAll('.size-option');
-                sizeButtons.forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        sizeButtons.forEach(b => b.classList.remove('selected'));
-                        btn.classList.add('selected');
-                    });
-                });
-
-                // Update exchange badge
-                const exchangeBadge = document.getElementById('exchangeBadge');
-                if (product.exchangeable) {
-                    exchangeBadge.style.display = 'flex';
-                } else {
-                    exchangeBadge.style.display = 'none';
-                }
-
-                // Load specifications
-                loadSpecifications(product.specifications);
-
-                // Load reviews
-                loadReviews(product.reviews);
-
-                // Load exchange info
-                loadExchangeInfo(product);
-
-                // Load related products
-                loadRelatedProducts(product.id);
-            }
-
-            function changeMainImage(imageSrc) {
-                const mainImage = document.getElementById('mainImage');
-                mainImage.src = imageSrc;
-
-                // Update active thumbnail
-                const thumbnails = document.querySelectorAll('.thumbnail');
-                thumbnails.forEach((thumb, index) => {
-                    thumb.classList.remove('active');
-                    if (thumb.querySelector('img').src === imageSrc) {
-                        thumb.classList.add('active');
-                    }
-                });
-            }
-
-            function loadSpecifications(specs) {
-                const specsList = document.getElementById('specsList');
-                specsList.innerHTML = Object.entries(specs).map(([key, value]) => `
-                    <div class="spec-item">
-                        <span class="spec-label">${key}:</span>
-                        <span class="spec-value">${value}</span>
-                    </div>
-                `).join('');
-            }
-
-            function loadReviews(reviews) {
-                const reviewsContainer = document.getElementById('reviewsContainer');
-                if (reviews.length === 0) {
-                    reviewsContainer.innerHTML = '<p>No reviews yet. Be the first to review this product!</p>';
-                } else {
-                    reviewsContainer.innerHTML = reviews.map(review => `
-                        <div class="review-item">
-                            <div class="review-header">
-                                <span class="review-author">${review.author}</span>
-                                <div class="review-stars">
-                                    ${'⭐'.repeat(review.rating)}
-                                </div>
-                                <span class="review-date">${review.date}</span>
-                            </div>
-                            <p class="review-comment">${review.comment}</p>
-                        </div>
-                    `).join('');
-                }
-            }
-
-            function loadExchangeInfo(product) {
-                const exchangeInfo = document.getElementById('exchangeInfo');
-                if (product.exchangeable) {
-                    exchangeInfo.innerHTML = `
-                        <div class="exchange-details">
-                            <h4>Exchange Information</h4>
-                            <p>This item is available for exchange with other community members.</p>
-                            <ul>
-                                <li>Item must be in good condition</li>
-                                <li>Exchange value: $${product.price}</li>
-                                <li>Shipping costs may apply</li>
-                                <li>Both parties must agree to terms</li>
-                            </ul>
-                            <button class="cyber-btn primary" onclick="createExchange(${product.id})">Create Exchange Offer</button>
-                        </div>
-                    `;
-                } else {
-                    exchangeInfo.innerHTML = '<p>This item is not available for exchange.</p>';
-                }
-            }
-
-            function loadRelatedProducts(currentProductId) {
-                const relatedProducts = [
-                    { id: 2, name: 'Glitch Art Tee', price: '$49.99', image: '/images/products/tee-1.jpg' },
-                    { id: 3, name: 'Holographic Cargo Pants', price: '$89.99', image: '/images/products/pants-1.jpg' },
-                    { id: 4, name: 'LED Sneakers', price: '$199.99', image: '/images/products/sneakers-1.jpg' }
-                ];
-
-                const relatedGrid = document.getElementById('relatedGrid');
-                relatedGrid.innerHTML = relatedProducts.map(product => `
-                    <div class="related-item cyber-card">
-                        <div class="item-image">
-                            <img src="${product.image}" alt="${product.name}" onerror="this.src='/images/placeholder.jpg'">
-                        </div>
-                        <div class="item-info">
-                            <h4 class="item-name">${product.name}</h4>
-                            <span class="item-price">${product.price}</span>
-                        </div>
-                        <button class="cyber-btn secondary" onclick="viewProduct(${product.id})">View</button>
-                    </div>
-                `).join('');
-            }
-
-            function switchTab(tabName) {
-                tabBtns.forEach(btn => {
-                    btn.classList.remove('active');
-                    if (btn.dataset.tab === tabName) {
-                        btn.classList.add('active');
-                    }
-                });
-
-                tabContents.forEach(content => {
-                    content.classList.remove('active');
-                    if (content.id === tabName) {
-                        content.classList.add('active');
-                    }
-                });
-            }
-
-            function addToCart() {
-                const selectedSize = document.querySelector('.size-option.selected');
-                if (!selectedSize) {
-                    alert('Please select a size');
-                    return;
-                }
-
-                const quantity = parseInt(quantityInput.value);
-                const productId = new URLSearchParams(window.location.search).get('id') || '1';
-                
-                console.log('Adding to cart:', {
-                    productId,
-                    size: selectedSize.dataset.size,
-                    quantity
-                });
-
-                // Simulate adding to cart
-                alert('Added to cart!');
-            }
-
-            function addToWishlist() {
-                const productId = new URLSearchParams(window.location.search).get('id') || '1';
-                console.log('Adding to wishlist:', productId);
-                alert('Added to wishlist!');
-            }
-
-            function initiateExchange() {
-                const productId = new URLSearchParams(window.location.search).get('id') || '1';
-                console.log('Initiating exchange for product:', productId);
-                window.location.href = `/exchange?product=${productId}`;
-            }
-        });
-
-        // Global functions
-        function changeMainImage(imageSrc) {
-            const mainImage = document.getElementById('mainImage');
-            mainImage.src = imageSrc;
-        }
-
-        function createExchange(productId) {
-            console.log('Creating exchange for product:', productId);
-            window.location.href = `/exchange?product=${productId}`;
-        }
-
-        function viewProduct(productId) {
-            window.location.href = `/product-detail?id=${productId}`;
-        }
-    </script>
+    <script src="/scripts/main.js"></script>
+    <script src="/scripts/auth.js"></script>
+    <script src="/scripts/cart.js"></script>
+    <script src="/scripts/product-detail.js"></script>
 </body>
 </html> 

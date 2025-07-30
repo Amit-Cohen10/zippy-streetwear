@@ -1,0 +1,15 @@
+<svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cyberGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2a2a2a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="200" fill="url(#cyberGradient)"/>
+  <text x="200" y="80" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#00ffff">CYBERPUNK</text>
+  <text x="200" y="110" font-family="Arial, sans-serif" font-size="18" text-anchor="middle" fill="#ffffff">FASHION RISE</text>
+  <rect x="50" y="130" width="300" height="4" fill="#00ffff"/>
+  <circle cx="100" cy="160" r="3" fill="#ff00ff"/>
+  <circle cx="200" cy="160" r="3" fill="#00ffff"/>
+  <circle cx="300" cy="160" r="3" fill="#00ff00"/>
+</svg> 

@@ -16,5 +16,23 @@
       "language": "en",
       "notifications": true
     }
+  },
+  {
+    "id": "user-1753901439175-sl80wbwx7",
+    "username": "amitcohen",
+    "password": "$2b$10$KVMwsKvW4UCRZEWVvaIQhuJOQrGOTFAavgKsgcQ/XK6Q6I5m52TQG",
+    "email": "amitcohen@gmail.com",
+    "role": "user",
+    "profile": {
+      "displayName": "amitcohen",
+      "avatar": "/images/default-avatar.png",
+      "exchangeRating": 0,
+      "joinDate": "2025-07-30T18:50:39.175Z"
+    },
+    "preferences": {
+      "darkMode": true,
+      "language": "en",
+      "notifications": true
+    }
   }
 ]

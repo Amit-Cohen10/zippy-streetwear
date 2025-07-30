@@ -13,6 +13,11 @@
   --shadow-neon: 0 0 20px rgba(0, 255, 255, 0.3);
   --shadow-pink: 0 0 20px rgba(255, 0, 255, 0.3);
   --shadow-green: 0 0 20px rgba(0, 255, 0, 0.3);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --glow-cyan: 0 0 30px rgba(0, 255, 255, 0.5);
+  --glow-pink: 0 0 30px rgba(255, 0, 255, 0.5);
+  --glow-green: 0 0 30px rgba(0, 255, 0, 0.5);
 }
 
 /* Reset and Base Styles */
@@ -28,6 +33,30 @@ body {
   color: var(--text-light);
   line-height: 1.6;
   overflow-x: hidden;
+  position: relative;
+}
+
+/* Animated Gradient Background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(0, 255, 0, 0.05) 0%, transparent 50%);
+  animation: gradient-shift 20s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.1) rotate(90deg); }
+  50% { transform: scale(0.9) rotate(180deg); }
+  75% { transform: scale(1.05) rotate(270deg); }
 }
 
 /* Custom Scrollbar */
@@ -81,6 +110,7 @@ body {
   position: relative;
 }
 
+/* Enhanced Logo */
 .logo-text {
   font-family: 'Orbitron', monospace;
   font-size: 2rem;
@@ -88,6 +118,25 @@ body {
   color: var(--accent-neon-cyan);
   text-shadow: var(--shadow-neon);
   letter-spacing: 0.2em;
+  position: relative;
+}
+
+.logo-text::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--accent-neon-pink);
+  animation: logo-glitch 4s infinite;
+  opacity: 0.7;
+}
+
+@keyframes logo-glitch {
+  0%, 90%, 100% { transform: translate(0); }
+  5% { transform: translate(-1px, 1px); }
+  10% { transform: translate(1px, -1px); }
+  15% { transform: translate(-1px, -1px); }
+  20% { transform: translate(1px, 1px); }
 }
 
 .logo-glow {
@@ -99,7 +148,12 @@ body {
   background: var(--accent-neon-cyan);
   filter: blur(20px);
   opacity: 0.3;
-  z-index: -1;
+  animation: logo-pulse 2s ease-in-out infinite;
+}
+
+@keyframes logo-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
 }
 
 .nav-menu {
@@ -107,20 +161,25 @@ body {
   gap: 2rem;
 }
 
+/* Enhanced Navigation Styling */
 .nav-link {
   color: var(--text-light);
   text-decoration: none;
   font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: all 0.3s ease;
   position: relative;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .nav-link:hover,
 .nav-link.active {
   color: var(--accent-neon-cyan);
   text-shadow: var(--shadow-neon);
+  background: rgba(0, 255, 255, 0.1);
+  box-shadow: var(--glow-cyan);
 }
 
 .nav-link::after {
@@ -130,7 +189,7 @@ body {
   left: 50%;
   width: 0;
   height: 2px;
-  background: var(--accent-neon-cyan);
+  background: linear-gradient(90deg, var(--accent-neon-cyan), var(--accent-neon-pink));
   transition: all 0.3s ease;
   transform: translateX(-50%);
 }
@@ -146,14 +205,14 @@ body {
   align-items: center;
 }
 
+/* Enhanced Search and Cart Buttons */
 .search-btn,
-.cart-btn,
-.auth-btn {
+.cart-btn {
   background: transparent;
   border: 1px solid var(--accent-neon-cyan);
   color: var(--accent-neon-cyan);
   padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
@@ -161,11 +220,11 @@ body {
 }
 
 .search-btn:hover,
-.cart-btn:hover,
-.auth-btn:hover {
+.cart-btn:hover {
   background: var(--accent-neon-cyan);
   color: var(--primary-dark);
-  box-shadow: var(--shadow-neon);
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-2px);
 }
 
 .cart-count {
@@ -349,24 +408,29 @@ body {
   flex-wrap: wrap;
 }
 
+/* Enhanced CTA Buttons */
 .cta-btn {
-  position: relative;
   padding: 1rem 2rem;
   border: 2px solid var(--accent-neon-cyan);
   background: transparent;
   color: var(--accent-neon-cyan);
-  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.1rem;
   font-weight: 600;
-  font-size: 1rem;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
   overflow: hidden;
-  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .cta-btn.primary {
-  border-color: var(--accent-neon-cyan);
-  color: var(--accent-neon-cyan);
+  background: var(--accent-neon-cyan);
+  color: var(--primary-dark);
+  box-shadow: var(--glow-cyan);
 }
 
 .cta-btn.secondary {
@@ -375,31 +439,28 @@ body {
 }
 
 .cta-btn:hover {
-  background: var(--accent-neon-cyan);
-  color: var(--primary-dark);
-  box-shadow: var(--shadow-neon);
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: var(--glow-cyan);
 }
 
 .cta-btn.secondary:hover {
   background: var(--accent-neon-pink);
-  box-shadow: var(--shadow-pink);
+  color: var(--primary-dark);
+  box-shadow: var(--glow-pink);
 }
 
 .btn-glow {
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--accent-neon-cyan);
-  filter: blur(10px);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
 }
 
 .cta-btn:hover .btn-glow {
-  opacity: 0.3;
+  left: 100%;
 }
 
 .hero-visual {
@@ -476,32 +537,52 @@ body {
   margin-top: 2rem;
 }
 
+/* Enhanced Product Cards */
 .product-card {
   background: var(--card-background);
-  border: 1px solid var(--accent-neon-cyan);
-  border-radius: 8px;
-  padding: 1rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: var(--glass-border);
+  border-radius: 16px;
+  padding: 1.5rem;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
 
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.product-card:hover::before {
+  left: 100%;
+}
+
 .product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-neon);
-  border-color: var(--accent-neon-pink);
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: var(--glass-shadow), var(--glow-cyan);
+  border-color: var(--accent-neon-cyan);
 }
 
 .product-image {
   width: 100%;
-  height: 200px;
-  background: var(--secondary-dark);
-  border-radius: 4px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 12px;
   margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+  box-shadow: var(--glow-cyan);
 }
 
 .product-title {
@@ -522,16 +603,21 @@ body {
   width: 100%;
   padding: 0.75rem;
   background: transparent;
-  border: 1px solid var(--accent-neon-cyan);
+  border: 2px solid var(--accent-neon-cyan);
   color: var(--accent-neon-cyan);
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .add-to-cart-btn:hover {
   background: var(--accent-neon-cyan);
   color: var(--primary-dark);
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-2px);
 }
 
 /* Exchange Preview */
@@ -793,4 +879,70 @@ body {
   .section-title {
     font-size: 2rem;
   }
+} 
+
+/* Auth Button - Special Styling */
+.auth-btn {
+    background: linear-gradient(45deg, var(--accent-neon-cyan), var(--accent-neon-pink));
+    color: var(--primary-dark);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-family: 'Orbitron', monospace;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.5),
+        0 0 40px rgba(255, 0, 255, 0.3);
+}
+
+.auth-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.auth-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 
+        0 0 30px rgba(0, 255, 255, 0.8),
+        0 0 60px rgba(255, 0, 255, 0.5),
+        0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.auth-btn:hover::before {
+    left: 100%;
+}
+
+.auth-btn:active {
+    transform: translateY(0) scale(1.02);
+}
+
+/* Auth Button Animation */
+@keyframes auth-pulse {
+    0%, 100% {
+        box-shadow: 
+            0 0 20px rgba(0, 255, 255, 0.5),
+            0 0 40px rgba(255, 0, 255, 0.3);
+    }
+    50% {
+        box-shadow: 
+            0 0 30px rgba(0, 255, 255, 0.8),
+            0 0 60px rgba(255, 0, 255, 0.5);
+    }
+}
+
+.auth-btn {
+    animation: auth-pulse 3s ease-in-out infinite;
 } 
