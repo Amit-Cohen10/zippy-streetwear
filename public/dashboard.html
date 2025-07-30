@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Zippy Streetwear</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cyberpunk-background">
+        <div class="grid-overlay"></div>
+        <div class="neon-particles"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="cyber-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/" class="logo">ZIPPY</a>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/products" class="nav-link">Shop</a>
+                <a href="/exchange" class="nav-link">Exchange</a>
+                <a href="/community" class="nav-link">Community</a>
+                <a href="/brands" class="nav-link">Brands</a>
+                <a href="/dashboard" class="nav-link active">Dashboard</a>
+            </div>
+            <div class="nav-actions">
+                <button class="cart-btn" id="cartBtn">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="auth-btn" id="authBtn">Login</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="dashboard">
+        <div class="container">
+            <!-- Dashboard Header -->
+            <section class="dashboard-header">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <img src="/images/avatar.jpg" alt="User Avatar" id="userAvatar" onerror="this.src='/images/default-avatar.jpg'">
+                    </div>
+                    <div class="user-details">
+                        <h1 class="user-name" id="userName">Cyber User</h1>
+                        <p class="user-email" id="userEmail">user@zippy.com</p>
+                        <div class="user-stats">
+                            <span class="stat">Member since <span id="joinDate">2024</span></span>
+                            <span class="stat">Exchange rating: <span id="exchangeRating">4.8</span>⭐</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-actions">
+                    <button class="cyber-btn secondary" id="editProfileBtn">Edit Profile</button>
+                    <button class="cyber-btn primary" id="logoutBtn">Logout</button>
+                </div>
+            </section>
+
+            <!-- Dashboard Navigation -->
+            <section class="dashboard-nav">
+                <div class="nav-tabs">
+                    <button class="tab-btn active" data-tab="overview">Overview</button>
+                    <button class="tab-btn" data-tab="orders">My Orders</button>
+                    <button class="tab-btn" data-tab="exchanges">My Exchanges</button>
+                    <button class="tab-btn" data-tab="wishlist">Wishlist</button>
+                    <button class="tab-btn" data-tab="settings">Settings</button>
+                </div>
+            </section>
+
+            <!-- Dashboard Content -->
+            <section class="dashboard-content">
+                <!-- Overview Tab -->
+                <div class="tab-content active" id="overview">
+                    <div class="overview-grid">
+                        <div class="overview-card cyber-card">
+                            <h3>Recent Activity</h3>
+                            <div class="activity-list" id="recentActivity">
+                                <!-- Activity items will be populated here -->
+                            </div>
+                        </div>
+                        <div class="overview-card cyber-card">
+                            <h3>Quick Stats</h3>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <span class="stat-number" id="totalOrders">12</span>
+                                    <span class="stat-label">Orders</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="totalExchanges">8</span>
+                                    <span class="stat-label">Exchanges</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="wishlistItems">15</span>
+                                    <span class="stat-label">Wishlist</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="exchangeRating">4.8</span>
+                                    <span class="stat-label">Rating</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders Tab -->
+                <div class="tab-content" id="orders">
+                    <div class="orders-container">
+                        <div class="orders-header">
+                            <h2>My Orders</h2>
+                            <div class="order-filters">
+                                <select id="orderStatusFilter" class="cyber-select">
+                                    <option value="all">All Orders</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="shipped">Shipped</option>
+                                    <option value="delivered">Delivered</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="orders-list" id="ordersList">
+                            <!-- Orders will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exchanges Tab -->
+                <div class="tab-content" id="exchanges">
+                    <div class="exchanges-container">
+                        <div class="exchanges-header">
+                            <h2>My Exchanges</h2>
+                            <button class="cyber-btn primary" id="createExchangeBtn">Create Exchange</button>
+                        </div>
+                        <div class="exchanges-tabs">
+                            <button class="exchange-tab active" data-status="active">Active</button>
+                            <button class="exchange-tab" data-status="pending">Pending</button>
+                            <button class="exchange-tab" data-status="completed">Completed</button>
+                        </div>
+                        <div class="exchanges-list" id="exchangesList">
+                            <!-- Exchanges will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wishlist Tab -->
+                <div class="tab-content" id="wishlist">
+                    <div class="wishlist-container">
+                        <div class="wishlist-header">
+                            <h2>My Wishlist</h2>
+                            <button class="cyber-btn secondary" id="clearWishlistBtn">Clear All</button>
+                        </div>
+                        <div class="wishlist-grid" id="wishlistGrid">
+                            <!-- Wishlist items will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="tab-content" id="settings">
+                    <div class="settings-container">
+                        <div class="settings-section">
+                            <h3>Profile Settings</h3>
+                            <form id="profileForm" class="settings-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="displayName">Display Name</label>
+                                        <input type="text" id="displayName" class="cyber-input" value="Cyber User">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" id="email" class="cyber-input" value="user@zippy.com">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="phone">Phone</label>
+                                        <input type="tel" id="phone" class="cyber-input" value="+1 (555) 123-4567">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="location">Location</label>
+                                        <input type="text" id="location" class="cyber-input" value="Neo Tokyo">
+                                    </div>
+                                </div>
+                                <button type="submit" class="cyber-btn primary">Update Profile</button>
+                            </form>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Preferences</h3>
+                            <form id="preferencesForm" class="settings-form">
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="darkMode" checked>
+                                        <span class="checkmark"></span>
+                                        Dark Mode
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="emailNotifications" checked>
+                                        <span class="checkmark"></span>
+                                        Email Notifications
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="exchangeNotifications" checked>
+                                        <span class="checkmark"></span>
+                                        Exchange Notifications
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="language">Language</label>
+                                    <select id="language" class="cyber-select">
+                                        <option value="en">English</option>
+                                        <option value="es">Spanish</option>
+                                        <option value="fr">French</option>
+                                        <option value="de">German</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="cyber-btn primary">Save Preferences</button>
+                            </form>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Security</h3>
+                            <form id="passwordForm" class="settings-form">
+                                <div class="form-group">
+                                    <label for="currentPassword">Current Password</label>
+                                    <input type="password" id="currentPassword" class="cyber-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="newPassword">New Password</label>
+                                    <input type="password" id="newPassword" class="cyber-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirm New Password</label>
+                                    <input type="password" id="confirmPassword" class="cyber-input">
+                                </div>
+                                <button type="submit" class="cyber-btn primary">Change Password</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="authTitle">Login</h2>
+                <button class="modal-close" id="closeAuthModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="authForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" class="cyber-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="cyber-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="cyber-btn primary">Login</button>
+                    </div>
+                    <div class="auth-switch">
+                        <span id="authSwitchText">Don't have an account?</span>
+                        <button type="button" class="link-btn" id="authSwitchBtn">Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Shopping Cart</h2>
+                <button class="modal-close" id="closeCartModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="cartItems" class="cart-items">
+                    <!-- Cart items will be populated here -->
+                </div>
+                <div class="cart-summary">
+                    <div class="cart-total">
+                        <span>Total:</span>
+                        <span id="cartTotal">$0.00</span>
+                    </div>
+                    <button class="cyber-btn primary" id="checkoutBtn">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/cart.js"></script>
+    <script src="scripts/main.js"></script>
+    <script>
+        // Dashboard specific functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const profileForm = document.getElementById('profileForm');
+            const preferencesForm = document.getElementById('preferencesForm');
+            const passwordForm = document.getElementById('passwordForm');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            // Event listeners
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetTab = btn.dataset.tab;
+                    switchTab(targetTab);
+                });
+            });
+
+            profileForm.addEventListener('submit', updateProfile);
+            preferencesForm.addEventListener('submit', updatePreferences);
+            passwordForm.addEventListener('submit', changePassword);
+            logoutBtn.addEventListener('click', logout);
+
+            // Load dashboard data
+            loadDashboardData();
+
+            function switchTab(tabName) {
+                // Update tab buttons
+                tabBtns.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.tab === tabName) {
+                        btn.classList.add('active');
+                    }
+                });
+
+                // Update tab content
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === tabName) {
+                        content.classList.add('active');
+                    }
+                });
+
+                // Load tab-specific data
+                loadTabData(tabName);
+            }
+
+            function loadDashboardData() {
+                loadUserInfo();
+                loadRecentActivity();
+                loadQuickStats();
+            }
+
+            function loadUserInfo() {
+                // Mock user data
+                const userData = {
+                    name: 'Cyber User',
+                    email: 'user@zippy.com',
+                    joinDate: '2024',
+                    exchangeRating: '4.8',
+                    avatar: '/images/avatar.jpg'
+                };
+
+                document.getElementById('userName').textContent = userData.name;
+                document.getElementById('userEmail').textContent = userData.email;
+                document.getElementById('joinDate').textContent = userData.joinDate;
+                document.getElementById('exchangeRating').textContent = userData.exchangeRating;
+            }
+
+            function loadRecentActivity() {
+                const activities = [
+                    { type: 'order', message: 'Order #1234 shipped', time: '2 hours ago' },
+                    { type: 'exchange', message: 'Exchange offer received', time: '1 day ago' },
+                    { type: 'wishlist', message: 'Item added to wishlist', time: '2 days ago' },
+                    { type: 'review', message: 'Review posted', time: '3 days ago' }
+                ];
+
+                const activityList = document.getElementById('recentActivity');
+                activityList.innerHTML = activities.map(activity => `
+                    <div class="activity-item">
+                        <span class="activity-icon">${getActivityIcon(activity.type)}</span>
+                        <div class="activity-content">
+                            <p class="activity-message">${activity.message}</p>
+                            <span class="activity-time">${activity.time}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function getActivityIcon(type) {
+                const icons = {
+                    order: '📦',
+                    exchange: '🔄',
+                    wishlist: '❤️',
+                    review: '⭐'
+                };
+                return icons[type] || '📝';
+            }
+
+            function loadQuickStats() {
+                // Stats are already set in HTML, but could be updated from API
+                console.log('Loading quick stats...');
+            }
+
+            function loadTabData(tabName) {
+                switch(tabName) {
+                    case 'orders':
+                        loadOrders();
+                        break;
+                    case 'exchanges':
+                        loadExchanges();
+                        break;
+                    case 'wishlist':
+                        loadWishlist();
+                        break;
+                    case 'settings':
+                        loadSettings();
+                        break;
+                }
+            }
+
+            function loadOrders() {
+                const orders = [
+                    {
+                        id: '1234',
+                        date: '2024-01-15',
+                        status: 'shipped',
+                        total: '$129.99',
+                        items: ['Neon Cyber Hoodie', 'Glitch Art Tee']
+                    },
+                    {
+                        id: '1233',
+                        date: '2024-01-10',
+                        status: 'delivered',
+                        total: '$89.99',
+                        items: ['Holographic Cargo Pants']
+                    }
+                ];
+
+                const ordersList = document.getElementById('ordersList');
+                ordersList.innerHTML = orders.map(order => `
+                    <div class="order-card cyber-card">
+                        <div class="order-header">
+                            <h4>Order #${order.id}</h4>
+                            <span class="order-status ${order.status}">${order.status}</span>
+                        </div>
+                        <div class="order-details">
+                            <p class="order-date">${order.date}</p>
+                            <p class="order-total">${order.total}</p>
+                            <p class="order-items">${order.items.join(', ')}</p>
+                        </div>
+                        <div class="order-actions">
+                            <button class="cyber-btn secondary">View Details</button>
+                            <button class="cyber-btn primary">Track Order</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function loadExchanges() {
+                const exchanges = [
+                    {
+                        id: 'EX001',
+                        title: 'Neon Hoodie Exchange',
+                        status: 'active',
+                        partner: 'CyberStylist',
+                        date: '2024-01-14'
+                    },
+                    {
+                        id: 'EX002',
+                        title: 'Glitch Tee Trade',
+                        status: 'completed',
+                        partner: 'StreetGuru',
+                        date: '2024-01-08'
+                    }
+                ];
+
+                const exchangesList = document.getElementById('exchangesList');
+                exchangesList.innerHTML = exchanges.map(exchange => `
+                    <div class="exchange-card cyber-card">
+                        <div class="exchange-header">
+                            <h4>${exchange.title}</h4>
+                            <span class="exchange-status ${exchange.status}">${exchange.status}</span>
+                        </div>
+                        <div class="exchange-details">
+                            <p class="exchange-partner">with ${exchange.partner}</p>
+                            <p class="exchange-date">${exchange.date}</p>
+                        </div>
+                        <div class="exchange-actions">
+                            <button class="cyber-btn secondary">View Details</button>
+                            <button class="cyber-btn primary">Message</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function loadWishlist() {
+                const wishlistItems = [
+                    { id: 1, name: 'LED Sneakers', price: '$199.99', image: '/images/items/sneakers.jpg' },
+                    { id: 2, name: 'Cyber Jacket', price: '$149.99', image: '/images/items/jacket.jpg' },
+                    { id: 3, name: 'Neon Glasses', price: '$79.99', image: '/images/items/glasses.jpg' }
+                ];
+
+                const wishlistGrid = document.getElementById('wishlistGrid');
+                wishlistGrid.innerHTML = wishlistItems.map(item => `
+                    <div class="wishlist-item cyber-card">
+                        <div class="item-image">
+                            <img src="${item.image}" alt="${item.name}" onerror="this.src='/images/placeholder.jpg'">
+                        </div>
+                        <div class="item-info">
+                            <h4 class="item-name">${item.name}</h4>
+                            <span class="item-price">${item.price}</span>
+                        </div>
+                        <div class="item-actions">
+                            <button class="cyber-btn primary">Add to Cart</button>
+                            <button class="cyber-btn secondary" onclick="removeFromWishlist(${item.id})">Remove</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function loadSettings() {
+                // Settings are already loaded in HTML
+                console.log('Settings loaded');
+            }
+
+            function updateProfile(e) {
+                e.preventDefault();
+                console.log('Profile updated');
+                // Implement profile update logic
+            }
+
+            function updatePreferences(e) {
+                e.preventDefault();
+                console.log('Preferences updated');
+                // Implement preferences update logic
+            }
+
+            function changePassword(e) {
+                e.preventDefault();
+                console.log('Password changed');
+                // Implement password change logic
+            }
+
+            function logout() {
+                console.log('Logging out...');
+                // Implement logout logic
+                window.location.href = '/';
+            }
+        });
+
+        // Global functions
+        function removeFromWishlist(itemId) {
+            console.log('Removing item from wishlist:', itemId);
+            // Implement remove from wishlist logic
+        }
+    </script>
+</body>
+</html> 

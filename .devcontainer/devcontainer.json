@@ -1,0 +1,14 @@
+{
+    "name": "Zippy Streetwear",
+    "image": "node:18",
+    "forwardPorts": [3000],
+    "postCreateCommand": "npm install",
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "ms-vscode.vscode-typescript-next",
+          "bradlc.vscode-tailwindcss"
+        ]
+      }
+    }
+  }

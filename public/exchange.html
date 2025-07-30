@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exchange Hub - Zippy Streetwear</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cyberpunk-background">
+        <div class="grid-overlay"></div>
+        <div class="neon-particles"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="cyber-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/" class="logo">ZIPPY</a>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/products" class="nav-link">Shop</a>
+                <a href="/exchange" class="nav-link active">Exchange</a>
+                <a href="/community" class="nav-link">Community</a>
+                <a href="/brands" class="nav-link">Brands</a>
+                <a href="/dashboard" class="nav-link">Dashboard</a>
+            </div>
+            <div class="nav-actions">
+                <button class="cart-btn" id="cartBtn">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="auth-btn" id="authBtn">Login</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="exchange-hub">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <h1 class="cyber-title">Exchange Hub</h1>
+                    <p class="hero-subtitle">Trade your streetwear with the community. Build connections through fashion.</p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="activeExchanges">0</span>
+                            <span class="stat-label">Active Exchanges</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="completedExchanges">0</span>
+                            <span class="stat-label">Completed</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="communityMembers">0</span>
+                            <span class="stat-label">Members</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Exchange Controls -->
+            <section class="exchange-controls">
+                <div class="controls-container">
+                    <div class="search-filter">
+                        <input type="text" id="exchangeSearch" placeholder="Search exchanges..." class="cyber-input">
+                        <select id="categoryFilter" class="cyber-select">
+                            <option value="">All Categories</option>
+                            <option value="hoodies">Hoodies</option>
+                            <option value="t-shirts">T-Shirts</option>
+                            <option value="pants">Pants</option>
+                            <option value="shoes">Shoes</option>
+                            <option value="accessories">Accessories</option>
+                        </select>
+                        <select id="sizeFilter" class="cyber-select">
+                            <option value="">All Sizes</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                    </div>
+                    <button class="create-exchange-btn" id="createExchangeBtn">
+                        <span class="btn-icon">+</span>
+                        Create Exchange
+                    </button>
+                </div>
+            </section>
+
+            <!-- Exchange Grid -->
+            <section class="exchange-grid">
+                <div class="grid-container" id="exchangeGrid">
+                    <!-- Exchange items will be populated here -->
+                </div>
+            </section>
+
+            <!-- Exchange Modal -->
+            <div class="modal" id="exchangeModal">
+                <div class="modal-content cyber-modal">
+                    <div class="modal-header">
+                        <h2 class="modal-title">Create New Exchange</h2>
+                        <button class="modal-close" id="closeModal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="exchangeForm" class="exchange-form">
+                            <div class="form-group">
+                                <label for="exchangeTitle">Exchange Title</label>
+                                <input type="text" id="exchangeTitle" class="cyber-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="exchangeDescription">Description</label>
+                                <textarea id="exchangeDescription" class="cyber-textarea" rows="3" required></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="offeredItems">Items You're Offering</label>
+                                    <select id="offeredItems" class="cyber-select" multiple>
+                                        <!-- Will be populated with user's items -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="requestedItems">Items You Want</label>
+                                    <select id="requestedItems" class="cyber-select" multiple>
+                                        <!-- Will be populated with available items -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="cyber-btn secondary" id="cancelExchange">Cancel</button>
+                                <button type="submit" class="cyber-btn primary">Create Exchange</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="authTitle">Login</h2>
+                <button class="modal-close" id="closeAuthModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="authForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" class="cyber-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="cyber-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="cyber-btn primary">Login</button>
+                    </div>
+                    <div class="auth-switch">
+                        <span id="authSwitchText">Don't have an account?</span>
+                        <button type="button" class="link-btn" id="authSwitchBtn">Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Shopping Cart</h2>
+                <button class="modal-close" id="closeCartModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="cartItems" class="cart-items">
+                    <!-- Cart items will be populated here -->
+                </div>
+                <div class="cart-summary">
+                    <div class="cart-total">
+                        <span>Total:</span>
+                        <span id="cartTotal">$0.00</span>
+                    </div>
+                    <button class="cyber-btn primary" id="checkoutBtn">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/cart.js"></script>
+    <script src="scripts/main.js"></script>
+    <script>
+        // Exchange Hub specific functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const exchangeGrid = document.getElementById('exchangeGrid');
+            const createExchangeBtn = document.getElementById('createExchangeBtn');
+            const exchangeModal = document.getElementById('exchangeModal');
+            const closeModal = document.getElementById('closeModal');
+            const exchangeForm = document.getElementById('exchangeForm');
+            const exchangeSearch = document.getElementById('exchangeSearch');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const sizeFilter = document.getElementById('sizeFilter');
+
+            // Load exchanges
+            loadExchanges();
+
+            // Event listeners
+            createExchangeBtn.addEventListener('click', () => {
+                exchangeModal.style.display = 'flex';
+            });
+
+            closeModal.addEventListener('click', () => {
+                exchangeModal.style.display = 'none';
+            });
+
+            exchangeForm.addEventListener('submit', handleCreateExchange);
+            exchangeSearch.addEventListener('input', filterExchanges);
+            categoryFilter.addEventListener('change', filterExchanges);
+            sizeFilter.addEventListener('change', filterExchanges);
+
+            function loadExchanges() {
+                fetch('/api/exchanges')
+                    .then(response => response.json())
+                    .then(data => {
+                        displayExchanges(data);
+                        updateStats(data);
+                    })
+                    .catch(error => {
+                        console.error('Error loading exchanges:', error);
+                    });
+            }
+
+            function displayExchanges(exchanges) {
+                exchangeGrid.innerHTML = '';
+                
+                exchanges.forEach(exchange => {
+                    const exchangeCard = createExchangeCard(exchange);
+                    exchangeGrid.appendChild(exchangeCard);
+                });
+            }
+
+            function createExchangeCard(exchange) {
+                const card = document.createElement('div');
+                card.className = 'exchange-card cyber-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <h3 class="card-title">${exchange.title}</h3>
+                        <span class="exchange-status ${exchange.status}">${exchange.status}</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-description">${exchange.description}</p>
+                        <div class="exchange-items">
+                            <div class="offered-items">
+                                <h4>Offering:</h4>
+                                <div class="items-list">
+                                    ${exchange.offeredItems.map(item => `
+                                        <span class="item-tag">${item.title}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            <div class="requested-items">
+                                <h4>Wanting:</h4>
+                                <div class="items-list">
+                                    ${exchange.requestedItems.map(item => `
+                                        <span class="item-tag">${item.title}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="cyber-btn secondary" onclick="viewExchange('${exchange.id}')">View Details</button>
+                        <button class="cyber-btn primary" onclick="respondToExchange('${exchange.id}')">Respond</button>
+                    </div>
+                `;
+                return card;
+            }
+
+            function updateStats(exchanges) {
+                document.getElementById('activeExchanges').textContent = 
+                    exchanges.filter(e => e.status === 'pending').length;
+                document.getElementById('completedExchanges').textContent = 
+                    exchanges.filter(e => e.status === 'completed').length;
+                document.getElementById('communityMembers').textContent = 
+                    new Set(exchanges.flatMap(e => [e.initiatorId, e.recipientId])).size;
+            }
+
+            function handleCreateExchange(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    title: document.getElementById('exchangeTitle').value,
+                    description: document.getElementById('exchangeDescription').value,
+                    offeredItems: Array.from(document.getElementById('offeredItems').selectedOptions).map(opt => opt.value),
+                    requestedItems: Array.from(document.getElementById('requestedItems').selectedOptions).map(opt => opt.value)
+                };
+
+                fetch('/api/exchanges/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        exchangeModal.style.display = 'none';
+                        exchangeForm.reset();
+                        loadExchanges();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error creating exchange:', error);
+                });
+            }
+
+            function filterExchanges() {
+                const searchTerm = exchangeSearch.value.toLowerCase();
+                const category = categoryFilter.value;
+                const size = sizeFilter.value;
+
+                // This would typically filter on the server side
+                // For now, we'll just reload all exchanges
+                loadExchanges();
+            }
+        });
+
+        // Global functions for exchange interactions
+        function viewExchange(exchangeId) {
+            // Navigate to exchange detail page or open modal
+            console.log('Viewing exchange:', exchangeId);
+        }
+
+        function respondToExchange(exchangeId) {
+            // Open response modal
+            console.log('Responding to exchange:', exchangeId);
+        }
+    </script>
+</body>
+</html> 

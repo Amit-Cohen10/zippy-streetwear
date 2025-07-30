@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Zippy Streetwear</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h1 class="logo-text">ZIPPY</h1>
+                <div class="logo-glow"></div>
+            </div>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/products" class="nav-link">Shop</a>
+                <a href="/exchange" class="nav-link">Exchange</a>
+                <a href="/community" class="nav-link">Community</a>
+                <a href="/admin" class="nav-link active">Admin</a>
+            </div>
+            <div class="nav-actions">
+                <button class="auth-btn" id="authBtn">Login</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h3 id="authTitle">Login</h3>
+                <button class="close-btn" id="closeAuth">×</button>
+            </div>
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Login</button>
+                <button class="auth-tab" data-tab="register">Register</button>
+            </div>
+            <form class="auth-form" id="loginForm">
+                <input type="text" placeholder="Username or Email" required>
+                <input type="password" placeholder="Password" required>
+                <label class="remember-me">
+                    <input type="checkbox">
+                    <span>Remember me</span>
+                </label>
+                <button type="submit">Login</button>
+            </form>
+            <form class="auth-form hidden" id="registerForm">
+                <input type="text" placeholder="Username" required>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <input type="password" placeholder="Confirm Password" required>
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="admin-page">
+        <div class="container">
+            <!-- Admin Header -->
+            <div class="admin-header">
+                <h1 class="admin-title">Admin Panel</h1>
+                <p class="admin-subtitle">Manage your Zippy platform</p>
+            </div>
+
+            <!-- Admin Tabs -->
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="dashboard">Dashboard</button>
+                <button class="admin-tab" data-tab="activity">Activity Logs</button>
+                <button class="admin-tab" data-tab="users">User Management</button>
+                <button class="admin-tab" data-tab="products">Product Management</button>
+                <button class="admin-tab" data-tab="exchanges">Exchange Moderation</button>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div class="admin-content" id="dashboardTab">
+                <div class="dashboard-grid">
+                    <!-- Analytics Cards -->
+                    <div class="analytics-card">
+                        <h3>Total Revenue</h3>
+                        <div class="analytics-value" id="totalRevenue">$0.00</div>
+                        <div class="analytics-change positive">+12.5%</div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Total Orders</h3>
+                        <div class="analytics-value" id="totalOrders">0</div>
+                        <div class="analytics-change positive">+8.3%</div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Active Users</h3>
+                        <div class="analytics-value" id="activeUsers">0</div>
+                        <div class="analytics-change positive">+15.2%</div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Exchanges</h3>
+                        <div class="analytics-value" id="totalExchanges">0</div>
+                        <div class="analytics-change positive">+22.1%</div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list" id="recentActivityList">
+                        <!-- Activity items will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- System Health -->
+                <div class="system-health">
+                    <h3>System Health</h3>
+                    <div class="health-status" id="systemHealth">
+                        <div class="health-item">
+                            <span class="health-label">Database</span>
+                            <span class="health-status-indicator online">Online</span>
+                        </div>
+                        <div class="health-item">
+                            <span class="health-label">API</span>
+                            <span class="health-status-indicator online">Online</span>
+                        </div>
+                        <div class="health-item">
+                            <span class="health-label">File System</span>
+                            <span class="health-status-indicator online">Online</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Logs Tab -->
+            <div class="admin-content hidden" id="activityTab">
+                <div class="activity-filters">
+                    <select id="activityFilter">
+                        <option value="">All Activities</option>
+                        <option value="login">Login</option>
+                        <option value="register">Register</option>
+                        <option value="order_placed">Order Placed</option>
+                        <option value="exchange_create">Exchange Created</option>
+                        <option value="product_create">Product Created</option>
+                    </select>
+                    <input type="date" id="activityStartDate">
+                    <input type="date" id="activityEndDate">
+                    <button class="filter-btn" id="filterActivity">Filter</button>
+                </div>
+                <div class="activity-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Details</th>
+                                <th>Timestamp</th>
+                                <th>IP</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityTableBody">
+                            <!-- Activity rows will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- User Management Tab -->
+            <div class="admin-content hidden" id="usersTab">
+                <div class="user-filters">
+                    <input type="text" id="userSearch" placeholder="Search users...">
+                    <select id="userRoleFilter">
+                        <option value="">All Roles</option>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <button class="filter-btn" id="filterUsers">Filter</button>
+                </div>
+                <div class="user-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Join Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <!-- User rows will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Product Management Tab -->
+            <div class="admin-content hidden" id="productsTab">
+                <div class="product-actions">
+                    <button class="add-product-btn" id="addProductBtn">Add New Product</button>
+                </div>
+                <div class="product-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Brand</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody">
+                            <!-- Product rows will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Exchange Moderation Tab -->
+            <div class="admin-content hidden" id="exchangesTab">
+                <div class="exchange-filters">
+                    <select id="exchangeStatusFilter">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="accepted">Accepted</option>
+                        <option value="rejected">Rejected</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    <button class="filter-btn" id="filterExchanges">Filter</button>
+                </div>
+                <div class="exchange-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Initiator</th>
+                                <th>Recipient</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="exchangeTableBody">
+                            <!-- Exchange rows will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-text">ZIPPY</div>
+        </div>
+    </div>
+
+    <script src="/scripts/main.js"></script>
+    <script src="/scripts/auth.js"></script>
+    <script src="/scripts/admin.js"></script>
+</body>
+</html> 

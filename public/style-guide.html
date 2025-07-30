@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Guide - Zippy Streetwear</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cyberpunk-background">
+        <div class="grid-overlay"></div>
+        <div class="neon-particles"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="cyber-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/" class="logo">ZIPPY</a>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/products" class="nav-link">Shop</a>
+                <a href="/exchange" class="nav-link">Exchange</a>
+                <a href="/community" class="nav-link">Community</a>
+                <a href="/brands" class="nav-link">Brands</a>
+                <a href="/style-guide" class="nav-link active">Style Guide</a>
+            </div>
+            <div class="nav-actions">
+                <button class="cart-btn" id="cartBtn">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="auth-btn" id="authBtn">Login</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="style-guide">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <h1 class="cyber-title">Style Guide</h1>
+                    <p class="hero-subtitle">Master the art of cyberpunk streetwear with our comprehensive style guide.</p>
+                </div>
+            </section>
+
+            <!-- Style Categories -->
+            <section class="style-categories">
+                <h2 class="section-title">🎨 Style Categories</h2>
+                <div class="categories-grid">
+                    <div class="category-card cyber-card" data-category="cyberpunk">
+                        <div class="category-icon">🤖</div>
+                        <h3>Cyberpunk</h3>
+                        <p>Neon accents, futuristic silhouettes, and digital aesthetics</p>
+                    </div>
+                    <div class="category-card cyber-card" data-category="streetwear">
+                        <div class="category-icon">🏙️</div>
+                        <h3>Streetwear</h3>
+                        <p>Urban culture meets high fashion</p>
+                    </div>
+                    <div class="category-card cyber-card" data-category="techwear">
+                        <div class="category-icon">⚡</div>
+                        <h3>Techwear</h3>
+                        <p>Functional fashion for the digital age</p>
+                    </div>
+                    <div class="category-card cyber-card" data-category="vintage">
+                        <div class="category-icon">📼</div>
+                        <h3>Vintage</h3>
+                        <p>Retro styles with modern twists</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Size Guide -->
+            <section class="size-guide">
+                <h2 class="section-title">📏 Size Guide</h2>
+                <div class="size-guide-content">
+                    <div class="size-chart">
+                        <h3>International Size Chart</h3>
+                        <table class="size-table">
+                            <thead>
+                                <tr>
+                                    <th>US</th>
+                                    <th>EU</th>
+                                    <th>UK</th>
+                                    <th>Chest (cm)</th>
+                                    <th>Waist (cm)</th>
+                                    <th>Hips (cm)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>XS</td>
+                                    <td>34-36</td>
+                                    <td>6-8</td>
+                                    <td>81-86</td>
+                                    <td>66-71</td>
+                                    <td>86-91</td>
+                                </tr>
+                                <tr>
+                                    <td>S</td>
+                                    <td>38-40</td>
+                                    <td>10-12</td>
+                                    <td>86-91</td>
+                                    <td>71-76</td>
+                                    <td>91-96</td>
+                                </tr>
+                                <tr>
+                                    <td>M</td>
+                                    <td>42-44</td>
+                                    <td>14-16</td>
+                                    <td>91-96</td>
+                                    <td>76-81</td>
+                                    <td>96-101</td>
+                                </tr>
+                                <tr>
+                                    <td>L</td>
+                                    <td>46-48</td>
+                                    <td>18-20</td>
+                                    <td>96-101</td>
+                                    <td>81-86</td>
+                                    <td>101-106</td>
+                                </tr>
+                                <tr>
+                                    <td>XL</td>
+                                    <td>50-52</td>
+                                    <td>22-24</td>
+                                    <td>101-106</td>
+                                    <td>86-91</td>
+                                    <td>106-111</td>
+                                </tr>
+                                <tr>
+                                    <td>XXL</td>
+                                    <td>54-56</td>
+                                    <td>26-28</td>
+                                    <td>106-111</td>
+                                    <td>91-96</td>
+                                    <td>111-116</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="measurement-guide">
+                        <h3>How to Measure</h3>
+                        <div class="measurement-steps">
+                            <div class="step">
+                                <span class="step-number">1</span>
+                                <div class="step-content">
+                                    <h4>Chest</h4>
+                                    <p>Measure around the fullest part of your chest, keeping the tape horizontal.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">2</span>
+                                <div class="step-content">
+                                    <h4>Waist</h4>
+                                    <p>Measure around your natural waistline, keeping the tape comfortably loose.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">3</span>
+                                <div class="step-content">
+                                    <h4>Hips</h4>
+                                    <p>Measure around the fullest part of your hips, keeping the tape horizontal.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Care Instructions -->
+            <section class="care-instructions">
+                <h2 class="section-title">🧺 Care Instructions</h2>
+                <div class="care-content">
+                    <div class="care-item">
+                        <h3>Washing</h3>
+                        <ul>
+                            <li>Machine wash cold (30°C/86°F)</li>
+                            <li>Use mild detergent</li>
+                            <li>Turn garments inside out</li>
+                            <li>Wash similar colors together</li>
+                        </ul>
+                    </div>
+                    <div class="care-item">
+                        <h3>Drying</h3>
+                        <ul>
+                            <li>Air dry when possible</li>
+                            <li>Tumble dry low if necessary</li>
+                            <li>Remove promptly to prevent wrinkles</li>
+                            <li>Avoid direct sunlight</li>
+                        </ul>
+                    </div>
+                    <div class="care-item">
+                        <h3>Ironing</h3>
+                        <ul>
+                            <li>Iron on low heat</li>
+                            <li>Use steam setting if available</li>
+                            <li>Iron inside out for dark colors</li>
+                            <li>Test on inconspicuous area first</li>
+                        </ul>
+                    </div>
+                    <div class="care-item">
+                        <h3>Storage</h3>
+                        <ul>
+                            <li>Store in cool, dry place</li>
+                            <li>Use padded hangers for delicate items</li>
+                            <li>Keep away from direct sunlight</li>
+                            <li>Consider garment bags for special pieces</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Outfit Builder -->
+            <section class="outfit-builder">
+                <h2 class="section-title">👕 Outfit Builder</h2>
+                <div class="builder-container">
+                    <div class="builder-controls">
+                        <div class="control-group">
+                            <label for="styleSelect">Style Category</label>
+                            <select id="styleSelect" class="cyber-select">
+                                <option value="cyberpunk">Cyberpunk</option>
+                                <option value="streetwear">Streetwear</option>
+                                <option value="techwear">Techwear</option>
+                                <option value="vintage">Vintage</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label for="occasionSelect">Occasion</label>
+                            <select id="occasionSelect" class="cyber-select">
+                                <option value="casual">Casual</option>
+                                <option value="street">Street</option>
+                                <option value="night">Night Out</option>
+                                <option value="formal">Formal</option>
+                            </select>
+                        </div>
+                        <button class="cyber-btn primary" id="generateOutfit">Generate Outfit</button>
+                    </div>
+                    <div class="outfit-display" id="outfitDisplay">
+                        <div class="outfit-preview">
+                            <div class="outfit-item top">
+                                <span class="item-label">Top</span>
+                                <div class="item-placeholder">Select style to generate</div>
+                            </div>
+                            <div class="outfit-item bottom">
+                                <span class="item-label">Bottom</span>
+                                <div class="item-placeholder">Select style to generate</div>
+                            </div>
+                            <div class="outfit-item shoes">
+                                <span class="item-label">Shoes</span>
+                                <div class="item-placeholder">Select style to generate</div>
+                            </div>
+                            <div class="outfit-item accessories">
+                                <span class="item-label">Accessories</span>
+                                <div class="item-placeholder">Select style to generate</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Style Tips -->
+            <section class="style-tips">
+                <h2 class="section-title">💡 Style Tips</h2>
+                <div class="tips-grid">
+                    <div class="tip-card cyber-card">
+                        <div class="tip-icon">🎨</div>
+                        <h3>Color Coordination</h3>
+                        <p>Start with a neutral base and add neon accents. Don't be afraid to mix bold colors, but keep it to 2-3 main colors per outfit.</p>
+                    </div>
+                    <div class="tip-card cyber-card">
+                        <div class="tip-icon">📐</div>
+                        <h3>Layering</h3>
+                        <p>Master the art of layering with different textures and lengths. Start with a base layer and build up with jackets, vests, or overshirts.</p>
+                    </div>
+                    <div class="tip-card cyber-card">
+                        <div class="tip-icon">⚡</div>
+                        <h3>Accessories</h3>
+                        <p>Accessories can make or break an outfit. Add cyberpunk elements like LED jewelry, reflective patches, or tech-inspired bags.</p>
+                    </div>
+                    <div class="tip-card cyber-card">
+                        <div class="tip-icon">👟</div>
+                        <h3>Footwear</h3>
+                        <p>Your shoes should complement your outfit's aesthetic. Chunky sneakers work well with most streetwear looks.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="authTitle">Login</h2>
+                <button class="modal-close" id="closeAuthModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="authForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" class="cyber-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="cyber-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="cyber-btn primary">Login</button>
+                    </div>
+                    <div class="auth-switch">
+                        <span id="authSwitchText">Don't have an account?</span>
+                        <button type="button" class="link-btn" id="authSwitchBtn">Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Shopping Cart</h2>
+                <button class="modal-close" id="closeCartModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="cartItems" class="cart-items">
+                    <!-- Cart items will be populated here -->
+                </div>
+                <div class="cart-summary">
+                    <div class="cart-total">
+                        <span>Total:</span>
+                        <span id="cartTotal">$0.00</span>
+                    </div>
+                    <button class="cyber-btn primary" id="checkoutBtn">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/cart.js"></script>
+    <script src="scripts/main.js"></script>
+    <script>
+        // Style Guide specific functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const styleSelect = document.getElementById('styleSelect');
+            const occasionSelect = document.getElementById('occasionSelect');
+            const generateOutfitBtn = document.getElementById('generateOutfit');
+            const outfitDisplay = document.getElementById('outfitDisplay');
+            const categoryCards = document.querySelectorAll('.category-card');
+
+            // Event listeners
+            generateOutfitBtn.addEventListener('click', generateOutfit);
+            
+            categoryCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const category = card.dataset.category;
+                    showStyleCategory(category);
+                });
+            });
+
+            function generateOutfit() {
+                const style = styleSelect.value;
+                const occasion = occasionSelect.value;
+                
+                // Mock outfit generation based on style and occasion
+                const outfits = {
+                    cyberpunk: {
+                        casual: {
+                            top: 'Neon Cyber Hoodie',
+                            bottom: 'Holographic Cargo Pants',
+                            shoes: 'LED Sneakers',
+                            accessories: 'Neon Glasses, LED Bracelet'
+                        },
+                        street: {
+                            top: 'Digital Distortion Tee',
+                            bottom: 'Reflective Joggers',
+                            shoes: 'Chunky Tech Sneakers',
+                            accessories: 'Cyber Backpack, Glow Sticks'
+                        },
+                        night: {
+                            top: 'Neon Mesh Top',
+                            bottom: 'Glow-in-the-Dark Pants',
+                            shoes: 'Neon Platform Boots',
+                            accessories: 'LED Necklace, Glow Earrings'
+                        }
+                    },
+                    streetwear: {
+                        casual: {
+                            top: 'Oversized Graphic Tee',
+                            bottom: 'Baggy Jeans',
+                            shoes: 'Chunky Sneakers',
+                            accessories: 'Baseball Cap, Chain Necklace'
+                        },
+                        street: {
+                            top: 'Hoodie with Graphic',
+                            bottom: 'Cargo Pants',
+                            shoes: 'High-Top Sneakers',
+                            accessories: 'Backpack, Watch'
+                        }
+                    }
+                };
+
+                const outfit = outfits[style]?.[occasion] || outfits.cyberpunk.casual;
+                
+                displayOutfit(outfit);
+            }
+
+            function displayOutfit(outfit) {
+                const outfitPreview = outfitDisplay.querySelector('.outfit-preview');
+                
+                outfitPreview.innerHTML = `
+                    <div class="outfit-item top">
+                        <span class="item-label">Top</span>
+                        <div class="item-content">${outfit.top}</div>
+                    </div>
+                    <div class="outfit-item bottom">
+                        <span class="item-label">Bottom</span>
+                        <div class="item-content">${outfit.bottom}</div>
+                    </div>
+                    <div class="outfit-item shoes">
+                        <span class="item-label">Shoes</span>
+                        <div class="item-content">${outfit.shoes}</div>
+                    </div>
+                    <div class="outfit-item accessories">
+                        <span class="item-label">Accessories</span>
+                        <div class="item-content">${outfit.accessories}</div>
+                    </div>
+                `;
+            }
+
+            function showStyleCategory(category) {
+                console.log('Showing style category:', category);
+                // Implement category-specific content display
+            }
+        });
+    </script>
+</body>
+</html> 

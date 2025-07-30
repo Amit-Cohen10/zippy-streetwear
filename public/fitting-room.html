@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Fitting Room - Zippy Streetwear</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cyberpunk-background">
+        <div class="grid-overlay"></div>
+        <div class="neon-particles"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="cyber-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/" class="logo">ZIPPY</a>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/products" class="nav-link">Shop</a>
+                <a href="/exchange" class="nav-link">Exchange</a>
+                <a href="/community" class="nav-link">Community</a>
+                <a href="/brands" class="nav-link">Brands</a>
+                <a href="/fitting-room" class="nav-link active">Fitting Room</a>
+            </div>
+            <div class="nav-actions">
+                <button class="cart-btn" id="cartBtn">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="auth-btn" id="authBtn">Login</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="fitting-room">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <h1 class="cyber-title">Virtual Fitting Room</h1>
+                    <p class="hero-subtitle">Try on clothes virtually with our AR-powered fitting room experience.</p>
+                </div>
+            </section>
+
+            <!-- Fitting Room Interface -->
+            <section class="fitting-interface">
+                <div class="interface-container">
+                    <div class="camera-view">
+                        <div class="camera-placeholder" id="cameraView">
+                            <div class="camera-overlay">
+                                <div class="camera-icon">📷</div>
+                                <p>Camera access required for AR try-on</p>
+                                <button class="cyber-btn primary" id="enableCamera">Enable Camera</button>
+                            </div>
+                        </div>
+                        <div class="camera-controls">
+                            <button class="control-btn" id="switchCamera">Switch Camera</button>
+                            <button class="control-btn" id="toggleAR">Toggle AR</button>
+                            <button class="control-btn" id="capturePhoto">Capture</button>
+                        </div>
+                    </div>
+                    
+                    <div class="fitting-panel">
+                        <div class="panel-section">
+                            <h3>Try On Items</h3>
+                            <div class="item-selector">
+                                <div class="category-tabs">
+                                    <button class="tab-btn active" data-category="tops">Tops</button>
+                                    <button class="tab-btn" data-category="bottoms">Bottoms</button>
+                                    <button class="tab-btn" data-category="outerwear">Outerwear</button>
+                                    <button class="tab-btn" data-category="accessories">Accessories</button>
+                                </div>
+                                <div class="items-grid" id="itemsGrid">
+                                    <!-- Items will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="panel-section">
+                            <h3>Size Recommendations</h3>
+                            <div class="size-recommendations" id="sizeRecommendations">
+                                <div class="recommendation-card">
+                                    <h4>Based on your measurements</h4>
+                                    <div class="size-suggestions">
+                                        <div class="size-suggestion">
+                                            <span class="size-label">Tops:</span>
+                                            <span class="size-value">M</span>
+                                        </div>
+                                        <div class="size-suggestion">
+                                            <span class="size-label">Bottoms:</span>
+                                            <span class="size-value">32</span>
+                                        </div>
+                                        <div class="size-suggestion">
+                                            <span class="size-label">Shoes:</span>
+                                            <span class="size-value">10</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Measurements Setup -->
+            <section class="measurements-setup">
+                <h2 class="section-title">📏 Set Your Measurements</h2>
+                <div class="measurements-container">
+                    <div class="measurements-form">
+                        <form id="measurementsForm" class="measurements-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="height">Height (cm)</label>
+                                    <input type="number" id="height" class="cyber-input" min="100" max="250" value="175">
+                                </div>
+                                <div class="form-group">
+                                    <label for="weight">Weight (kg)</label>
+                                    <input type="number" id="weight" class="cyber-input" min="30" max="200" value="70">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="chest">Chest (cm)</label>
+                                    <input type="number" id="chest" class="cyber-input" min="60" max="150" value="95">
+                                </div>
+                                <div class="form-group">
+                                    <label for="waist">Waist (cm)</label>
+                                    <input type="number" id="waist" class="cyber-input" min="50" max="150" value="80">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="hips">Hips (cm)</label>
+                                    <input type="number" id="hips" class="cyber-input" min="60" max="150" value="95">
+                                </div>
+                                <div class="form-group">
+                                    <label for="inseam">Inseam (cm)</label>
+                                    <input type="number" id="inseam" class="cyber-input" min="50" max="100" value="75">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="shoeSize">Shoe Size (US)</label>
+                                    <input type="number" id="shoeSize" class="cyber-input" min="5" max="15" value="10" step="0.5">
+                                </div>
+                                <div class="form-group">
+                                    <label for="bodyType">Body Type</label>
+                                    <select id="bodyType" class="cyber-select">
+                                        <option value="slim">Slim</option>
+                                        <option value="athletic">Athletic</option>
+                                        <option value="average">Average</option>
+                                        <option value="curvy">Curvy</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="cyber-btn primary">Update Measurements</button>
+                        </form>
+                    </div>
+                    <div class="measurements-visual">
+                        <div class="body-outline">
+                            <div class="outline-container">
+                                <div class="body-shape" id="bodyShape">
+                                    <!-- Body outline will be rendered here -->
+                                </div>
+                                <div class="measurement-points">
+                                    <div class="point chest" data-measurement="chest"></div>
+                                    <div class="point waist" data-measurement="waist"></div>
+                                    <div class="point hips" data-measurement="hips"></div>
+                                    <div class="point inseam" data-measurement="inseam"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Fit Predictor -->
+            <section class="fit-predictor">
+                <h2 class="section-title">🎯 Fit Predictor</h2>
+                <div class="predictor-container">
+                    <div class="predictor-input">
+                        <h3>Predict Fit for Any Item</h3>
+                        <div class="predictor-form">
+                            <div class="form-group">
+                                <label for="itemSelect">Select Item</label>
+                                <select id="itemSelect" class="cyber-select">
+                                    <option value="">Choose an item...</option>
+                                    <option value="neon-hoodie">Neon Cyber Hoodie</option>
+                                    <option value="glitch-tee">Glitch Art Tee</option>
+                                    <option value="holographic-pants">Holographic Cargo Pants</option>
+                                    <option value="led-sneakers">LED Sneakers</option>
+                                </select>
+                            </div>
+                            <button class="cyber-btn primary" id="predictFit">Predict Fit</button>
+                        </div>
+                    </div>
+                    <div class="predictor-results" id="predictorResults">
+                        <div class="fit-prediction">
+                            <h4>Fit Prediction</h4>
+                            <div class="prediction-details">
+                                <div class="prediction-item">
+                                    <span class="prediction-label">Size:</span>
+                                    <span class="prediction-value" id="predictedSize">-</span>
+                                </div>
+                                <div class="prediction-item">
+                                    <span class="prediction-label">Fit:</span>
+                                    <span class="prediction-value" id="predictedFit">-</span>
+                                </div>
+                                <div class="prediction-item">
+                                    <span class="prediction-label">Comfort:</span>
+                                    <span class="prediction-value" id="predictedComfort">-</span>
+                                </div>
+                                <div class="prediction-item">
+                                    <span class="prediction-label">Confidence:</span>
+                                    <span class="prediction-value" id="predictedConfidence">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Saved Outfits -->
+            <section class="saved-outfits">
+                <h2 class="section-title">💾 Saved Outfits</h2>
+                <div class="outfits-grid" id="savedOutfits">
+                    <!-- Saved outfits will be populated here -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="authTitle">Login</h2>
+                <button class="modal-close" id="closeAuthModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="authForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" class="cyber-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="cyber-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="cyber-btn primary">Login</button>
+                    </div>
+                    <div class="auth-switch">
+                        <span id="authSwitchText">Don't have an account?</span>
+                        <button type="button" class="link-btn" id="authSwitchBtn">Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Shopping Cart</h2>
+                <button class="modal-close" id="closeCartModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="cartItems" class="cart-items">
+                    <!-- Cart items will be populated here -->
+                </div>
+                <div class="cart-summary">
+                    <div class="cart-total">
+                        <span>Total:</span>
+                        <span id="cartTotal">$0.00</span>
+                    </div>
+                    <button class="cyber-btn primary" id="checkoutBtn">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/cart.js"></script>
+    <script src="scripts/main.js"></script>
+    <script>
+        // Virtual Fitting Room specific functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const enableCameraBtn = document.getElementById('enableCamera');
+            const measurementsForm = document.getElementById('measurementsForm');
+            const predictFitBtn = document.getElementById('predictFit');
+            const itemSelect = document.getElementById('itemSelect');
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const itemsGrid = document.getElementById('itemsGrid');
+
+            // Event listeners
+            enableCameraBtn.addEventListener('click', enableCamera);
+            measurementsForm.addEventListener('submit', updateMeasurements);
+            predictFitBtn.addEventListener('click', predictFit);
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    loadItems(btn.dataset.category);
+                });
+            });
+
+            // Load initial items
+            loadItems('tops');
+
+            function enableCamera() {
+                // Simulate camera access
+                const cameraView = document.getElementById('cameraView');
+                cameraView.innerHTML = `
+                    <div class="camera-active">
+                        <div class="ar-overlay">
+                            <div class="ar-item" id="arItem">
+                                <!-- AR item will be displayed here -->
+                            </div>
+                        </div>
+                        <div class="camera-status">Camera Active - AR Mode</div>
+                    </div>
+                `;
+            }
+
+            function loadItems(category) {
+                const items = {
+                    tops: [
+                        { id: 1, name: 'Neon Cyber Hoodie', image: '/images/items/hoodie.jpg', price: '$129.99' },
+                        { id: 2, name: 'Glitch Art Tee', image: '/images/items/tee.jpg', price: '$49.99' },
+                        { id: 3, name: 'Digital Mesh Top', image: '/images/items/mesh.jpg', price: '$79.99' }
+                    ],
+                    bottoms: [
+                        { id: 4, name: 'Holographic Cargo Pants', image: '/images/items/pants.jpg', price: '$89.99' },
+                        { id: 5, name: 'Reflective Joggers', image: '/images/items/joggers.jpg', price: '$69.99' }
+                    ],
+                    outerwear: [
+                        { id: 6, name: 'Cyber Jacket', image: '/images/items/jacket.jpg', price: '$149.99' },
+                        { id: 7, name: 'Neon Vest', image: '/images/items/vest.jpg', price: '$99.99' }
+                    ],
+                    accessories: [
+                        { id: 8, name: 'LED Cap', image: '/images/items/cap.jpg', price: '$39.99' },
+                        { id: 9, name: 'Glow Bracelet', image: '/images/items/bracelet.jpg', price: '$19.99' }
+                    ]
+                };
+
+                displayItems(items[category] || []);
+            }
+
+            function displayItems(items) {
+                itemsGrid.innerHTML = '';
+                
+                items.forEach(item => {
+                    const itemCard = document.createElement('div');
+                    itemCard.className = 'item-card cyber-card';
+                    itemCard.innerHTML = `
+                        <div class="item-image">
+                            <img src="${item.image}" alt="${item.name}" onerror="this.src='/images/placeholder.jpg'">
+                        </div>
+                        <div class="item-info">
+                            <h4 class="item-name">${item.name}</h4>
+                            <span class="item-price">${item.price}</span>
+                        </div>
+                        <button class="cyber-btn secondary" onclick="tryOnItem(${item.id})">Try On</button>
+                    `;
+                    itemsGrid.appendChild(itemCard);
+                });
+            }
+
+            function updateMeasurements(e) {
+                e.preventDefault();
+                
+                const measurements = {
+                    height: document.getElementById('height').value,
+                    weight: document.getElementById('weight').value,
+                    chest: document.getElementById('chest').value,
+                    waist: document.getElementById('waist').value,
+                    hips: document.getElementById('hips').value,
+                    inseam: document.getElementById('inseam').value,
+                    shoeSize: document.getElementById('shoeSize').value,
+                    bodyType: document.getElementById('bodyType').value
+                };
+
+                // Update size recommendations based on measurements
+                updateSizeRecommendations(measurements);
+                
+                console.log('Measurements updated:', measurements);
+            }
+
+            function updateSizeRecommendations(measurements) {
+                // Simple size calculation logic
+                const chest = parseInt(measurements.chest);
+                const waist = parseInt(measurements.waist);
+                
+                let topSize = 'M';
+                if (chest < 90) topSize = 'S';
+                else if (chest > 100) topSize = 'L';
+                
+                let bottomSize = '32';
+                if (waist < 75) bottomSize = '30';
+                else if (waist > 85) bottomSize = '34';
+                
+                const recommendations = document.getElementById('sizeRecommendations');
+                recommendations.innerHTML = `
+                    <div class="recommendation-card">
+                        <h4>Based on your measurements</h4>
+                        <div class="size-suggestions">
+                            <div class="size-suggestion">
+                                <span class="size-label">Tops:</span>
+                                <span class="size-value">${topSize}</span>
+                            </div>
+                            <div class="size-suggestion">
+                                <span class="size-label">Bottoms:</span>
+                                <span class="size-value">${bottomSize}</span>
+                            </div>
+                            <div class="size-suggestion">
+                                <span class="size-label">Shoes:</span>
+                                <span class="size-value">${measurements.shoeSize}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function predictFit() {
+                const selectedItem = itemSelect.value;
+                if (!selectedItem) return;
+
+                // Mock fit prediction
+                const predictions = {
+                    'neon-hoodie': { size: 'M', fit: 'Regular', comfort: 'High', confidence: '95%' },
+                    'glitch-tee': { size: 'L', fit: 'Oversized', comfort: 'Medium', confidence: '88%' },
+                    'holographic-pants': { size: '32', fit: 'Slim', comfort: 'High', confidence: '92%' },
+                    'led-sneakers': { size: '10', fit: 'True to size', comfort: 'High', confidence: '90%' }
+                };
+
+                const prediction = predictions[selectedItem];
+                if (prediction) {
+                    document.getElementById('predictedSize').textContent = prediction.size;
+                    document.getElementById('predictedFit').textContent = prediction.fit;
+                    document.getElementById('predictedComfort').textContent = prediction.comfort;
+                    document.getElementById('predictedConfidence').textContent = prediction.confidence;
+                }
+            }
+        });
+
+        // Global functions for fitting room interactions
+        function tryOnItem(itemId) {
+            console.log('Trying on item:', itemId);
+            // Simulate AR try-on
+            const arItem = document.getElementById('arItem');
+            if (arItem) {
+                arItem.innerHTML = `<div class="ar-item-display">Item ${itemId} - AR Overlay Active</div>`;
+            }
+        }
+    </script>
+</body>
+</html> 

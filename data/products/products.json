@@ -1,0 +1,141 @@
+[
+  {
+    "id": "prod-001",
+    "title": "Neon Cyber Hoodie",
+    "description": "Futuristic streetwear hoodie with LED trim and cyberpunk design",
+    "price": 129.99,
+    "images": [
+      "/images/cyber-hoodie-1.jpg",
+      "/images/cyber-hoodie-2.jpg"
+    ],
+    "category": "hoodies",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 10,
+      "M": 15,
+      "L": 12,
+      "XL": 8
+    },
+    "brand": "Zippy Originals",
+    "exchangeable": true,
+    "condition": "new",
+    "createdAt": "2025-07-30T13:53:39.225Z"
+  },
+  {
+    "id": "prod-002",
+    "title": "Glitch Art Tee",
+    "description": "Digital distortion graphic t-shirt with glitch effects",
+    "price": 49.99,
+    "images": [
+      "/images/glitch-tee-1.jpg",
+      "/images/glitch-tee-2.jpg"
+    ],
+    "category": "t-shirts",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "stock": {
+      "S": 20,
+      "M": 25,
+      "L": 20,
+      "XL": 15,
+      "XXL": 10
+    },
+    "brand": "Street Tech",
+    "exchangeable": true,
+    "condition": "new",
+    "createdAt": "2025-07-30T13:53:39.225Z"
+  },
+  {
+    "id": "prod-003",
+    "title": "Holographic Cargo Pants",
+    "description": "Reflective cargo pants with utility pockets and holographic finish",
+    "price": 89.99,
+    "images": [
+      "/images/cargo-pants-1.jpg",
+      "/images/cargo-pants-2.jpg"
+    ],
+    "category": "pants",
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "stock": {
+      "28": 8,
+      "30": 12,
+      "32": 15,
+      "34": 10,
+      "36": 6
+    },
+    "brand": "Future Wear",
+    "exchangeable": true,
+    "condition": "new",
+    "createdAt": "2025-07-30T13:53:39.225Z"
+  },
+  {
+    "id": "prod-004",
+    "title": "Neon Grid Jacket",
+    "description": "Light-up jacket with programmable LED grid pattern",
+    "price": 199.99,
+    "images": [
+      "/images/grid-jacket-1.jpg",
+      "/images/grid-jacket-2.jpg"
+    ],
+    "category": "jackets",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 5,
+      "M": 8,
+      "L": 6,
+      "XL": 4
+    },
+    "brand": "Zippy Originals",
+    "exchangeable": true,
+    "condition": "new",
+    "createdAt": "2025-07-30T13:53:39.225Z"
+  },
+  {
+    "id": "prod-005",
+    "title": "Digital Camo Shorts",
+    "description": "Pixelated camouflage shorts with tech fabric",
+    "price": 69.99,
+    "images": [
+      "/images/camo-shorts-1.jpg",
+      "/images/camo-shorts-2.jpg"
+    ],
+    "category": "shorts",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 12,
+      "M": 15,
+      "L": 10,
+      "XL": 8
+    },
+    "brand": "Street Tech",
+    "exchangeable": true,
+    "condition": "new",
+    "createdAt": "2025-07-30T13:53:39.225Z"
+  }
+]

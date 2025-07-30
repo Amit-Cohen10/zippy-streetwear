@@ -1,0 +1,20 @@
+[
+  {
+    "id": "admin-001",
+    "username": "admin",
+    "password": "$2b$10$TDF.n8oziHJuSTYD/Jxzj.uCSTH5P/Uy0Dk1xYDTW.zGi2xqHoNhC",
+    "email": "admin@zippy.com",
+    "role": "admin",
+    "profile": {
+      "displayName": "Admin",
+      "avatar": "/images/admin-avatar.png",
+      "exchangeRating": 5,
+      "joinDate": "2025-07-30T13:53:39.224Z"
+    },
+    "preferences": {
+      "darkMode": true,
+      "language": "en",
+      "notifications": true
+    }
+  }
+]
