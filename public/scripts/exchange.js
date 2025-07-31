@@ -296,7 +296,29 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add event listeners only if elements exist
         if (elements.createExchangeBtn) {
             elements.createExchangeBtn.addEventListener('click', () => {
-                document.getElementById('createExchangeModal').classList.add('active');
+                const createModal = document.getElementById('createExchangeModal');
+                createModal.classList.add('active');
+                
+                // Ensure modal is centered in viewport
+                setTimeout(() => {
+                    const modalRect = createModal.getBoundingClientRect();
+                    const viewportHeight = window.innerHeight;
+                    const viewportWidth = window.innerWidth;
+                    
+                    const isNotFullyVisible = 
+                        modalRect.top < 0 || 
+                        modalRect.bottom > viewportHeight ||
+                        modalRect.left < 0 ||
+                        modalRect.right > viewportWidth;
+                    
+                    if (isNotFullyVisible) {
+                        createModal.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center',
+                            inline: 'center'
+                        });
+                    }
+                }, 100);
             }, { passive: true });
         }
 
@@ -469,7 +491,30 @@ document.addEventListener('DOMContentLoaded', function() {
         renderComments(exchange.comments);
         
         // Show modal
-        document.getElementById('exchangeDetailModal').classList.add('active');
+        const detailModal = document.getElementById('exchangeDetailModal');
+        detailModal.classList.add('active');
+        
+        // Ensure modal is centered in viewport
+        setTimeout(() => {
+            const modalRect = detailModal.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            const viewportWidth = window.innerWidth;
+            
+            // Check if modal is not fully visible
+            const isNotFullyVisible = 
+                modalRect.top < 0 || 
+                modalRect.bottom > viewportHeight ||
+                modalRect.left < 0 ||
+                modalRect.right > viewportWidth;
+            
+            if (isNotFullyVisible) {
+                detailModal.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                    inline: 'center'
+                });
+            }
+        }, 100);
         
         // Setup modal event listeners
         setupDetailModalListeners(exchangeId);

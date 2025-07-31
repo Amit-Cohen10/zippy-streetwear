@@ -2205,6 +2205,8 @@ body::before {
 .modal.active {
   display: flex;
   animation: modal-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  align-items: center;
+  justify-content: center;
 }
 
 @keyframes modal-fade-in {
@@ -2236,6 +2238,7 @@ body::before {
 
 .modal-container.large {
   max-width: 800px;
+  max-height: 90vh;
 }
 
 .modal-header {
@@ -2569,6 +2572,11 @@ body::before {
   .modal-container {
     width: 95%;
     margin: 1rem;
+    max-height: 95vh;
+  }
+  
+  .modal {
+    padding: 10px;
   }
 } 
 
