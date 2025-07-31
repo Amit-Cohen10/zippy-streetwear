@@ -289,6 +289,24 @@
         </div>
     </footer>
 
+    <!-- Add to Cart Modal -->
+    <div class="add-to-cart-modal" id="addToCartModal">
+        <div class="add-to-cart-container">
+            <div class="add-to-cart-header">
+                <h3>Add to Cart</h3>
+                <p>Product added successfully!</p>
+            </div>
+            <div class="add-to-cart-product" id="addToCartProduct">
+                <!-- Product details will be populated here -->
+            </div>
+            <div class="add-to-cart-actions">
+                <button class="add-to-cart-btn" onclick="addToCartAndClose()">Add to Cart</button>
+                <button class="add-to-cart-close-btn" onclick="closeAddToCartModal()">Continue Shopping</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="/scripts/main.js"></script>
     <script src="/scripts/auth.js"></script>
     <script src="/scripts/cart.js"></script>

@@ -140,5 +140,28 @@
     },
     "timestamp": "2025-07-31T21:25:49.718Z",
     "ip": "::ffff:127.0.0.1"
+  },
+  {
+    "id": "act-1753997227664-yzgbvga8s",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "logout",
+    "details": {
+      "username": "amitcohen",
+      "ip": "::ffff:127.0.0.1"
+    },
+    "timestamp": "2025-07-31T21:27:07.664Z",
+    "ip": "::ffff:127.0.0.1"
+  },
+  {
+    "id": "act-1753997247475-ld7ussz82",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "::ffff:127.0.0.1"
+    },
+    "timestamp": "2025-07-31T21:27:27.475Z",
+    "ip": "::ffff:127.0.0.1"
   }
 ]

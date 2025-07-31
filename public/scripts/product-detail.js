@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!currentProduct) return;
         
         if (currentProduct.status === 'sold-out') {
-            alert('This product is sold out!');
+            showNotification('This product is sold out!', 'error');
             return;
         }
 
@@ -321,12 +321,12 @@ document.addEventListener('DOMContentLoaded', function() {
             price: currentProduct.price,
             size: selectedSize,
             quantity: quantity,
-            image: currentProduct.images[0]
+            image: currentProduct.images[0],
+            description: currentProduct.description
         };
 
-        // Add to cart (this would integrate with your cart system)
-        console.log('Adding to cart:', cartItem);
-        alert('Added to cart!');
+        // Show the new modal instead of direct add
+        showAddToCartModal(cartItem);
     }
 
     // Buy now
@@ -334,24 +334,22 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!currentProduct) return;
         
         if (currentProduct.status === 'sold-out') {
-            alert('This product is sold out!');
+            showNotification('This product is sold out!', 'error');
             return;
         }
 
-        // Redirect to checkout
-        const checkoutData = {
-            items: [{
-                id: currentProduct.id,
-                name: currentProduct.name,
-                price: currentProduct.price,
-                size: selectedSize,
-                quantity: quantity,
-                image: currentProduct.images[0]
-            }]
+        const cartItem = {
+            id: currentProduct.id,
+            name: currentProduct.name,
+            price: currentProduct.price,
+            size: selectedSize,
+            quantity: quantity,
+            image: currentProduct.images[0],
+            description: currentProduct.description
         };
 
-        console.log('Buying now:', checkoutData);
-        alert('Redirecting to checkout...');
+        // Use the direct order function
+        directOrder(cartItem);
     }
 
     // Initialize the page

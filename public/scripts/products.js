@@ -45,40 +45,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add to cart functionality
     window.addToCart = function(product) {
-        const cartItems = JSON.parse(localStorage.getItem('zippyCart') || '[]');
-        
-        // Check if item already exists in cart
-        const existingItem = cartItems.find(item => item.id === product.id);
-        
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            cartItems.push({
-                id: product.id,
-                name: product.name,
-                price: product.price,
-                image: product.image,
-                description: `${product.name} - ${product.category}`,
-                quantity: 1
-            });
-        }
-        
-        localStorage.setItem('zippyCart', JSON.stringify(cartItems));
-        
-        // Update cart count in navigation
-        updateCartCount();
-        
-        // Show success notification
-        showNotification(`${product.name} added to cart!`, 'success');
+        // Show the new modal instead of direct add
+        showAddToCartModal(product);
     }
 
-    // Update cart count
+    // Update cart count - use the enhanced function from main.js
     window.updateCartCount = function() {
-        const cartItems = JSON.parse(localStorage.getItem('zippyCart') || '[]');
-        const cartCount = document.getElementById('cartCount');
-        if (cartCount) {
-            const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-            cartCount.textContent = totalItems;
+        if (typeof window.updateCartCount === 'function') {
+            window.updateCartCount();
         }
     }
 
@@ -222,9 +196,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h3 class="product-title">${product.name}</h3>
                     <p class="product-price">${product.price} NIS</p>
                     ${product.status === 'available' ? 
-                        `<button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(${JSON.stringify(product)})">
-                            Add to Cart
-                        </button>` : 
+                        `<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(${JSON.stringify(product)})">
+                                Add to Cart
+                            </button>
+                            <button class="direct-order-btn" onclick="event.stopPropagation(); directOrder(${JSON.stringify(product)})">
+                                Order Now
+                            </button>
+                        </div>` : 
                         `<button class="add-to-cart-btn disabled" disabled>Sold Out</button>`
                     }
                 </div>

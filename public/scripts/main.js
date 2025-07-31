@@ -357,6 +357,116 @@ function initModals() {
     // }
 }
 
+// Add to Cart Modal Functions
+function showAddToCartModal(product) {
+    const modal = document.getElementById('addToCartModal');
+    const productContainer = document.getElementById('addToCartProduct');
+    
+    if (!modal || !productContainer) return;
+    
+    // Populate product details
+    productContainer.innerHTML = `
+        <div class="add-to-cart-product-image">
+            <img src="${product.image || '/images/placeholder.jpg'}" alt="${product.name}" onerror="this.src='/images/placeholder.jpg'">
+        </div>
+        <div class="add-to-cart-product-info">
+            <div class="add-to-cart-product-name">${product.name}</div>
+            <div class="add-to-cart-product-price">$${product.price.toFixed(2)}</div>
+        </div>
+    `;
+    
+    // Show modal with animation
+    modal.classList.add('active');
+    
+    // Store product for later use
+    window.currentProduct = product;
+}
+
+function closeAddToCartModal() {
+    const modal = document.getElementById('addToCartModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+    window.currentProduct = null;
+}
+
+function addToCartAndClose() {
+    if (window.currentProduct) {
+        addToCart(window.currentProduct);
+        closeAddToCartModal();
+        
+        // Show success notification
+        showNotification('Product added to cart successfully!', 'success');
+    }
+}
+
+// Enhanced Add to Cart function
+function addToCart(product) {
+    if (!window.cartItems) {
+        window.cartItems = [];
+    }
+    
+    // Check if product already exists in cart
+    const existingItem = window.cartItems.find(item => item.id === product.id);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        window.cartItems.push({
+            ...product,
+            quantity: 1
+        });
+    }
+    
+    // Save to localStorage
+    localStorage.setItem('zippyCart', JSON.stringify(window.cartItems));
+    
+    // Update cart count
+    updateCartCount();
+    
+    // Update cart display if on cart page
+    if (typeof updateCartDisplay === 'function') {
+        updateCartDisplay();
+    }
+}
+
+// Enhanced Update Cart Count function
+function updateCartCount() {
+    const cartCountElement = document.getElementById('cartCount');
+    if (!cartCountElement) return;
+    
+    const totalItems = window.cartItems ? window.cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
+    
+    cartCountElement.textContent = totalItems;
+    
+    // Add animation class if items were added
+    if (totalItems > 0) {
+        cartCountElement.style.animation = 'none';
+        setTimeout(() => {
+            cartCountElement.style.animation = 'cart-count-pulse 0.6s ease-in-out';
+        }, 10);
+    }
+}
+
+// Direct Order function
+function directOrder(product) {
+    // Add to cart first
+    addToCart(product);
+    
+    // Show success notification
+    showNotification('Product added to cart! Redirecting to checkout...', 'success');
+    
+    // Redirect to cart page after a short delay
+    setTimeout(() => {
+        window.location.href = '/cart';
+    }, 1500);
+}
+
+// Initialize cart count on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateCartCount();
+});
+
 // Initialize everything
 async function init() {
     showLoading();
