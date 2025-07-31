@@ -4603,10 +4603,21 @@ body.theme-light .auth-container {
   align-items: center;
   z-index: 3000;
   animation: modal-fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Ensure modal is always visible and centered */
+  overflow: hidden;
+  pointer-events: auto;
 }
 
 .add-to-cart-modal.active {
-  display: flex;
+  display: flex !important;
+  /* Force the modal to be visible and centered */
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100vh !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 .add-to-cart-container {

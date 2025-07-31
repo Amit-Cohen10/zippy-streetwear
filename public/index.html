@@ -264,7 +264,7 @@
                 <!-- Product details will be populated here -->
             </div>
             <div class="add-to-cart-actions">
-                <button class="add-to-cart-btn" onclick="console.log('Button clicked'); if(typeof addToCartAndClose === 'function') { addToCartAndClose(); } else { console.error('addToCartAndClose not found'); }">Add to Cart</button>
+                <button class="add-to-cart-btn" onclick="addToCartAndClose()">Add to Cart</button>
                 <button class="add-to-cart-close-btn" onclick="closeAddToCartModal()">Continue Shopping</button>
             </div>
         </div>
@@ -273,29 +273,8 @@
     <!-- Scripts -->
     <script src="/scripts/global.js"></script>
     <script src="/scripts/main.js"></script>
-    <script src="/scripts/cart.js"></script>
     <script src="/scripts/auth.js"></script>
+    <script src="/scripts/cart.js"></script>
     <script src="/scripts/search.js"></script>
-    
-    <!-- Ensure modal functions are available -->
-    <script>
-        // Fallback for modal functions
-        if (typeof window.addToCartAndClose === 'undefined') {
-            console.warn('Creating fallback for addToCartAndClose');
-            window.addToCartAndClose = function() {
-                if (window.currentProduct) {
-                    if (typeof window.addToCartLocal === 'function') {
-                        window.addToCartLocal(window.currentProduct);
-                    }
-                    if (typeof window.closeAddToCartModal === 'function') {
-                        window.closeAddToCartModal();
-                    }
-                    if (typeof window.showNotification === 'function') {
-                        window.showNotification('Product added to cart successfully!', 'success');
-                    }
-                }
-            };
-        }
-    </script>
 </body>
 </html> 

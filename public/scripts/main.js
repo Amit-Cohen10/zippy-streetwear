@@ -139,7 +139,7 @@ function renderFeaturedProducts() {
     const container = document.getElementById('featuredProducts');
     if (!container) return;
     
-    container.innerHTML = featuredProducts.map(product => `
+    container.innerHTML = featuredProducts.map((product, idx) => `
         <div class="product-card" onclick="window.location.href='/product/${product.id}'">
             <div class="product-image">
                 ${product.images && product.images.length > 0 ? 
@@ -149,11 +149,20 @@ function renderFeaturedProducts() {
             </div>
             <h3 class="product-title">${product.title}</h3>
             <div class="product-price">$${product.price.toFixed(2)}</div>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); showAddToCartModal(${JSON.stringify(product)})">
+            <button class="add-to-cart-btn" data-product-idx="${idx}">
                 Add to Cart
             </button>
         </div>
     `).join('');
+
+    // Add real event listeners for Add to Cart
+    container.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        const idx = btn.getAttribute('data-product-idx');
+        btn.addEventListener('click', function(event) {
+            event.stopPropagation();
+            window.showAddToCartModal(featuredProducts[idx]);
+        });
+    });
 }
 
 async function addToCart(productId, size = 'M', quantity = 1) {
@@ -453,6 +462,7 @@ window.ZippyApp = {
 (function() {
     // Define functions first
     function showAddToCartModal(product) {
+        console.log('showAddToCartModal called with:', product);
         const modal = document.getElementById('addToCartModal');
         const productContainer = document.getElementById('addToCartProduct');
         
@@ -474,6 +484,14 @@ window.ZippyApp = {
         
         // Store product for later use
         window.currentProduct = product;
+        
+        // Auto-scroll to top to ensure modal is visible
+        setTimeout(() => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }, 100);
     }
 
     function closeAddToCartModal() {
@@ -485,6 +503,7 @@ window.ZippyApp = {
     }
 
     function addToCartAndClose() {
+        console.log('addToCartAndClose called. window.currentProduct:', window.currentProduct);
         if (window.currentProduct) {
             addToCartLocal(window.currentProduct);
             closeAddToCartModal();
@@ -582,4 +601,19 @@ window.ZippyApp = {
             showAddToCartModal: typeof window.showAddToCartModal
         });
     });
+    
+    // Ensure functions are available immediately after DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded - checking modal functions:', {
+                addToCartAndClose: typeof window.addToCartAndClose,
+                showAddToCartModal: typeof window.showAddToCartModal
+            });
+        });
+    } else {
+        console.log('DOM already loaded - checking modal functions:', {
+            addToCartAndClose: typeof window.addToCartAndClose,
+            showAddToCartModal: typeof window.showAddToCartModal
+        });
+    }
 })(); 
