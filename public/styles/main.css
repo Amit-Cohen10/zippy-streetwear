@@ -340,7 +340,7 @@ body::before {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -348,9 +348,6 @@ body::before {
   justify-content: center;
   align-items: center;
   z-index: 2000;
-  /* Optimize for performance */
-  will-change: opacity;
-  transform: translateZ(0);
 }
 
 .search-modal.active,
@@ -384,20 +381,7 @@ body::before {
   width: 90%;
   max-height: 80vh;
   overflow-y: auto;
-  box-shadow: var(--glass-shadow), 0 0 50px rgba(0, 255, 255, 0.2);
-  /* Optimize for performance */
-  will-change: transform;
-  transform: translateZ(0);
-  animation: modal-glow 3s ease-in-out infinite alternate;
-}
-
-@keyframes modal-glow {
-  0% {
-    box-shadow: var(--glass-shadow), 0 0 50px rgba(0, 255, 255, 0.2);
-  }
-  100% {
-    box-shadow: var(--glass-shadow), 0 0 80px rgba(255, 0, 255, 0.3);
-  }
+  box-shadow: var(--glass-shadow);
 }
 
 .search-input {

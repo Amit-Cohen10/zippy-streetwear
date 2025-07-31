@@ -5,8 +5,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Cart data structure
-let cartItems = [];
-let isLoggedIn = false;
+if (!window.cartItems) {
+    window.cartItems = [];
+}
+if (!window.isLoggedIn) {
+    window.isLoggedIn = false;
+}
 
 function initCart() {
     // Initialize cart functionality

@@ -66,26 +66,31 @@ async function apiCall(endpoint, options = {}) {
 async function checkAuth() {
     try {
         const response = await apiCall('/api/auth/verify-token');
-        currentUser = response.user;
-        updateAuthUI();
+        window.currentUser = response.user;
+        if (typeof window.updateAuthUI === 'function') {
+            window.updateAuthUI();
+        }
         return true;
     } catch (error) {
-        currentUser = null;
-        updateAuthUI();
+        window.currentUser = null;
+        if (typeof window.updateAuthUI === 'function') {
+            window.updateAuthUI();
+        }
         return false;
     }
 }
 
-function updateAuthUI() {
-    const authBtn = document.getElementById('authBtn');
-    if (currentUser) {
-        authBtn.textContent = currentUser.username;
-        authBtn.onclick = () => window.location.href = '/dashboard';
-    } else {
-        authBtn.textContent = 'Login';
-        authBtn.onclick = () => document.getElementById('authModal').style.display = 'flex';
-    }
-}
+// This function is now handled by auth.js
+// function updateAuthUI() {
+//     const authBtn = document.getElementById('authBtn');
+//     if (currentUser) {
+//         authBtn.textContent = currentUser.username;
+//         authBtn.onclick = () => window.location.href = '/dashboard';
+//     } else {
+//         authBtn.textContent = 'Login';
+//         authBtn.onclick = () => document.getElementById('authModal').style.display = 'flex';
+//     }
+// }
 
 // Product functions
 async function loadFeaturedProducts() {
@@ -121,9 +126,13 @@ function renderFeaturedProducts() {
 }
 
 async function addToCart(productId, size = 'M', quantity = 1) {
-    if (!currentUser) {
+    if (!window.currentUser) {
         showNotification('Please login to add items to cart', 'error');
-        document.getElementById('authModal').style.display = 'flex';
+        if (typeof openAuthModal === 'function') {
+            openAuthModal();
+        } else {
+            document.getElementById('authModal').style.display = 'flex';
+        }
         return;
     }
     
@@ -146,7 +155,7 @@ async function addToCart(productId, size = 'M', quantity = 1) {
 
 // Cart functions
 async function loadCart() {
-    if (!currentUser) return;
+    if (!window.currentUser) return;
     
     try {
         const response = await apiCall('/api/cart/');
@@ -331,21 +340,21 @@ function initModals() {
         };
     }
     
-    // Auth modal
-    const authModal = document.getElementById('authModal');
-    const closeAuth = document.getElementById('closeAuth');
+    // Auth modal - handled by auth.js
+    // const authModal = document.getElementById('authModal');
+    // const closeAuth = document.getElementById('closeAuth');
     
-    if (closeAuth && authModal) {
-        closeAuth.onclick = () => {
-            authModal.style.display = 'none';
-        };
+    // if (closeAuth && authModal) {
+    //     closeAuth.onclick = () => {
+    //         authModal.style.display = 'none';
+    //     };
         
-        authModal.onclick = (e) => {
-            if (e.target === authModal) {
-                authModal.style.display = 'none';
-            }
-        };
-    }
+    //     authModal.onclick = (e) => {
+    //         if (e.target === authModal) {
+    //             authModal.style.display = 'none';
+    //         }
+    //     };
+    // }
 }
 
 // Initialize everything
@@ -381,6 +390,9 @@ async function init() {
 // Start the application
 document.addEventListener('DOMContentLoaded', init);
 
+// Add fallback for updateAuthUI
+window.updateAuthUI = window.updateAuthUI || function() {};
+
 // Export functions for other scripts
 window.ZippyApp = {
     apiCall,
@@ -388,5 +400,5 @@ window.ZippyApp = {
     addToCart,
     loadCart,
     checkAuth,
-    currentUser: () => currentUser
+    currentUser: () => window.currentUser
 }; 
