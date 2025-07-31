@@ -593,13 +593,124 @@ document.addEventListener('DOMContentLoaded', function() {
     // View post
     function viewPost(postId) {
         console.log('Viewing post:', postId);
-        // Implement post detail view
+        const post = communityPosts.find(p => p.id === postId);
+        if (post) {
+            // Show post detail modal
+            showPostDetailModal(post);
+        }
     }
 
     // Comment on post
     function commentPost(postId) {
         console.log('Commenting on post:', postId);
-        // Implement comment functionality
+        const post = communityPosts.find(p => p.id === postId);
+        if (post) {
+            // Show comment modal
+            showCommentModal(post);
+        }
+    }
+
+    // Show post detail modal
+    function showPostDetailModal(post) {
+        // Create modal content
+        const modalContent = `
+            <div class="modal active" id="postDetailModal">
+                <div class="modal-container large">
+                    <div class="modal-header">
+                        <h2>${post.title}</h2>
+                        <button class="close-btn" onclick="closePostDetailModal()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="post-detail-content">
+                            <div class="post-detail-header">
+                                <div class="user-info">
+                                    <span class="user-avatar" style="color: ${post.color}">${post.avatar}</span>
+                                    <span class="user-name">${post.author}</span>
+                                </div>
+                                <span class="post-category">${post.category}</span>
+                            </div>
+                            <div class="post-detail-body">
+                                <p class="post-detail-text">${post.content}</p>
+                                ${post.image ? `<div class="post-detail-image"><img src="${post.image}" alt="Post image" onerror="this.style.display='none'"></div>` : ''}
+                                <div class="post-detail-tags">
+                                    ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                                </div>
+                            </div>
+                            <div class="post-detail-stats">
+                                <span class="post-time">${post.timestamp}</span>
+                                <div class="post-engagement">
+                                    <span class="likes-count">❤️ ${post.likes}</span>
+                                    <span class="comments-count">💬 ${post.comments}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Add modal to page
+        document.body.insertAdjacentHTML('beforeend', modalContent);
+        
+        // Add close functionality
+        window.closePostDetailModal = function() {
+            const modal = document.getElementById('postDetailModal');
+            if (modal) {
+                modal.remove();
+            }
+        };
+    }
+
+    // Show comment modal
+    function showCommentModal(post) {
+        // Create modal content
+        const modalContent = `
+            <div class="modal active" id="commentModal">
+                <div class="modal-container">
+                    <div class="modal-header">
+                        <h2>Comment on: ${post.title}</h2>
+                        <button class="close-btn" onclick="closeCommentModal()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="commentForm" class="comment-form">
+                            <div class="form-group">
+                                <label for="commentText">Your Comment</label>
+                                <textarea id="commentText" class="form-textarea" rows="4" placeholder="Write your comment..." required></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn-secondary" onclick="closeCommentModal()">Cancel</button>
+                                <button type="submit" class="btn-primary">Post Comment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Add modal to page
+        document.body.insertAdjacentHTML('beforeend', modalContent);
+        
+        // Add form submission
+        document.getElementById('commentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const commentText = document.getElementById('commentText').value;
+            if (commentText.trim()) {
+                // Add comment to post
+                post.comments++;
+                renderCommunityPosts();
+                updateStats();
+                closeCommentModal();
+                console.log('Comment added:', commentText);
+            }
+        });
+        
+        // Add close functionality
+        window.closeCommentModal = function() {
+            const modal = document.getElementById('commentModal');
+            if (modal) {
+                modal.remove();
+            }
+        };
     }
 
     // Toggle like
