@@ -519,15 +519,18 @@ window.ZippyApp = {
             window.cartItems = [];
         }
         
-        // Check if product already exists in cart
-        const existingItem = window.cartItems.find(item => item.id === product.id);
+        // Check if product already exists in cart with same size
+        const existingItem = window.cartItems.find(item => 
+            item.id === product.id && item.size === product.size
+        );
         
         if (existingItem) {
-            existingItem.quantity += 1;
+            // Add the new quantity to existing quantity
+            existingItem.quantity += (product.quantity || 1);
         } else {
             window.cartItems.push({
                 ...product,
-                quantity: 1
+                quantity: product.quantity || 1
             });
         }
         
