@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p class="product-price">${product.price} NIS</p>
                     ${product.status === 'available' ? 
                         `<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                            <button class="add-to-cart-btn" onclick="event.stopPropagation(); showAddToCartModal(${JSON.stringify(product)})">
+                            <button class="add-to-cart-btn" onclick="event.stopPropagation(); window.location.href='/product-detail.html?id=${product.id}'">
                                 Add to Cart
                             </button>
                         </div>` : 

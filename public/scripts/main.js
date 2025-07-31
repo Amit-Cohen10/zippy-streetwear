@@ -160,7 +160,8 @@ function renderFeaturedProducts() {
         const idx = btn.getAttribute('data-product-idx');
         btn.addEventListener('click', function(event) {
             event.stopPropagation();
-            window.showAddToCartModal(featuredProducts[idx]);
+            // Navigate to product detail page instead of opening modal directly
+            window.location.href = `/product-detail.html?id=${featuredProducts[idx].id}`;
         });
     });
 }
