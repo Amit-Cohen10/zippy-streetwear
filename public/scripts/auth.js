@@ -75,11 +75,13 @@ function initAuth() {
     
     // Form submissions
     if (loginForm) {
-        loginForm.onsubmit = handleLogin;
+        loginForm.addEventListener('submit', handleLogin);
+        console.log('Login form event listener added');
     }
     
     if (registerForm) {
-        registerForm.onsubmit = handleRegister;
+        registerForm.addEventListener('submit', handleRegister);
+        console.log('Register form event listener added');
     }
     
     console.log('Auth initialization complete');
@@ -116,12 +118,105 @@ async function handleLogin(e) {
     e.preventDefault();
     console.log('Handling login...');
     
+    console.log('Form submitted:', e.target);
+    console.log('Form elements:', e.target.elements);
+    
+    // Try different ways to get form data
+    console.log('Form target:', e.target);
+    console.log('Form ID:', e.target.id);
+    
+    // Method 1: FormData
     const formData = new FormData(e.target);
-    const username = formData.get('username');
-    const password = formData.get('password');
+    let username = formData.get('username');
+    let password = formData.get('password');
     const rememberMe = formData.get('rememberMe') === 'on';
     
+    console.log('FormData results:', { username, password, rememberMe });
+    
+    // Method 2: Direct access if FormData failed
     if (!username || !password) {
+        console.log('FormData failed, trying direct access...');
+        const usernameInput = e.target.querySelector('input[name="username"]');
+        const passwordInput = e.target.querySelector('input[name="password"]');
+        
+        console.log('Username input:', usernameInput);
+        console.log('Password input:', passwordInput);
+        
+        if (usernameInput) {
+            console.log('Username input found, value:', usernameInput.value);
+            username = usernameInput.value;
+        }
+        if (passwordInput) {
+            console.log('Password input found, value:', passwordInput.value);
+            password = passwordInput.value;
+        }
+    }
+    
+    // Method 3: Try getting from form elements
+    if (!username || !password) {
+        console.log('Direct access failed, trying form elements...');
+        console.log('Form elements:', e.target.elements);
+        console.log('Username element:', e.target.elements.username);
+        console.log('Password element:', e.target.elements.password);
+        
+        username = e.target.elements.username?.value || '';
+        password = e.target.elements.password?.value || '';
+    }
+    
+    // Method 4: Try getting all inputs
+    if (!username || !password) {
+        console.log('All methods failed, trying all inputs...');
+        const allInputs = e.target.querySelectorAll('input');
+        console.log('All inputs:', allInputs);
+        
+        allInputs.forEach((input, index) => {
+            console.log(`Input ${index}:`, input.name, input.type, input.value);
+        });
+        
+        // Get values directly from inputs
+        const usernameInput = allInputs[0]; // First input should be username
+        const passwordInput = allInputs[1]; // Second input should be password
+        
+        console.log('Username input element:', usernameInput);
+        console.log('Password input element:', passwordInput);
+        
+        if (usernameInput && usernameInput.type === 'text') {
+            username = usernameInput.value;
+            console.log('Got username from input:', username);
+        }
+        
+        if (passwordInput && passwordInput.type === 'password') {
+            password = passwordInput.value;
+            console.log('Got password from input:', password);
+        }
+        
+        // Also try getting by name attribute
+        if (!username || !password) {
+            console.log('Trying by name attribute...');
+            const usernameByName = e.target.querySelector('input[name="username"]');
+            const passwordByName = e.target.querySelector('input[name="password"]');
+            
+            console.log('Username by name:', usernameByName);
+            console.log('Password by name:', passwordByName);
+            
+            if (usernameByName) {
+                username = usernameByName.value;
+                console.log('Got username by name:', username);
+            }
+            
+            if (passwordByName) {
+                password = passwordByName.value;
+                console.log('Got password by name:', password);
+            }
+        }
+    }
+    
+    console.log('Final form data:', { username, password, rememberMe });
+    console.log('Final username length:', username ? username.length : 0);
+    console.log('Final password length:', password ? password.length : 0);
+    
+    if (!username || !password) {
+        console.log('Validation failed:', { username: !!username, password: !!password });
         alert('Please fill in all fields');
         return;
     }
