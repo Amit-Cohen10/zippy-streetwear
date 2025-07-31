@@ -2,6 +2,14 @@
 document.addEventListener('DOMContentLoaded', function() {
     initCart();
     loadCart();
+    
+    // Ensure modal functions are available
+    if (typeof window.addToCartAndClose === 'undefined') {
+        console.warn('addToCartAndClose not found, creating fallback');
+        window.addToCartAndClose = function() {
+            console.error('addToCartAndClose not properly loaded');
+        };
+    }
 });
 
 // Cart data structure
@@ -136,6 +144,11 @@ function updateCartCount() {
         const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
         cartCount.textContent = totalItems;
     }
+}
+
+// Use the enhanced version from main.js if available
+if (typeof window.updateCartCountLocal === 'function') {
+    window.updateCartCount = window.updateCartCountLocal;
 }
 
 // Update item quantity

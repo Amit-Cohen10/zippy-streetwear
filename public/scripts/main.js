@@ -100,7 +100,38 @@ async function loadFeaturedProducts() {
         renderFeaturedProducts();
     } catch (error) {
         console.error('Failed to load featured products:', error);
-        showNotification('Failed to load featured products', 'error');
+        // Fallback to sample data
+        featuredProducts = [
+            {
+                id: 1,
+                title: "Neural Network Hoodie",
+                price: 459,
+                images: ["/images/products/neural-network-hoodie.jpg"],
+                description: "Experience the future of streetwear with this cutting-edge neural network design."
+            },
+            {
+                id: 2,
+                title: "Glitch Reality Hoodie",
+                price: 429,
+                images: ["/images/products/glitch-reality-hoodie.jpg"],
+                description: "Embrace the digital distortion with this glitch reality hoodie."
+            },
+            {
+                id: 3,
+                title: "Cyber Samurai Hoodie",
+                price: 489,
+                images: ["/images/products/cyber-samurai-hoodie.jpg"],
+                description: "Channel your inner warrior with this cyber samurai design."
+            },
+            {
+                id: 4,
+                title: "Data Stream Hoodie",
+                price: 449,
+                images: ["/images/products/data-stream-hoodie.jpg"],
+                description: "Flow with the digital current in this data stream hoodie."
+            }
+        ];
+        renderFeaturedProducts();
     }
 }
 
@@ -118,7 +149,7 @@ function renderFeaturedProducts() {
             </div>
             <h3 class="product-title">${product.title}</h3>
             <div class="product-price">$${product.price.toFixed(2)}</div>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${product.id}')">
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); showAddToCartModal(${JSON.stringify(product)})">
                 Add to Cart
             </button>
         </div>
@@ -358,113 +389,18 @@ function initModals() {
 }
 
 // Add to Cart Modal Functions
-function showAddToCartModal(product) {
-    const modal = document.getElementById('addToCartModal');
-    const productContainer = document.getElementById('addToCartProduct');
-    
-    if (!modal || !productContainer) return;
-    
-    // Populate product details
-    productContainer.innerHTML = `
-        <div class="add-to-cart-product-image">
-            <img src="${product.image || '/images/placeholder.jpg'}" alt="${product.name}" onerror="this.src='/images/placeholder.jpg'">
-        </div>
-        <div class="add-to-cart-product-info">
-            <div class="add-to-cart-product-name">${product.name}</div>
-            <div class="add-to-cart-product-price">$${product.price.toFixed(2)}</div>
-        </div>
-    `;
-    
-    // Show modal with animation
-    modal.classList.add('active');
-    
-    // Store product for later use
-    window.currentProduct = product;
-}
-
-function closeAddToCartModal() {
-    const modal = document.getElementById('addToCartModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-    window.currentProduct = null;
-}
-
-function addToCartAndClose() {
-    if (window.currentProduct) {
-        addToCart(window.currentProduct);
-        closeAddToCartModal();
-        
-        // Show success notification
-        showNotification('Product added to cart successfully!', 'success');
-    }
-}
-
-// Enhanced Add to Cart function
-function addToCart(product) {
-    if (!window.cartItems) {
-        window.cartItems = [];
-    }
-    
-    // Check if product already exists in cart
-    const existingItem = window.cartItems.find(item => item.id === product.id);
-    
-    if (existingItem) {
-        existingItem.quantity += 1;
-    } else {
-        window.cartItems.push({
-            ...product,
-            quantity: 1
-        });
-    }
-    
-    // Save to localStorage
-    localStorage.setItem('zippyCart', JSON.stringify(window.cartItems));
-    
-    // Update cart count
-    updateCartCount();
-    
-    // Update cart display if on cart page
-    if (typeof updateCartDisplay === 'function') {
-        updateCartDisplay();
-    }
-}
-
-// Enhanced Update Cart Count function
-function updateCartCount() {
-    const cartCountElement = document.getElementById('cartCount');
-    if (!cartCountElement) return;
-    
-    const totalItems = window.cartItems ? window.cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
-    
-    cartCountElement.textContent = totalItems;
-    
-    // Add animation class if items were added
-    if (totalItems > 0) {
-        cartCountElement.style.animation = 'none';
-        setTimeout(() => {
-            cartCountElement.style.animation = 'cart-count-pulse 0.6s ease-in-out';
-        }, 10);
-    }
-}
-
-// Direct Order function
-function directOrder(product) {
-    // Add to cart first
-    addToCart(product);
-    
-    // Show success notification
-    showNotification('Product added to cart! Redirecting to checkout...', 'success');
-    
-    // Redirect to cart page after a short delay
-    setTimeout(() => {
-        window.location.href = '/cart';
-    }, 1500);
-}
+// These functions are now defined in the IIFE above
 
 // Initialize cart count on page load
 document.addEventListener('DOMContentLoaded', function() {
-    updateCartCount();
+    // Load cart from localStorage
+    const savedCart = localStorage.getItem('zippyCart');
+    if (savedCart) {
+        window.cartItems = JSON.parse(savedCart);
+    } else {
+        window.cartItems = [];
+    }
+    updateCartCountLocal();
 });
 
 // Initialize everything
@@ -511,4 +447,139 @@ window.ZippyApp = {
     loadCart,
     checkAuth,
     currentUser: () => window.currentUser
-}; 
+};
+
+// Make modal functions globally available immediately
+(function() {
+    // Define functions first
+    function showAddToCartModal(product) {
+        const modal = document.getElementById('addToCartModal');
+        const productContainer = document.getElementById('addToCartProduct');
+        
+        if (!modal || !productContainer) return;
+        
+        // Populate product details
+        productContainer.innerHTML = `
+            <div class="add-to-cart-product-image">
+                <img src="${product.images && product.images.length > 0 ? product.images[0] : '/images/placeholder.jpg'}" alt="${product.title || product.name}" onerror="this.src='/images/placeholder.jpg'">
+            </div>
+            <div class="add-to-cart-product-info">
+                <div class="add-to-cart-product-name">${product.title || product.name}</div>
+                <div class="add-to-cart-product-price">$${product.price.toFixed(2)}</div>
+            </div>
+        `;
+        
+        // Show modal with animation
+        modal.classList.add('active');
+        
+        // Store product for later use
+        window.currentProduct = product;
+    }
+
+    function closeAddToCartModal() {
+        const modal = document.getElementById('addToCartModal');
+        if (modal) {
+            modal.classList.remove('active');
+        }
+        window.currentProduct = null;
+    }
+
+    function addToCartAndClose() {
+        if (window.currentProduct) {
+            addToCartLocal(window.currentProduct);
+            closeAddToCartModal();
+            
+            // Show success notification
+            showNotification('Product added to cart successfully!', 'success');
+        }
+    }
+
+    function addToCartLocal(product) {
+        if (!window.cartItems) {
+            window.cartItems = [];
+        }
+        
+        // Check if product already exists in cart
+        const existingItem = window.cartItems.find(item => item.id === product.id);
+        
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            window.cartItems.push({
+                ...product,
+                quantity: 1
+            });
+        }
+        
+        // Save to localStorage
+        localStorage.setItem('zippyCart', JSON.stringify(window.cartItems));
+        
+        // Update cart count
+        updateCartCountLocal();
+        
+        // Update cart display if on cart page
+        if (typeof updateCartDisplay === 'function') {
+            updateCartDisplay();
+        }
+    }
+
+    function updateCartCountLocal() {
+        const cartCountElement = document.getElementById('cartCount');
+        if (!cartCountElement) return;
+        
+        const totalItems = window.cartItems ? window.cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
+        
+        cartCountElement.textContent = totalItems;
+        
+        // Add animation class if items were added
+        if (totalItems > 0) {
+            cartCountElement.style.animation = 'none';
+            setTimeout(() => {
+                cartCountElement.style.animation = 'cart-count-pulse 0.6s ease-in-out';
+            }, 10);
+        }
+    }
+
+    function directOrder(product) {
+        // Add to cart first
+        addToCartLocal(product);
+        
+        // Show success notification
+        showNotification('Product added to cart! Redirecting to checkout...', 'success');
+        
+        // Redirect to cart page after a short delay
+        setTimeout(() => {
+            window.location.href = '/cart';
+        }, 1500);
+    }
+
+    // Make all functions globally available
+    window.showAddToCartModal = showAddToCartModal;
+    window.closeAddToCartModal = closeAddToCartModal;
+    window.addToCartAndClose = addToCartAndClose;
+    window.addToCartLocal = addToCartLocal;
+    window.updateCartCountLocal = updateCartCountLocal;
+    window.directOrder = directOrder;
+
+    // Also make the old functions available for backward compatibility
+    window.addToCart = addToCartLocal;
+    window.updateCartCount = updateCartCountLocal;
+    
+    // Debug: Log that functions are available
+    console.log('Modal functions loaded:', {
+        showAddToCartModal: typeof window.showAddToCartModal,
+        closeAddToCartModal: typeof window.closeAddToCartModal,
+        addToCartAndClose: typeof window.addToCartAndClose,
+        addToCartLocal: typeof window.addToCartLocal,
+        updateCartCountLocal: typeof window.updateCartCountLocal,
+        directOrder: typeof window.directOrder
+    });
+    
+    // Also ensure functions are available on window load
+    window.addEventListener('load', function() {
+        console.log('Window loaded - checking modal functions:', {
+            addToCartAndClose: typeof window.addToCartAndClose,
+            showAddToCartModal: typeof window.showAddToCartModal
+        });
+    });
+})(); 
