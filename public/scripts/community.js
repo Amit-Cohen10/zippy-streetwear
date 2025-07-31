@@ -181,6 +181,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 elements.createPostBtn.addEventListener('click', () => {
                     const createPostModal = document.getElementById('createPostModal');
                     createPostModal.classList.add('active');
+                    
+                    // Scroll to modal and center it
+                    setTimeout(() => {
+                        createPostModal.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }, 100);
                 });
             }
 
@@ -188,6 +196,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 elements.uploadOutfitBtn.addEventListener('click', () => {
                     const uploadOutfitModal = document.getElementById('uploadOutfitModal');
                     uploadOutfitModal.classList.add('active');
+                    
+                    // Scroll to modal and center it
+                    setTimeout(() => {
+                        uploadOutfitModal.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }, 100);
                 });
             }
 

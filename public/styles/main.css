@@ -2204,6 +2204,9 @@ body::before {
   /* Optimize for performance */
   will-change: opacity;
   transform: translateZ(0);
+  /* Ensure modal is always centered */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .modal.active {
@@ -2211,16 +2214,22 @@ body::before {
   animation: modal-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   align-items: center;
   justify-content: center;
+  /* Force center positioning */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 @keyframes modal-fade-in {
   from {
     opacity: 0;
-    transform: scale(0.9);
+    transform: scale(0.9) translateY(-20px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
   }
 }
 
