@@ -43,6 +43,70 @@ document.addEventListener('DOMContentLoaded', function() {
         { id: 30, name: "Cyber Ninja Pants", price: 599, category: "pants", image: "/images/products/cyber-ninja-pants.jpg", status: "available" }
     ];
 
+    // Add to cart functionality
+    function addToCart(product) {
+        const cartItems = JSON.parse(localStorage.getItem('zippyCart') || '[]');
+        
+        // Check if item already exists in cart
+        const existingItem = cartItems.find(item => item.id === product.id);
+        
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cartItems.push({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                description: `${product.name} - ${product.category}`,
+                quantity: 1
+            });
+        }
+        
+        localStorage.setItem('zippyCart', JSON.stringify(cartItems));
+        
+        // Update cart count in navigation
+        updateCartCount();
+        
+        // Show success notification
+        showNotification(`${product.name} added to cart!`, 'success');
+    }
+
+    // Update cart count
+    function updateCartCount() {
+        const cartItems = JSON.parse(localStorage.getItem('zippyCart') || '[]');
+        const cartCount = document.getElementById('cartCount');
+        if (cartCount) {
+            const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+        }
+    }
+
+    // Show notification
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${type === 'error' ? '#ff4444' : type === 'success' ? '#00ff00' : '#00ffff'};
+            color: #000;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            z-index: 10000;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+
     let filteredProducts = [...products];
     let isInitialized = false;
     let currentView = 'grid';
@@ -157,6 +221,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="product-info">
                     <h3 class="product-title">${product.name}</h3>
                     <p class="product-price">${product.price} NIS</p>
+                    ${product.status === 'available' ? 
+                        `<button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(${JSON.stringify(product)})">
+                            Add to Cart
+                        </button>` : 
+                        `<button class="add-to-cart-btn disabled" disabled>Sold Out</button>`
+                    }
                 </div>
             `;
             
