@@ -135,7 +135,7 @@ function updateCartCount() {
 }
 
 // Update item quantity
-function updateQuantity(itemId, change) {
+window.updateQuantity = function(itemId, change) {
     const item = cartItems.find(item => item.id === itemId);
     if (item) {
         item.quantity += change;
@@ -149,14 +149,14 @@ function updateQuantity(itemId, change) {
 }
 
 // Remove item from cart
-function removeFromCart(itemId) {
+window.removeFromCart = function(itemId) {
     cartItems = cartItems.filter(item => item.id !== itemId);
     saveCartToStorage();
     updateCartDisplay();
 }
 
 // Clear cart
-function clearCart() {
+window.clearCart = function() {
     if (confirm('Are you sure you want to clear your cart?')) {
         cartItems = [];
         saveCartToStorage();
@@ -166,7 +166,7 @@ function clearCart() {
 }
 
 // Proceed to checkout
-function proceedToCheckout() {
+window.proceedToCheckout = function() {
     if (!isLoggedIn) {
         showNotification('Please login to checkout', 'error');
         openAuthModal();
@@ -343,7 +343,7 @@ function closeSearchModal() {
 }
 
 // Open cart modal
-function openCartModal() {
+window.openCartModal = function() {
     // Create cart modal if it doesn't exist
     let cartModal = document.getElementById('cartModal');
     
@@ -407,7 +407,7 @@ function openCartModal() {
 }
 
 // Close cart modal
-function closeCartModal() {
+window.closeCartModal = function() {
     const modal = document.getElementById('cartModal');
     if (modal) {
         modal.classList.remove('active');

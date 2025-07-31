@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
 
     // Add to cart functionality
-    function addToCart(product) {
+    window.addToCart = function(product) {
         const cartItems = JSON.parse(localStorage.getItem('zippyCart') || '[]');
         
         // Check if item already exists in cart
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Update cart count
-    function updateCartCount() {
+    window.updateCartCount = function() {
         const cartItems = JSON.parse(localStorage.getItem('zippyCart') || '[]');
         const cartCount = document.getElementById('cartCount');
         if (cartCount) {
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Show notification
-    function showNotification(message, type = 'info') {
+    window.showNotification = function(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         notification.textContent = message;
