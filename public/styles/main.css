@@ -2943,3 +2943,90 @@ body::before {
   0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
   50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.2); }
 }
+
+/* Response Section Styles */
+.response-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.response-options h4 {
+  color: var(--accent-neon-cyan);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.response-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.response-buttons button {
+  flex: 1;
+  min-width: 150px;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.accept-exchange-btn {
+  background: linear-gradient(135deg, var(--accent-neon-green), #00cc88);
+  color: white;
+  border: 1px solid var(--accent-neon-green);
+}
+
+.accept-exchange-btn:hover {
+  background: linear-gradient(135deg, #00cc88, var(--accent-neon-green));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 255, 0, 0.3);
+}
+
+.counter-offer-btn,
+.ask-question-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-white);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.counter-offer-btn:hover,
+.ask-question-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--accent-neon-cyan);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 255, 255, 0.2);
+}
+
+/* Comment item styles for counter offers and questions */
+.comment-item.counter-offer {
+  border-left: 4px solid var(--accent-neon-purple);
+  background: rgba(128, 0, 255, 0.1);
+}
+
+.comment-item.question {
+  border-left: 4px solid var(--accent-neon-cyan);
+  background: rgba(0, 255, 255, 0.1);
+}
+
+/* Responsive styles for response buttons */
+@media (max-width: 768px) {
+  .response-buttons {
+    flex-direction: column;
+  }
+  
+  .response-buttons button {
+    min-width: auto;
+  }
+}

@@ -621,7 +621,256 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Respond to exchange
     function respondToExchange(exchangeId) {
-        showNotification('Response feature coming soon!', 'info');
+        console.log('Respond button clicked for exchange:', exchangeId);
+        
+        const exchange = exchanges.find(e => e.id === exchangeId);
+        if (!exchange) {
+            console.log('Exchange not found');
+            return;
+        }
+
+        // Check if exchange is still active
+        if (exchange.status !== 'active') {
+            showNotification(`This exchange is ${exchange.status} and cannot be responded to.`, 'error');
+            return;
+        }
+
+        // Open the exchange detail modal to show response options
+        viewExchange(exchangeId);
+        
+        // Add response section to detail modal
+        const detailModal = document.getElementById('exchangeDetailModal');
+        if (detailModal) {
+            console.log('Detail modal found, adding response section');
+            
+            // Remove existing response section if any
+            const existingResponseSection = detailModal.querySelector('.response-section');
+            if (existingResponseSection) {
+                existingResponseSection.remove();
+            }
+            
+            // Create new response section
+            const responseSection = document.createElement('div');
+            responseSection.className = 'response-section';
+            responseSection.innerHTML = `
+                <div class="response-options">
+                    <h4>Respond to this Exchange</h4>
+                    <div class="response-buttons">
+                        <button class="btn-primary accept-exchange-btn" data-exchange-id="${exchangeId}">
+                            <span>✅</span> Accept Exchange
+                        </button>
+                        <button class="btn-secondary counter-offer-btn" data-exchange-id="${exchangeId}">
+                            <span>🔄</span> Propose Counter Offer
+                        </button>
+                        <button class="btn-secondary ask-question-btn" data-exchange-id="${exchangeId}">
+                            <span>❓</span> Ask Question
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Add event listeners to the new buttons
+            responseSection.querySelector('.accept-exchange-btn').addEventListener('click', () => {
+                console.log('Accept exchange clicked');
+                acceptExchange(exchangeId);
+            });
+            
+            responseSection.querySelector('.counter-offer-btn').addEventListener('click', () => {
+                console.log('Counter offer clicked');
+                proposeCounterOffer(exchangeId);
+            });
+            
+            responseSection.querySelector('.ask-question-btn').addEventListener('click', () => {
+                console.log('Ask question clicked');
+                askQuestion(exchangeId);
+            });
+            
+            // Insert before comments section
+            const commentsSection = detailModal.querySelector('.comments-section');
+            const modalBody = detailModal.querySelector('.modal-body');
+            
+            if (commentsSection) {
+                commentsSection.parentNode.insertBefore(responseSection, commentsSection);
+            } else if (modalBody) {
+                modalBody.appendChild(responseSection);
+            }
+        }
+        
+        showNotification('Response options loaded!', 'success');
+    }
+
+    // Accept exchange function
+    function acceptExchange(exchangeId) {
+        console.log('acceptExchange called with ID:', exchangeId);
+        const exchange = exchanges.find(e => e.id === exchangeId);
+        if (!exchange) {
+            console.log('Exchange not found in acceptExchange');
+            return;
+        }
+
+        exchange.status = 'completed';
+        
+        // Update UI
+        const exchangeCard = document.querySelector(`[data-exchange-id="${exchangeId}"]`);
+        if (exchangeCard) {
+            const statusBadge = exchangeCard.querySelector('.status-badge');
+            if (statusBadge) {
+                statusBadge.textContent = 'COMPLETED';
+                statusBadge.className = 'status-badge completed';
+            }
+        }
+        
+        // Close modal
+        document.getElementById('exchangeDetailModal').classList.remove('active');
+        
+        updateStats();
+        showNotification('Exchange accepted successfully!', 'success');
+    }
+
+    // Propose counter offer function
+    function proposeCounterOffer(exchangeId) {
+        console.log('proposeCounterOffer called with ID:', exchangeId);
+        
+        // Create counter offer modal
+        const counterModal = document.createElement('div');
+        counterModal.className = 'modal active';
+        counterModal.innerHTML = `
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2>Propose Counter Offer</h2>
+                    <button class="close-btn" id="closeCounterModal">×</button>
+                </div>
+                <div class="modal-body">
+                    <form id="counterOfferForm">
+                        <div class="form-group">
+                            <label for="counterDescription">What are you offering?</label>
+                            <textarea id="counterDescription" required placeholder="Describe your item..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="counterCategory">Category</label>
+                            <select id="counterCategory" required>
+                                <option value="">Select category</option>
+                                <option value="hoodies">Hoodies</option>
+                                <option value="shirts">Shirts</option>
+                                <option value="pants">Pants</option>
+                                <option value="shoes">Shoes</option>
+                                <option value="accessories">Accessories</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="counterSize">Size</label>
+                            <select id="counterSize" required>
+                                <option value="">Select size</option>
+                                <option value="XS">XS</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" id="cancelCounterBtn">Cancel</button>
+                            <button type="submit" class="btn-primary">Submit Counter Offer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(counterModal);
+        
+        // Add event listeners
+        counterModal.querySelector('#closeCounterModal').addEventListener('click', () => {
+            counterModal.remove();
+        });
+        
+        counterModal.querySelector('#cancelCounterBtn').addEventListener('click', () => {
+            counterModal.remove();
+        });
+        
+        counterModal.querySelector('#counterOfferForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitCounterOffer(e, exchangeId);
+            counterModal.remove();
+        });
+        
+        // Center modal
+        setTimeout(() => {
+            const modalRect = counterModal.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            const viewportWidth = window.innerWidth;
+            
+            const isNotFullyVisible = 
+                modalRect.top < 0 || 
+                modalRect.bottom > viewportHeight ||
+                modalRect.left < 0 ||
+                modalRect.right > viewportWidth;
+            
+            if (isNotFullyVisible) {
+                counterModal.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                    inline: 'center'
+                });
+            }
+        }, 100);
+    }
+
+    // Submit counter offer function
+    function submitCounterOffer(event, exchangeId) {
+        console.log('submitCounterOffer called');
+        
+        const description = document.getElementById('counterDescription').value;
+        const category = document.getElementById('counterCategory').value;
+        const size = document.getElementById('counterSize').value;
+        
+        if (!description || !category || !size) {
+            showNotification('Please fill in all fields', 'error');
+            return;
+        }
+        
+        const exchange = exchanges.find(e => e.id === exchangeId);
+        if (!exchange) return;
+        
+        // Add counter offer as a comment
+        const counterComment = {
+            id: exchange.comments.length + 1,
+            userId: 1, // Current user
+            text: `Counter Offer: ${description} (${category} - Size ${size})`,
+            date: new Date().toISOString().split('T')[0],
+            isCounterOffer: true
+        };
+        
+        exchange.comments.push(counterComment);
+        renderComments(exchange.comments);
+        
+        showNotification('Counter offer submitted successfully!', 'success');
+    }
+
+    // Ask question function
+    function askQuestion(exchangeId) {
+        console.log('askQuestion called with ID:', exchangeId);
+        
+        const question = prompt('What would you like to ask about this exchange?');
+        if (!question) return;
+        
+        const exchange = exchanges.find(e => e.id === exchangeId);
+        if (!exchange) return;
+        
+        // Add question as a comment
+        const questionComment = {
+            id: exchange.comments.length + 1,
+            userId: 1, // Current user
+            text: `Question: ${question}`,
+            date: new Date().toISOString().split('T')[0],
+            isQuestion: true
+        };
+        
+        exchange.comments.push(questionComment);
+        renderComments(exchange.comments);
+        
+        showNotification('Question submitted successfully!', 'success');
     }
 
     // Show notification
