@@ -3510,6 +3510,108 @@ body::before {
   resize: vertical;
 }
 
+/* Comments section styles */
+.comments-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comments-section h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.comment-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--accent-neon-cyan);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.comment-author {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.comment-author .user-avatar {
+  font-size: 1rem;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+}
+
+.comment-author .user-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+.comment-date {
+  font-size: 0.8rem;
+  color: var(--text-gray);
+}
+
+.comment-text {
+  color: var(--text-light);
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.no-comments {
+  text-align: center;
+  color: var(--text-gray);
+  font-style: italic;
+  padding: 2rem;
+}
+
+.add-comment {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.add-comment .form-group {
+  margin-bottom: 1rem;
+}
+
+.add-comment .form-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .community-controls {
@@ -3562,5 +3664,24 @@ body::before {
   
   .community-page .page-title {
     font-size: 2.5rem;
+  }
+  
+  .comments-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+  }
+  
+  .comments-list {
+    max-height: 250px;
+  }
+  
+  .comment-item {
+    padding: 0.75rem;
+  }
+  
+  .comment-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
   }
 }

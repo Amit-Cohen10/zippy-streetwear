@@ -643,6 +643,22 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <span class="comments-count">💬 ${post.comments}</span>
                                 </div>
                             </div>
+                            <div class="comments-section">
+                                <h3>Comments (${post.comments})</h3>
+                                <div class="comments-list">
+                                    ${post.comments > 0 ? generateCommentsList(post) : '<p class="no-comments">No comments yet. Be the first to comment!</p>'}
+                                </div>
+                                <div class="add-comment">
+                                    <form id="postCommentForm" class="comment-form">
+                                        <div class="form-group">
+                                            <textarea id="postCommentText" class="form-textarea" rows="3" placeholder="Write a comment..." required></textarea>
+                                        </div>
+                                        <div class="form-actions">
+                                            <button type="submit" class="btn-primary">Post Comment</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -651,6 +667,24 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Add modal to page
         document.body.insertAdjacentHTML('beforeend', modalContent);
+        
+        // Center modal on screen
+        setTimeout(() => {
+            const modal = document.getElementById('postDetailModal');
+            if (modal) {
+                modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 100);
+        
+        // Add comment form submission
+        document.getElementById('postCommentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const commentText = document.getElementById('postCommentText').value;
+            if (commentText.trim()) {
+                addCommentToPost(post.id, commentText);
+                document.getElementById('postCommentText').value = '';
+            }
+        });
         
         // Add close functionality
         window.closePostDetailModal = function() {
@@ -661,6 +695,80 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
+    // Generate comments list for a post
+    function generateCommentsList(post) {
+        // Sample comments - in real app this would come from database
+        const sampleComments = [
+            { id: 1, author: 'StreetTech', avatar: '👨‍🔧', content: 'Great post! Love the styling tips.', timestamp: '2 hours ago' },
+            { id: 2, author: 'NeonQueen', avatar: '👩‍🎨', content: 'This is exactly what I needed!', timestamp: '1 hour ago' },
+            { id: 3, author: 'CyberPunk', avatar: '🤖', content: 'Amazing content, keep it up!', timestamp: '30 min ago' },
+            { id: 4, author: 'GlitchMaster', avatar: '🎮', content: 'Incredible styling advice!', timestamp: '45 min ago' },
+            { id: 5, author: 'NeonVibes', avatar: '🌈', content: 'Love the cyberpunk aesthetic!', timestamp: '1 hour ago' },
+            { id: 6, author: 'TechStyle', avatar: '💻', content: 'Perfect for my next outfit!', timestamp: '1.5 hours ago' },
+            { id: 7, author: 'CyberQueen', avatar: '👑', content: 'This is fire! 🔥', timestamp: '2 hours ago' },
+            { id: 8, author: 'StreetPunk', avatar: '⚡', content: 'Amazing tips, thanks!', timestamp: '2.5 hours ago' },
+            { id: 9, author: 'NeonGuru', avatar: '🧘', content: 'This is exactly my style!', timestamp: '3 hours ago' },
+            { id: 10, author: 'GlitchLord', avatar: '👾', content: 'Incredible post!', timestamp: '3.5 hours ago' },
+            { id: 11, author: 'CyberStyle', avatar: '🤖', content: 'Love the aesthetic!', timestamp: '4 hours ago' },
+            { id: 12, author: 'NeonMaster', avatar: '🎯', content: 'Perfect timing for this!', timestamp: '4.5 hours ago' },
+            { id: 13, author: 'StreetVibes', avatar: '🎵', content: 'This is so cool!', timestamp: '5 hours ago' },
+            { id: 14, author: 'CyberPunk', avatar: '🖤', content: 'Amazing content!', timestamp: '5.5 hours ago' },
+            { id: 15, author: 'NeonStyle', avatar: '✨', content: 'Love this post!', timestamp: '6 hours ago' }
+        ];
+        
+        // Return the exact number of comments that matches post.comments
+        const commentsToShow = sampleComments.slice(0, post.comments);
+        
+        return commentsToShow.map(comment => `
+            <div class="comment-item">
+                <div class="comment-header">
+                    <div class="comment-author">
+                        <span class="user-avatar" style="font-size: 1rem;">${comment.avatar}</span>
+                        <span class="user-name">${comment.author}</span>
+                    </div>
+                    <span class="comment-date">${comment.timestamp}</span>
+                </div>
+                <div class="comment-text">${comment.content}</div>
+            </div>
+        `).join('');
+    }
+
+    // Add comment to post
+    function addCommentToPost(postId, commentText) {
+        const post = communityPosts.find(p => p.id === postId);
+        if (post) {
+            post.comments++;
+            renderCommunityPosts();
+            updateStats();
+            
+            // Update the modal if it's open
+            const postDetailModal = document.getElementById('postDetailModal');
+            if (postDetailModal) {
+                const commentsList = postDetailModal.querySelector('.comments-list');
+                const commentsSection = postDetailModal.querySelector('.comments-section h3');
+                
+                if (commentsList && commentsSection) {
+                    commentsSection.textContent = `Comments (${post.comments})`;
+                    commentsList.innerHTML = generateCommentsList(post);
+                }
+            }
+            
+            // Update comment modal if open
+            const commentModal = document.getElementById('commentModal');
+            if (commentModal) {
+                const commentsList = commentModal.querySelector('.comments-list');
+                const commentsSection = commentModal.querySelector('.comments-section h3');
+                
+                if (commentsList && commentsSection) {
+                    commentsSection.textContent = `Comments (${post.comments})`;
+                    commentsList.innerHTML = generateCommentsList(post);
+                }
+            }
+            
+            console.log('Comment added:', commentText);
+        }
+    }
+
     // Show comment modal
     function showCommentModal(post) {
         // Create modal content
@@ -668,20 +776,28 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="modal active" id="commentModal">
                 <div class="modal-container">
                     <div class="modal-header">
-                        <h2>Comment on: ${post.title}</h2>
+                        <h2>Comments on: ${post.title}</h2>
                         <button class="close-btn" onclick="closeCommentModal()">×</button>
                     </div>
                     <div class="modal-body">
-                        <form id="commentForm" class="comment-form">
-                            <div class="form-group">
-                                <label for="commentText">Your Comment</label>
-                                <textarea id="commentText" class="form-textarea" rows="4" placeholder="Write your comment..." required></textarea>
+                        <div class="comments-section">
+                            <h3>Comments (${post.comments})</h3>
+                            <div class="comments-list">
+                                ${post.comments > 0 ? generateCommentsList(post) : '<p class="no-comments">No comments yet. Be the first to comment!</p>'}
                             </div>
-                            <div class="form-actions">
-                                <button type="button" class="btn-secondary" onclick="closeCommentModal()">Cancel</button>
-                                <button type="submit" class="btn-primary">Post Comment</button>
+                            <div class="add-comment">
+                                <form id="commentForm" class="comment-form">
+                                    <div class="form-group">
+                                        <label for="commentText">Add Your Comment</label>
+                                        <textarea id="commentText" class="form-textarea" rows="4" placeholder="Write your comment..." required></textarea>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="button" class="btn-secondary" onclick="closeCommentModal()">Cancel</button>
+                                        <button type="submit" class="btn-primary">Post Comment</button>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -690,17 +806,21 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add modal to page
         document.body.insertAdjacentHTML('beforeend', modalContent);
         
+        // Center modal on screen
+        setTimeout(() => {
+            const modal = document.getElementById('commentModal');
+            if (modal) {
+                modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 100);
+        
         // Add form submission
         document.getElementById('commentForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const commentText = document.getElementById('commentText').value;
             if (commentText.trim()) {
-                // Add comment to post
-                post.comments++;
-                renderCommunityPosts();
-                updateStats();
+                addCommentToPost(post.id, commentText);
                 closeCommentModal();
-                console.log('Comment added:', commentText);
             }
         });
         
@@ -721,11 +841,20 @@ document.addEventListener('DOMContentLoaded', function() {
             post.liked = !post.liked;
             post.likes += post.liked ? 1 : -1;
             
-            // Update UI
+            // Update UI in cards
             const likeBtn = document.querySelector(`[data-post-id="${postId}"] .like-btn`);
             if (likeBtn) {
                 likeBtn.classList.toggle('liked', post.liked);
                 likeBtn.querySelector('.like-count').textContent = post.likes;
+            }
+            
+            // Update modal if open
+            const postDetailModal = document.getElementById('postDetailModal');
+            if (postDetailModal) {
+                const likesCount = postDetailModal.querySelector('.likes-count');
+                if (likesCount) {
+                    likesCount.textContent = `❤️ ${post.likes}`;
+                }
             }
             
             updateStats();
