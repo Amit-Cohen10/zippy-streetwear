@@ -541,34 +541,77 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Setup detail modal listeners
     function setupDetailModalListeners(exchangeId) {
+        console.log('setupDetailModalListeners called with ID:', exchangeId);
         const exchange = exchanges.find(e => e.id === exchangeId);
-        if (!exchange) return;
+        if (!exchange) {
+            console.log('Exchange not found in setupDetailModalListeners');
+            return;
+        }
 
         // Close modal
-        document.getElementById('closeDetailModal').addEventListener('click', () => {
-            document.getElementById('exchangeDetailModal').classList.remove('active');
-        }, { passive: true });
+        const closeBtn = document.getElementById('closeDetailModal');
+        if (closeBtn) {
+            console.log('Close button found, adding listener');
+            closeBtn.addEventListener('click', () => {
+                document.getElementById('exchangeDetailModal').classList.remove('active');
+            }, { passive: true });
+        } else {
+            console.error('Close button not found in modal');
+        }
 
         // Like button
-        document.getElementById('likeBtn').addEventListener('click', () => {
-            toggleLike(exchangeId);
-        }, { passive: true });
+        const likeBtn = document.getElementById('likeBtn');
+        if (likeBtn) {
+            console.log('Like button found, adding listener');
+            // Remove existing listeners first
+            const newLikeBtn = likeBtn.cloneNode(true);
+            likeBtn.parentNode.replaceChild(newLikeBtn, likeBtn);
+            
+            newLikeBtn.addEventListener('click', () => {
+                console.log('Like button clicked in modal for exchange:', exchangeId);
+                toggleLike(exchangeId);
+            }, { passive: true });
+        } else {
+            console.error('Like button not found in modal');
+        }
 
         // Add comment
-        document.getElementById('addCommentBtn').addEventListener('click', () => {
-            addComment(exchangeId);
-        }, { passive: true });
+        const addCommentBtn = document.getElementById('addCommentBtn');
+        if (addCommentBtn) {
+            console.log('Add comment button found, adding listener');
+            addCommentBtn.addEventListener('click', () => {
+                console.log('Add comment button clicked for exchange:', exchangeId);
+                addComment(exchangeId);
+            }, { passive: true });
+        } else {
+            console.error('Add comment button not found in modal');
+        }
 
         // Respond button
-        document.getElementById('respondBtn').addEventListener('click', () => {
-            respondToExchange(exchangeId);
-        }, { passive: true });
+        const respondBtn = document.getElementById('respondBtn');
+        if (respondBtn) {
+            console.log('Respond button found, adding listener');
+            // Remove existing listeners first
+            const newRespondBtn = respondBtn.cloneNode(true);
+            respondBtn.parentNode.replaceChild(newRespondBtn, respondBtn);
+            
+            newRespondBtn.addEventListener('click', () => {
+                console.log('Respond button clicked in modal for exchange:', exchangeId);
+                respondToExchange(exchangeId);
+            }, { passive: true });
+        } else {
+            console.error('Respond button not found in modal');
+        }
     }
 
     // Toggle like
     function toggleLike(exchangeId) {
+        console.log('toggleLike called with ID:', exchangeId);
         const exchange = exchanges.find(e => e.id === exchangeId);
-        if (!exchange) return;
+        if (!exchange) {
+            console.log('Exchange not found in toggleLike');
+            return;
+        }
 
         exchange.liked = !exchange.liked;
         exchange.likes += exchange.liked ? 1 : -1;
@@ -582,9 +625,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Update detail modal if open
         const detailLikeBtn = document.getElementById('likeBtn');
-        if (detailLikeBtn) {
+        const likeCount = document.getElementById('likeCount');
+        if (detailLikeBtn && likeCount) {
+            console.log('Updating detail modal like button');
             detailLikeBtn.classList.toggle('liked', exchange.liked);
-            document.getElementById('likeCount').textContent = exchange.likes;
+            likeCount.textContent = exchange.likes;
+            console.log('Like count updated to:', exchange.likes);
+        } else {
+            console.log('Detail modal like elements not found');
         }
     }
 
@@ -621,7 +669,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Respond to exchange
     function respondToExchange(exchangeId) {
-        console.log('Respond button clicked for exchange:', exchangeId);
+        console.log('respondToExchange called with ID:', exchangeId);
         
         const exchange = exchanges.find(e => e.id === exchangeId);
         if (!exchange) {
