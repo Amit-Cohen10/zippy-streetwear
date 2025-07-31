@@ -1,6 +1,7 @@
 // Global functionality for all pages
 document.addEventListener('DOMContentLoaded', function() {
     updateCartCount();
+    initializeViewPreferences();
 });
 
 // Update cart count in navigation
@@ -18,18 +19,6 @@ function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.textContent = message;
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === 'error' ? '#ff4444' : type === 'success' ? '#00ff00' : '#00ffff'};
-        color: #000;
-        padding: 1rem 2rem;
-        border-radius: 4px;
-        z-index: 10000;
-        font-weight: bold;
-        box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-    `;
     
     document.body.appendChild(notification);
     
@@ -106,4 +95,70 @@ function closeCartModal() {
     if (typeof window.CartModule !== 'undefined' && window.CartModule.closeCartModal) {
         window.CartModule.closeCartModal();
     }
-} 
+}
+
+// View customization functionality
+function initializeViewPreferences() {
+    // Load saved preferences
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const savedLayout = localStorage.getItem('layout') || 'grid';
+    
+    // Apply theme
+    document.body.classList.add(`theme-${savedTheme}`);
+    
+    // Create theme toggle button if not exists
+    if (!document.getElementById('themeToggle')) {
+        // Find the auth button
+        const authBtn = document.getElementById('authBtn');
+        if (authBtn && authBtn.parentElement) {
+            const themeToggle = document.createElement('button');
+            themeToggle.id = 'themeToggle';
+            themeToggle.className = 'theme-toggle';
+            themeToggle.innerHTML = savedTheme === 'dark' ? '☀️' : '🌙';
+            themeToggle.title = 'Toggle theme';
+            themeToggle.onclick = toggleTheme;
+            
+            // Insert the theme toggle before the auth button
+            authBtn.parentElement.insertBefore(themeToggle, authBtn);
+        }
+    }
+}
+
+function toggleTheme() {
+    const body = document.body;
+    const currentTheme = body.classList.contains('theme-light') ? 'light' : 'dark';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    // Remove old theme class and add new one
+    body.classList.remove(`theme-${currentTheme}`);
+    body.classList.add(`theme-${newTheme}`);
+    
+    // Save preference
+    localStorage.setItem('theme', newTheme);
+    
+    // Update toggle button
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
+    }
+    
+    // Update user preferences if logged in
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+        try {
+            const user = JSON.parse(currentUser);
+            if (user.preferences) {
+                user.preferences.darkMode = newTheme === 'dark';
+                localStorage.setItem('currentUser', JSON.stringify(user));
+            }
+        } catch (error) {
+            console.error('Error updating user preferences:', error);
+        }
+    }
+    
+    // Show notification
+    showNotification(`Theme changed to ${newTheme} mode`, 'success');
+}
+
+// Export for global access
+window.toggleTheme = toggleTheme; 

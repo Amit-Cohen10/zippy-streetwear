@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>README - Zippy Streetwear Platform</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        .readme-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-light);
+        }
+        .readme-content h1 {
+            color: var(--accent-neon-cyan);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+        }
+        .readme-content h2 {
+            color: var(--accent-neon-pink);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        .readme-content h3 {
+            color: var(--accent-neon-green);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .readme-content code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .readme-content pre {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+        .readme-content ul {
+            margin-left: 2rem;
+            line-height: 1.8;
+        }
+        .readme-content a {
+            color: var(--accent-neon-cyan);
+            text-decoration: none;
+        }
+        .readme-content a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">Zippy</a>
+            <div class="nav-menu">
+                <a href="/products.html" class="nav-link">Products</a>
+                <a href="/brands.html" class="nav-link">Brands</a>
+                <a href="/exchange.html" class="nav-link">Exchange</a>
+                <a href="/community.html" class="nav-link">Community</a>
+                <a href="/admin.html" class="nav-link">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="readme-content">
+        <h1>🚀 Zippy Streetwear Platform</h1>
+        
+        <h2>📋 Project Overview</h2>
+        <p>Zippy is a modern, full-stack e-commerce platform for streetwear enthusiasts. Built with Node.js backend and vanilla JavaScript frontend, it features a futuristic cyberpunk design with neon aesthetics.</p>
+
+        <h2>🛠 Technology Stack</h2>
+        <ul>
+            <li><strong>Backend:</strong> Node.js with Express.js</li>
+            <li><strong>Frontend:</strong> HTML5, CSS3, Vanilla JavaScript</li>
+            <li><strong>Database:</strong> File-based JSON storage via persist_module</li>
+            <li><strong>Authentication:</strong> JWT tokens with bcrypt password hashing</li>
+            <li><strong>Design:</strong> Cyberpunk theme with neon colors and glass-morphism effects</li>
+        </ul>
+
+        <h2>✨ Key Features</h2>
+        <h3>Authentication & User Management</h3>
+        <ul>
+            <li>Secure registration and login system</li>
+            <li>Remember Me functionality (12 days vs 30 minutes)</li>
+            <li>Default admin account: <code>admin/admin</code></li>
+            <li>JWT-based session management</li>
+        </ul>
+
+        <h3>Product Management</h3>
+        <ul>
+            <li>Browse products with search functionality</li>
+            <li>Product filtering by category and brand</li>
+            <li>Detailed product pages with images</li>
+            <li>Admin product CRUD operations</li>
+        </ul>
+
+        <h3>Shopping Features</h3>
+        <ul>
+            <li>Shopping cart with add/remove functionality</li>
+            <li>Checkout process with mock payment</li>
+            <li>Order history tracking</li>
+            <li>Purchase confirmation emails (simulated)</li>
+        </ul>
+
+        <h3>Community Features</h3>
+        <ul>
+            <li>User exchange marketplace</li>
+            <li>Community forum and discussions</li>
+            <li>User profiles and ratings</li>
+            <li>Brand partnerships showcase</li>
+        </ul>
+
+        <h3>Admin Dashboard</h3>
+        <ul>
+            <li>User activity monitoring</li>
+            <li>Product inventory management</li>
+            <li>Order processing</li>
+            <li>Activity logs with filtering</li>
+        </ul>
+
+        <h2>🏗 Architecture</h2>
+        <h3>Backend Structure</h3>
+        <pre>
+modules/
+├── auth-server.js       # Authentication routes
+├── products-server.js   # Product management
+├── cart-server.js       # Shopping cart logic
+├── payment-server.js    # Payment processing
+├── exchange-server.js   # Exchange marketplace
+├── admin-server.js      # Admin functionality
+└── persist_module.js    # Data persistence layer
+        </pre>
+
+        <h3>Frontend Structure</h3>
+        <pre>
+public/
+├── scripts/
+│   ├── auth.js         # Authentication logic
+│   ├── products.js     # Product browsing
+│   ├── cart.js         # Cart management
+│   └── ...
+├── styles/
+│   └── main.css        # Global styles
+└── *.html              # Page templates
+        </pre>
+
+        <h2>🚀 Getting Started</h2>
+        <h3>Installation</h3>
+        <pre>
+# Clone the repository
+git clone [repository-url]
+
+# Install dependencies
+npm install
+
+# Start the server
+npm start
+        </pre>
+
+        <h3>Environment Setup</h3>
+        <p>The server runs on port 3000 by default. You can change this in the <code>server.js</code> file.</p>
+
+        <h2>🧪 Testing</h2>
+        <p>Run the test suite with:</p>
+        <pre>node test.js</pre>
+        <p>This will test all API endpoints and verify functionality.</p>
+
+        <h2>📱 Responsive Design</h2>
+        <p>The platform is fully responsive and optimized for:</p>
+        <ul>
+            <li>Desktop (1920px and above)</li>
+            <li>Tablet (768px - 1024px)</li>
+            <li>Mobile (320px - 767px)</li>
+        </ul>
+
+        <h2>🔒 Security Features</h2>
+        <ul>
+            <li>Password hashing with bcrypt</li>
+            <li>JWT token authentication</li>
+            <li>HTTPS ready configuration</li>
+            <li>Input validation and sanitization</li>
+            <li>Protected admin routes</li>
+        </ul>
+
+        <h2>🎨 Design System</h2>
+        <p>The cyberpunk aesthetic includes:</p>
+        <ul>
+            <li>Neon color palette (cyan, pink, green)</li>
+            <li>Glass-morphism effects</li>
+            <li>Animated gradients</li>
+            <li>Futuristic typography</li>
+            <li>Dark mode by default</li>
+        </ul>
+
+        <h2>📄 License</h2>
+        <p>This project is created for educational purposes.</p>
+    </main>
+</body>
+</html>
