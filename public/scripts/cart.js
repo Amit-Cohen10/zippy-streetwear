@@ -479,12 +479,22 @@ window.openCartModal = function() {
         // Show modal
         cartModal.classList.add('active');
         
-        // Auto-scroll to top when opening cart
+        // Scroll modal to top and ensure it's visible
         setTimeout(() => {
+            // Scroll the modal content to top
+            const modalContainer = cartModal.querySelector('.modal-container');
+            if (modalContainer) {
+                modalContainer.scrollTop = 0;
+            }
+            
+            // Scroll page to top if needed
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
             });
+            
+            // Ensure modal is visible at top
+            cartModal.scrollTop = 0;
         }, 100);
     }
 }

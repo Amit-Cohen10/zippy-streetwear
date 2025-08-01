@@ -113,7 +113,7 @@ body::before {
   75% { transform: scale(1.05) rotate(270deg); }
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar - Fixed to prevent flickering */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -125,9 +125,31 @@ body::before {
 ::-webkit-scrollbar-thumb {
   background: var(--accent-neon-cyan);
   border-radius: 4px;
+  /* Remove animation to prevent flickering */
+  transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-neon-pink);
+}
+
+/* Horizontal scrollbar - Fixed */
+::-webkit-scrollbar:horizontal {
+  height: 8px;
+}
+
+::-webkit-scrollbar-track:horizontal {
+  background: var(--secondary-dark);
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+  background: var(--accent-neon-cyan);
+  border-radius: 4px;
+  /* Remove animation to prevent flickering */
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:horizontal:hover {
   background: var(--accent-neon-pink);
 }
 
@@ -2660,33 +2682,36 @@ body.theme-light .auth-container {
   -webkit-backdrop-filter: blur(10px);
   display: none;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   z-index: 2000;
   /* Optimize for performance */
   will-change: opacity;
   transform: translateZ(0);
-  /* Ensure modal is always centered */
+  /* Ensure modal opens at top */
   padding: 20px;
   box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .modal.active {
   display: flex;
   animation: modal-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  /* Force center positioning */
+  /* Force top positioning */
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  padding-top: 20px;
+  overflow-y: auto;
 }
 
 @keyframes modal-fade-in {
   from {
     opacity: 0;
-    transform: scale(0.9) translateY(-20px);
+    transform: scale(0.9) translateY(-10px);
   }
   to {
     opacity: 1;
@@ -2708,6 +2733,9 @@ body.theme-light .auth-container {
   /* Optimize for performance */
   will-change: transform;
   transform: translateZ(0);
+  /* Ensure modal opens at top */
+  margin-top: 0;
+  margin-bottom: 20px;
 }
 
 .modal-container.large {
@@ -4556,6 +4584,9 @@ body.theme-light .auth-container {
   position: relative;
   overflow: hidden;
   animation: modal-glow 3s ease-in-out infinite alternate;
+  /* Ensure modal opens at top */
+  margin-top: 0;
+  margin-bottom: 20px;
 }
 
 @keyframes modal-glow {
@@ -4692,18 +4723,10 @@ body.theme-light .auth-container {
 }
 
 .cart-items::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--accent-neon-cyan), #00a0a0);
+  background: var(--accent-neon-cyan);
   border-radius: 4px;
-  animation: scrollbar-glow 2s ease-in-out infinite alternate;
-}
-
-@keyframes scrollbar-glow {
-  0% {
-    box-shadow: 0 0 3px rgba(0, 255, 255, 0.3);
-  }
-  100% {
-    box-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
-  }
+  /* Remove animation to prevent flickering */
+  transition: background 0.3s ease;
 }
 
 .cart-items::-webkit-scrollbar-thumb:hover {
@@ -5230,6 +5253,9 @@ body.theme-light .auth-container {
     margin: 1rem;
     max-width: calc(100vw - 2rem);
     max-height: calc(100vh - 2rem);
+    /* Ensure modal opens at top on mobile */
+    align-items: flex-start;
+    padding-top: 10px;
   }
   
   .cart-item {
