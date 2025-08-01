@@ -3,6 +3,12 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCartCount();
     initializeViewPreferences();
     initializeThemeToggle();
+    initializeUserMenu();
+    
+    // Update auth UI if the function exists
+    if (typeof updateAuthUI === 'function') {
+        updateAuthUI();
+    }
 });
 
 // Initialize theme toggle button
@@ -200,16 +206,20 @@ async function logout() {
         
         // Update UI
         const authBtn = document.getElementById('authBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
+        const userMenu = document.getElementById('userMenu');
         
         if (authBtn) {
             authBtn.style.display = 'inline-block';
             authBtn.textContent = 'LOGIN';
         }
         
-        if (logoutBtn) {
-            logoutBtn.style.display = 'none';
+        if (userMenu) {
+            userMenu.style.display = 'none';
         }
+        
+        // Set global login status
+        window.isLoggedIn = false;
+        window.currentUser = null;
         
         // Update cart count
         const cartCount = document.getElementById('cartCount');
@@ -230,6 +240,94 @@ async function logout() {
     }
 }
 
+// User menu functionality
+function initializeUserMenu() {
+    console.log('Initializing user menu...');
+    
+    // Try multiple times since elements might not be ready
+    setTimeout(() => {
+        const userMenuToggle = document.getElementById('userMenuToggle');
+        const userMenu = document.getElementById('userMenu');
+        const userDropdown = document.getElementById('userDropdown');
+        
+        console.log('User menu elements:', { userMenuToggle, userMenu, userDropdown });
+        
+        if (userMenuToggle && userMenu) {
+            console.log('Adding click listener to user menu toggle');
+            
+            // Remove any existing listeners
+            userMenuToggle.onclick = null;
+            
+            userMenuToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('User menu toggle clicked!');
+                userMenu.classList.toggle('active');
+                console.log('User menu active state:', userMenu.classList.contains('active'));
+            });
+            
+            // Also add onclick for backup
+            userMenuToggle.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('User menu toggle clicked via onclick!');
+                userMenu.classList.toggle('active');
+                console.log('User menu active state:', userMenu.classList.contains('active'));
+            };
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (userMenu && !userMenu.contains(e.target)) {
+                    userMenu.classList.remove('active');
+                }
+            });
+            
+            // Close dropdown when pressing escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && userMenu) {
+                    userMenu.classList.remove('active');
+                }
+            });
+            
+            console.log('User menu initialized successfully!');
+        } else {
+            console.log('User menu elements not found, retrying...');
+            // Retry after another delay
+            setTimeout(initializeUserMenu, 1000);
+        }
+    }, 500);
+}
+
+// Update user menu with username
+function updateUserMenu(username) {
+    const usernameDisplay = document.getElementById('usernameDisplay');
+    if (usernameDisplay) {
+        usernameDisplay.textContent = username || 'User';
+    }
+}
+
+// Show/hide user menu based on login status
+function toggleUserMenuVisibility(isLoggedIn, username = null) {
+    const authBtn = document.getElementById('authBtn');
+    const userMenu = document.getElementById('userMenu');
+    
+    if (authBtn && userMenu) {
+        if (isLoggedIn) {
+            authBtn.style.display = 'none';
+            userMenu.style.display = 'block';
+            if (username) {
+                updateUserMenu(username);
+            }
+        } else {
+            authBtn.style.display = 'inline-block';
+            userMenu.style.display = 'none';
+        }
+    }
+}
+
 // Export for global access
 window.toggleTheme = toggleTheme;
-window.logout = logout; 
+window.logout = logout;
+window.initializeUserMenu = initializeUserMenu;
+window.updateUserMenu = updateUserMenu;
+window.toggleUserMenuVisibility = toggleUserMenuVisibility; 

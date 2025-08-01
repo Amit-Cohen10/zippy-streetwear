@@ -39,14 +39,29 @@ async function initCheckout() {
 // Check user login status
 async function checkUserLoginStatus() {
     try {
+        console.log('Checking user login status...');
+        
+        // First check localStorage
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+            console.log('User found in localStorage:', currentUser);
+            return true;
+        }
+        
+        console.log('No user in localStorage, checking server...');
         const response = await fetch('/api/auth/status', {
             credentials: 'include'
         });
         
+        console.log('Server response status:', response.status);
+        
         if (response.ok) {
             const data = await response.json();
+            console.log('Server response data:', data);
             return data.loggedIn;
         }
+        
+        console.log('Server response not ok, returning false');
         return false;
     } catch (error) {
         console.error('Failed to check login status:', error);

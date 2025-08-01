@@ -226,6 +226,31 @@ router.get('/verify-token', async (req, res) => {
   }
 });
 
+// Check login status
+router.get('/status', async (req, res) => {
+  try {
+    const user = await persist.getUserFromToken(req);
+    
+    if (!user) {
+      return res.json({ loggedIn: false });
+    }
+    
+    res.json({
+      loggedIn: true,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role
+      }
+    });
+    
+  } catch (error) {
+    console.error('Status check error:', error);
+    res.json({ loggedIn: false });
+  }
+});
+
 // Get user profile
 router.get('/profile', async (req, res) => {
   try {

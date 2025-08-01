@@ -89,6 +89,9 @@ function initAuth() {
     }
     
     console.log('Auth initialization complete');
+    
+    // Update UI based on current login status
+    updateAuthUI();
 }
 
 function openAuthModal() {
@@ -345,6 +348,9 @@ async function handleLogout() {
 function updateAuthUI() {
     console.log('Updating auth UI...');
     const authBtn = document.getElementById('authBtn');
+    const userMenu = document.getElementById('userMenu');
+    
+    console.log('Found elements:', { authBtn: !!authBtn, userMenu: !!userMenu });
     
     if (!authBtn) {
         console.log('Auth button not found, skipping UI update');
@@ -362,23 +368,48 @@ function updateAuthUI() {
             const displayName = user.profile?.displayName || user.username || 'User';
             console.log('Display name:', displayName);
             
-            authBtn.innerHTML = `
-                <span class="user-name">${displayName}</span>
-                <span class="logout-text">Logout</span>
-            `;
-            authBtn.classList.add('logged-in');
-            console.log('Updated auth button for logged-in user');
+            // Hide login button and show user menu
+            if (authBtn && userMenu) {
+                authBtn.style.display = 'none';
+                userMenu.style.display = 'block';
+                
+                // Update username in menu
+                const usernameDisplay = document.getElementById('usernameDisplay');
+                if (usernameDisplay) {
+                    usernameDisplay.textContent = displayName;
+                }
+                
+                // Set global login status
+                window.isLoggedIn = true;
+                window.currentUser = user;
+                
+                console.log('User menu should be visible now');
+            }
+            
+            console.log('Updated auth UI for logged-in user');
             
         } catch (error) {
             console.error('Error parsing saved user:', error);
             localStorage.removeItem('currentUser');
-            authBtn.innerHTML = 'Login';
-            authBtn.classList.remove('logged-in');
+            
+            // Show login button and hide user menu
+            if (authBtn && userMenu) {
+                authBtn.style.display = 'inline-block';
+                userMenu.style.display = 'none';
+            }
         }
     } else {
         console.log('No saved user, showing login state');
-        authBtn.innerHTML = 'Login';
-        authBtn.classList.remove('logged-in');
+        
+        // Show login button and hide user menu
+        if (authBtn && userMenu) {
+            authBtn.style.display = 'inline-block';
+            userMenu.style.display = 'none';
+        }
+        
+        // Set global login status
+        window.isLoggedIn = false;
+        window.currentUser = null;
     }
     
     console.log('Auth UI update complete');

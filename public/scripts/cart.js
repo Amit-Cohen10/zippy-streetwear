@@ -283,11 +283,18 @@ window.clearCart = function() {
 
 // Proceed to checkout
 window.proceedToCheckout = function() {
-    if (!window.isLoggedIn) {
+    console.log('Checkout button clicked!');
+    
+    // Check login status from localStorage
+    const currentUser = localStorage.getItem('currentUser');
+    if (!currentUser) {
+        console.log('No user found in localStorage');
         showNotification('Please login to checkout', 'error');
         openAuthModal();
         return;
     }
+    
+    console.log('User is logged in:', currentUser);
     
     // Ensure cartItems is an array
     if (!Array.isArray(window.cartItems)) {
@@ -295,10 +302,12 @@ window.proceedToCheckout = function() {
     }
     
     if (window.cartItems.length === 0) {
+        console.log('Cart is empty');
         showNotification('Your cart is empty', 'error');
         return;
     }
     
+    console.log('Proceeding to checkout...');
     // Navigate to checkout page
     window.location.href = '/checkout';
 }

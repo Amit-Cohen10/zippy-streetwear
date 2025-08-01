@@ -141,9 +141,10 @@ app.use((req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Zippy server running on port ${PORT}`);
   console.log(`🌐 Visit: http://localhost:${PORT}`);
+  console.log(`🌐 External: http://0.0.0.0:${PORT}`);
   console.log(`👨‍💼 Admin panel: http://localhost:${PORT}/admin`);
   console.log(`📧 Default admin: admin / admin`);
 }); 
