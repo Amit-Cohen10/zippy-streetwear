@@ -6813,3 +6813,52 @@ body.theme-light .auth-container {
     justify-content: center;
   }
 }
+
+/* Form Validation Styles */
+.validation-message {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  transition: all 0.3s ease;
+  min-height: 1rem;
+}
+
+.validation-message.success {
+  color: var(--accent-neon-cyan);
+}
+
+.validation-message.error {
+  color: #ff6b6b;
+}
+
+.field-help {
+  font-size: 0.7rem;
+  color: var(--text-gray);
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+.form-group input.valid {
+  border-color: var(--accent-neon-cyan);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.form-group input.invalid {
+  border-color: #ff6b6b;
+  box-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+}
+
+.validation-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.875rem;
+}
+
+.validation-icon.success {
+  color: var(--accent-neon-cyan);
+}
+
+.validation-icon.error {
+  color: #ff6b6b;
+}

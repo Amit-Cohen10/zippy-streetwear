@@ -200,21 +200,29 @@
                         <div class="credit-card-form" id="creditCardForm">
                             <div class="form-group">
                                 <label for="cardNumber">Card Number</label>
-                                <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                                <input type="text" id="cardNumber" name="cardNumber" placeholder="4532 1234 5678 9012" maxlength="19">
+                                <div class="validation-message" id="cardNumberValidation"></div>
+                                <div class="field-help">Example: 4532 1234 5678 9012 (Visa) or 5555 4444 3333 1111 (Mastercard)</div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="expiryDate">Expiry Date</label>
-                                    <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" maxlength="5">
+                                    <input type="text" id="expiryDate" name="expiryDate" placeholder="12/25" maxlength="5">
+                                    <div class="validation-message" id="expiryValidation"></div>
+                                    <div class="field-help">Format: MM/YY (e.g., 12/25)</div>
                                 </div>
                                 <div class="form-group">
                                     <label for="cvv">CVV</label>
                                     <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4">
+                                    <div class="validation-message" id="cvvValidation"></div>
+                                    <div class="field-help">3-4 digits on back of card</div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="cardName">Name on Card</label>
-                                <input type="text" id="cardName" name="cardName">
+                                <input type="text" id="cardName" name="cardName" placeholder="John Doe">
+                                <div class="validation-message" id="cardNameValidation"></div>
+                                <div class="field-help">Full name as printed on card</div>
                             </div>
                         </div>
                         
