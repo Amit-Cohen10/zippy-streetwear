@@ -299,8 +299,8 @@ window.proceedToCheckout = function() {
         return;
     }
     
-    // Show payment modal
-    openPaymentModal();
+    // Navigate to checkout page
+    window.location.href = '/checkout';
 }
 
 // Open payment modal

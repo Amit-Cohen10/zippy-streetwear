@@ -497,4 +497,73 @@ router.get('/activity/summary', requireAdmin, async (req, res) => {
   }
 });
 
+// Check admin access
+router.get('/check', requireAdmin, async (req, res) => {
+  try {
+    res.json({ 
+      message: 'Admin access verified',
+      user: req.user 
+    });
+  } catch (error) {
+    console.error('Admin check error:', error);
+    res.status(500).json({ error: 'Failed to verify admin access' });
+  }
+});
+
+// Get analytics data
+router.get('/analytics', requireAdmin, async (req, res) => {
+  try {
+    const [orders, users, activities, exchanges] = await Promise.all([
+      persist.readData(persist.ordersFile),
+      persist.readData(persist.usersFile),
+      persist.readData(persist.activityFile),
+      persist.readData(persist.exchangesFile)
+    ]);
+    
+    // Calculate analytics
+    const totalRevenue = orders.reduce((sum, order) => sum + (order.total || 0), 0);
+    const totalOrders = orders.length;
+    const activeUsers = users.filter(user => {
+      const lastActivity = new Date(user.lastActivity || user.createdAt);
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      return lastActivity > thirtyDaysAgo;
+    }).length;
+    const totalExchanges = exchanges.length;
+    
+    res.json({
+      totalRevenue,
+      totalOrders,
+      activeUsers,
+      totalExchanges
+    });
+    
+  } catch (error) {
+    console.error('Analytics error:', error);
+    res.status(500).json({ error: 'Failed to fetch analytics' });
+  }
+});
+
+// Get users list
+router.get('/users', requireAdmin, async (req, res) => {
+  try {
+    const users = await persist.readData(persist.usersFile);
+    
+    // Remove sensitive information
+    const safeUsers = users.map(user => ({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role || 'user',
+      createdAt: user.createdAt,
+      lastActivity: user.lastActivity
+    }));
+    
+    res.json(safeUsers);
+    
+  } catch (error) {
+    console.error('Users fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
 module.exports = router; 

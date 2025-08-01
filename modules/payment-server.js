@@ -404,4 +404,44 @@ function generateTrackingInfo(order) {
   };
 }
 
+// Get all orders for user
+router.get('/orders', requireAuth, async (req, res) => {
+  try {
+    // Read orders data
+    const orders = await persist.readData(persist.ordersFile);
+    const userOrders = orders.filter(o => o.userId === req.user.id);
+    
+    // Sort by most recent first
+    userOrders.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    res.json(userOrders);
+    
+  } catch (error) {
+    console.error('Failed to fetch orders:', error);
+    res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+});
+
+// Get order details by ID
+router.get('/order/:orderId', requireAuth, async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    
+    // Read orders data
+    const orders = await persist.readData(persist.ordersFile);
+    const order = orders.find(o => o.id === orderId && o.userId === req.user.id);
+    
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    // Return order details
+    res.json(order);
+    
+  } catch (error) {
+    console.error('Failed to fetch order:', error);
+    res.status(500).json({ error: 'Failed to fetch order details' });
+  }
+});
+
 module.exports = router; 

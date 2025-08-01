@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist - Zippy Streetwear</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">ZIPPY</span>
+                <div class="logo-glow"></div>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">HOME</a></li>
+                <li><a href="/products" class="nav-link">SHOP</a></li>
+                <li><a href="/exchange" class="nav-link">EXCHANGE</a></li>
+                <li><a href="/community" class="nav-link">COMMUNITY</a></li>
+                <li><a href="/brands" class="nav-link">BRANDS</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="search-btn" onclick="openSearchModal()">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="cart-btn" onclick="openCartModal()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <div class="auth-section">
+                    <button class="auth-btn" id="authBtn" onclick="openAuthModal()">LOGIN</button>
+                    <button class="logout-btn" id="logoutBtn" onclick="logout()" style="display: none;">
+                        <i class="fas fa-sign-out-alt"></i> LOGOUT
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="wishlist-page">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">
+                    <i class="fas fa-heart"></i>
+                    My Wishlist
+                </h1>
+                <p class="page-subtitle">Save your favorite items for later</p>
+            </div>
+
+            <!-- Wishlist Actions -->
+            <div class="wishlist-actions">
+                <div class="actions-left">
+                    <button class="filter-btn" onclick="toggleFilters()">
+                        <i class="fas fa-filter"></i> Filters
+                    </button>
+                    <select id="sortSelect" onchange="sortWishlist()">
+                        <option value="date-desc">Newest First</option>
+                        <option value="date-asc">Oldest First</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                        <option value="name-asc">Name: A to Z</option>
+                    </select>
+                </div>
+                <div class="actions-right">
+                    <button class="btn-secondary" onclick="shareWishlist()">
+                        <i class="fas fa-share"></i> Share Wishlist
+                    </button>
+                    <button class="btn-outline" onclick="clearWishlist()">
+                        <i class="fas fa-trash"></i> Clear All
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters Panel -->
+            <div class="filters-panel" id="filtersPanel" style="display: none;">
+                <div class="filter-group">
+                    <label>Category</label>
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="hoodies">Hoodies</option>
+                        <option value="t-shirts">T-Shirts</option>
+                        <option value="jeans">Jeans</option>
+                        <option value="sneakers">Sneakers</option>
+                        <option value="accessories">Accessories</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Brand</label>
+                    <select id="brandFilter">
+                        <option value="">All Brands</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Price Range</label>
+                    <div class="price-range">
+                        <input type="range" id="priceMin" min="0" max="500" value="0">
+                        <input type="range" id="priceMax" min="0" max="500" value="500">
+                        <div class="price-values">
+                            <span id="priceMinValue">$0</span> - <span id="priceMaxValue">$500</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Availability</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="inStockFilter" checked>
+                            <span class="checkmark"></span>
+                            In Stock Only
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="onSaleFilter">
+                            <span class="checkmark"></span>
+                            On Sale
+                        </label>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="applyFilters()">Apply Filters</button>
+            </div>
+
+            <!-- Wishlist Content -->
+            <div class="wishlist-content">
+                <!-- Wishlist Items Grid -->
+                <div class="wishlist-grid" id="wishlistGrid">
+                    <!-- Items will be loaded here -->
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-wishlist" id="emptyWishlist" style="display: none;">
+                    <div class="empty-icon">
+                        <i class="fas fa-heart-broken"></i>
+                    </div>
+                    <h3>Your wishlist is empty</h3>
+                    <p>Start adding items you love to your wishlist!</p>
+                    <a href="/products" class="btn-primary">
+                        <i class="fas fa-shopping-bag"></i>
+                        Browse Products
+                    </a>
+                </div>
+
+                <!-- Loading State -->
+                <div class="loading-state" id="loadingState">
+                    <div class="loading-spinner"></div>
+                    <p>Loading your wishlist...</p>
+                </div>
+            </div>
+
+            <!-- Wishlist Stats -->
+            <div class="wishlist-stats" id="wishlistStats" style="display: none;">
+                <div class="stats-card">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Items</span>
+                        <span class="stat-value" id="totalItems">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Value</span>
+                        <span class="stat-value" id="totalValue">$0.00</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Average Price</span>
+                        <span class="stat-value" id="averagePrice">$0.00</span>
+                    </div>
+                </div>
+                <div class="bulk-actions">
+                    <button class="btn-primary" onclick="addAllToCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        Add All to Cart
+                    </button>
+                    <button class="btn-secondary" onclick="moveToComparison()">
+                        <i class="fas fa-balance-scale"></i>
+                        Compare Selected
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Share Modal -->
+    <div class="modal" id="shareModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Share Your Wishlist</h3>
+                <button class="close-btn" onclick="closeShareModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Share your wishlist with friends and family!</p>
+                <div class="share-options">
+                    <button class="share-btn email" onclick="shareViaEmail()">
+                        <i class="fas fa-envelope"></i>
+                        Email
+                    </button>
+                    <button class="share-btn social" onclick="shareOnSocial('facebook')">
+                        <i class="fab fa-facebook"></i>
+                        Facebook
+                    </button>
+                    <button class="share-btn social" onclick="shareOnSocial('twitter')">
+                        <i class="fab fa-twitter"></i>
+                        Twitter
+                    </button>
+                    <button class="share-btn copy" onclick="copyWishlistLink()">
+                        <i class="fas fa-copy"></i>
+                        Copy Link
+                    </button>
+                </div>
+                <div class="share-link">
+                    <input type="text" id="shareLink" readonly>
+                    <button onclick="copyWishlistLink()">Copy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include common modals and scripts -->
+    <script src="/scripts/global.js"></script>
+    <script src="/scripts/auth.js"></script>
+    <script src="/scripts/wishlist.js"></script>
+</body>
+</html>

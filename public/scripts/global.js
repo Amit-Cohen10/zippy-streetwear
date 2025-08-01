@@ -2,7 +2,22 @@
 document.addEventListener('DOMContentLoaded', function() {
     updateCartCount();
     initializeViewPreferences();
+    initializeThemeToggle();
 });
+
+// Initialize theme toggle button
+function initializeThemeToggle() {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const themeIcon = document.getElementById('themeIcon');
+    
+    if (themeIcon) {
+        themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+    
+    // Apply saved theme
+    document.body.className = '';
+    document.body.classList.add(`theme-${savedTheme}`);
+}
 
 // Update cart count in navigation
 function updateCartCount() {
@@ -128,24 +143,7 @@ function initializeViewPreferences() {
     // Apply theme
     document.body.classList.add(`theme-${savedTheme}`);
     
-    // Create theme toggle button if not exists
-    if (!document.getElementById('themeToggle')) {
-        // Find the auth button
-        const authBtn = document.getElementById('authBtn');
-        if (authBtn && authBtn.parentElement) {
-            const themeToggle = document.createElement('button');
-            themeToggle.id = 'themeToggle';
-            themeToggle.className = 'theme-toggle';
-            themeToggle.innerHTML = savedTheme === 'dark' ? '☀️' : '🌙';
-            themeToggle.title = 'Toggle theme';
-            if (themeToggle) {
-                themeToggle.onclick = toggleTheme;
-            }
-            
-            // Insert the theme toggle before the auth button
-            authBtn.parentElement.insertBefore(themeToggle, authBtn);
-        }
-    }
+    // Theme toggle button is now in HTML, no need to create dynamically
 }
 
 function toggleTheme() {
@@ -161,9 +159,9 @@ function toggleTheme() {
     localStorage.setItem('theme', newTheme);
     
     // Update toggle button
-    const themeToggle = document.getElementById('themeToggle');
-    if (themeToggle) {
-        themeToggle.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
+    const themeIcon = document.getElementById('themeIcon');
+    if (themeIcon) {
+        themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     }
     
     // Update user preferences if logged in
@@ -184,5 +182,54 @@ function toggleTheme() {
     showNotification(`Theme changed to ${newTheme} mode`, 'success');
 }
 
+// Global logout function
+async function logout() {
+    try {
+        console.log('Logging out...');
+        
+        const response = await fetch('/api/auth/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        
+        // Clear local storage
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('userData');
+        localStorage.removeItem('userToken');
+        localStorage.removeItem('zippyCart');
+        
+        // Update UI
+        const authBtn = document.getElementById('authBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        
+        if (authBtn) {
+            authBtn.style.display = 'inline-block';
+            authBtn.textContent = 'LOGIN';
+        }
+        
+        if (logoutBtn) {
+            logoutBtn.style.display = 'none';
+        }
+        
+        // Update cart count
+        const cartCount = document.getElementById('cartCount');
+        if (cartCount) {
+            cartCount.textContent = '0';
+        }
+        
+        showNotification('Logged out successfully', 'success');
+        
+        // Redirect to home page
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+        
+    } catch (error) {
+        console.error('Logout error:', error);
+        showNotification('Error during logout', 'error');
+    }
+}
+
 // Export for global access
-window.toggleTheme = toggleTheme; 
+window.toggleTheme = toggleTheme;
+window.logout = logout; 

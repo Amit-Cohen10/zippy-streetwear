@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - Zippy Streetwear</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">ZIPPY</span>
+                <div class="logo-glow"></div>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">HOME</a></li>
+                <li><a href="/products" class="nav-link">SHOP</a></li>
+                <li><a href="/exchange" class="nav-link">EXCHANGE</a></li>
+                <li><a href="/community" class="nav-link">COMMUNITY</a></li>
+                <li><a href="/brands" class="nav-link">BRANDS</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="search-btn" onclick="openSearchModal()">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="cart-btn" onclick="openCartModal()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <div class="auth-section">
+                    <button class="auth-btn" id="authBtn" onclick="openAuthModal()">LOGIN</button>
+                    <button class="logout-btn" id="logoutBtn" onclick="logout()" style="display: none;">
+                        <i class="fas fa-sign-out-alt"></i> LOGOUT
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="thank-you-page">
+        <div class="container">
+            <!-- Success Animation -->
+            <div class="success-animation">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="success-glow"></div>
+            </div>
+
+            <!-- Thank You Message -->
+            <div class="thank-you-content">
+                <h1 class="thank-you-title">Thank You for Your Order!</h1>
+                <p class="thank-you-subtitle">Your payment was successful and your order is being processed</p>
+                
+                <!-- Order Details -->
+                <div class="order-confirmation">
+                    <div class="confirmation-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-receipt"></i> Order Confirmation</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="order-info">
+                                <div class="info-row">
+                                    <span class="info-label">Order Number:</span>
+                                    <span class="info-value" id="orderNumber">Loading...</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Order Date:</span>
+                                    <span class="info-value" id="orderDate">Loading...</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Total Amount:</span>
+                                    <span class="info-value" id="totalAmount">Loading...</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Payment Method:</span>
+                                    <span class="info-value" id="paymentMethod">Loading...</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Order Items -->
+                            <div class="order-items-summary">
+                                <h3>Items Ordered</h3>
+                                <div class="items-list" id="orderItemsList">
+                                    <!-- Items will be loaded here -->
+                                </div>
+                            </div>
+                            
+                            <!-- Shipping Info -->
+                            <div class="shipping-info">
+                                <h3>Shipping Information</h3>
+                                <div class="shipping-details" id="shippingDetails">
+                                    <!-- Shipping details will be loaded here -->
+                                </div>
+                                <div class="estimated-delivery">
+                                    <p><i class="fas fa-truck"></i> Estimated delivery: <span id="estimatedDelivery">3-5 business days</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Next Steps -->
+                <div class="next-steps">
+                    <h2>What's Next?</h2>
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <div class="step-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h3>Confirmation Email</h3>
+                            <p>You'll receive an email confirmation with your order details within the next few minutes.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-icon">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <h3>Order Processing</h3>
+                            <p>Your order is being prepared and will be packed with care for shipping.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-icon">
+                                <i class="fas fa-shipping-fast"></i>
+                            </div>
+                            <h3>Tracking Information</h3>
+                            <p>Once shipped, you'll receive tracking information to monitor your delivery.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <a href="/my-items" class="btn-primary">
+                        <i class="fas fa-package"></i>
+                        View My Orders
+                    </a>
+                    <a href="/products" class="btn-secondary">
+                        <i class="fas fa-shopping-bag"></i>
+                        Continue Shopping
+                    </a>
+                    <button class="btn-outline" onclick="printOrderDetails()">
+                        <i class="fas fa-print"></i>
+                        Print Receipt
+                    </button>
+                </div>
+
+                <!-- Social Sharing -->
+                <div class="social-sharing">
+                    <p>Share your style:</p>
+                    <div class="social-buttons">
+                        <button class="social-btn twitter" onclick="shareOnTwitter()">
+                            <i class="fab fa-twitter"></i>
+                        </button>
+                        <button class="social-btn instagram" onclick="shareOnInstagram()">
+                            <i class="fab fa-instagram"></i>
+                        </button>
+                        <button class="social-btn facebook" onclick="shareOnFacebook()">
+                            <i class="fab fa-facebook"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Customer Support -->
+                <div class="customer-support">
+                    <div class="support-card">
+                        <h3><i class="fas fa-headset"></i> Need Help?</h3>
+                        <p>Our customer support team is here to help with any questions about your order.</p>
+                        <div class="support-options">
+                            <a href="/support" class="support-link">
+                                <i class="fas fa-chat"></i>
+                                Live Chat
+                            </a>
+                            <a href="mailto:support@zippy.com" class="support-link">
+                                <i class="fas fa-envelope"></i>
+                                Email Support
+                            </a>
+                            <a href="tel:+1-800-ZIPPY" class="support-link">
+                                <i class="fas fa-phone"></i>
+                                Call Us
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Include common modals and scripts -->
+    <script src="/scripts/global.js"></script>
+    <script src="/scripts/auth.js"></script>
+    <script src="/scripts/thank-you.js"></script>
+</body>
+</html>

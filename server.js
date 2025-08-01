@@ -106,6 +106,18 @@ app.get('/my-items', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'my-items.html'));
 });
 
+app.get('/checkout', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'checkout.html'));
+});
+
+app.get('/thank-you', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'thank-you.html'));
+});
+
+app.get('/wishlist', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'wishlist.html'));
+});
+
 app.get('/readme.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'readme.html'));
 });
