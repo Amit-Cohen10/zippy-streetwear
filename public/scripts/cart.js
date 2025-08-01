@@ -215,15 +215,18 @@ function updateCartSummary() {
     }
     
     const subtotal = window.cartItems.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0);
-    const shipping = subtotal > 0 ? 5.99 : 0;
-    const total = subtotal + shipping;
+    const shipping = subtotal > 100 ? 0 : 9.99; // Free shipping over $100 (same as checkout)
+    const tax = subtotal * 0.08; // 8% tax (same as checkout)
+    const total = subtotal + shipping + tax;
     
     const subtotalEl = document.getElementById('subtotal');
     const shippingEl = document.getElementById('shipping');
+    const taxEl = document.getElementById('tax');
     const totalEl = document.getElementById('total');
     
     if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
-    if (shippingEl) shippingEl.textContent = `$${shipping.toFixed(2)}`;
+    if (shippingEl) shippingEl.textContent = shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`;
+    if (taxEl) taxEl.textContent = `$${tax.toFixed(2)}`;
     if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
 }
 
