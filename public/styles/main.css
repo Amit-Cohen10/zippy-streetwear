@@ -4721,8 +4721,9 @@ body.theme-light .auth-container {
   border-radius: 8px;
   transition: all 0.3s ease;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   animation: item-fade-in 0.5s ease-out;
+  min-height: 120px;
 }
 
 @keyframes item-fade-in {
@@ -4792,6 +4793,8 @@ body.theme-light .auth-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 0;
+  flex: 1;
 }
 
 .cart-item-name {
@@ -4800,6 +4803,10 @@ body.theme-light .auth-container {
   margin-bottom: 0.25rem;
   text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
   animation: name-glow 4s ease-in-out infinite alternate;
+  font-size: 1rem;
+  line-height: 1.2;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 @keyframes name-glow {
@@ -4813,8 +4820,12 @@ body.theme-light .auth-container {
 
 .cart-item-description {
   color: var(--text-gray);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   margin-bottom: 0.5rem;
+  line-height: 1.4;
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .cart-item-price {

@@ -35,6 +35,14 @@ function openCartModal() {
     } else {
         window.location.href = '/cart';
     }
+    
+    // Auto-scroll to top when opening cart
+    setTimeout(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }, 100);
 }
 
 // Open search modal

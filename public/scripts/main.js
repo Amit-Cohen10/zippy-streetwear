@@ -423,6 +423,14 @@ function initModals() {
         cartBtn.onclick = () => {
             cartModal.style.display = 'flex';
             loadCart();
+            
+            // Auto-scroll to top when opening cart
+            setTimeout(() => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }, 100);
         };
         
         if (closeCart) {
