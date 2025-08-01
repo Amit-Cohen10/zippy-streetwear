@@ -116,7 +116,9 @@ function initializeViewPreferences() {
             themeToggle.className = 'theme-toggle';
             themeToggle.innerHTML = savedTheme === 'dark' ? '☀️' : '🌙';
             themeToggle.title = 'Toggle theme';
-            themeToggle.onclick = toggleTheme;
+            if (themeToggle) {
+                themeToggle.onclick = toggleTheme;
+            }
             
             // Insert the theme toggle before the auth button
             authBtn.parentElement.insertBefore(themeToggle, authBtn);

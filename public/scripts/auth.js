@@ -26,17 +26,19 @@ function initAuth() {
     }
     
     // Auth button click handler
-    authBtn.onclick = function() {
-        console.log('Auth button clicked');
-        const savedUser = localStorage.getItem('currentUser');
-        if (!savedUser) {
-            console.log('No saved user, opening login modal');
-            openAuthModal();
-        } else {
-            console.log('User is logged in, handling logout');
-            handleLogout();
-        }
-    };
+    if (authBtn) {
+        authBtn.onclick = function() {
+            console.log('Auth button clicked');
+            const savedUser = localStorage.getItem('currentUser');
+            if (!savedUser) {
+                console.log('No saved user, opening login modal');
+                openAuthModal();
+            } else {
+                console.log('User is logged in, handling logout');
+                handleLogout();
+            }
+        };
+    }
     
     // Close button
     if (closeAuth) {
@@ -54,23 +56,25 @@ function initAuth() {
     
     // Tab switching
     authTabs.forEach(tab => {
-        tab.onclick = function() {
-            const targetTab = tab.dataset.tab;
-            console.log('Switching to tab:', targetTab);
-            
-            authTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            
-            if (targetTab === 'login') {
-                loginForm.classList.remove('hidden');
-                registerForm.classList.add('hidden');
-                document.getElementById('authTitle').textContent = 'Login';
-            } else {
-                loginForm.classList.add('hidden');
-                registerForm.classList.remove('hidden');
-                document.getElementById('authTitle').textContent = 'Register';
-            }
-        };
+        if (tab) {
+            tab.onclick = function() {
+                const targetTab = tab.dataset.tab;
+                console.log('Switching to tab:', targetTab);
+                
+                authTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                if (targetTab === 'login') {
+                    loginForm.classList.remove('hidden');
+                    registerForm.classList.add('hidden');
+                    document.getElementById('authTitle').textContent = 'Login';
+                } else {
+                    loginForm.classList.add('hidden');
+                    registerForm.classList.remove('hidden');
+                    document.getElementById('authTitle').textContent = 'Register';
+                }
+            };
+        }
     });
     
     // Form submissions

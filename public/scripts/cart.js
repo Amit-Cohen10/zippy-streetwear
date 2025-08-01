@@ -1,57 +1,93 @@
 // Cart functionality
 document.addEventListener('DOMContentLoaded', function() {
-    initCart();
-    loadCart();
-    
-    // Ensure modal functions are available
-    if (typeof window.addToCartAndClose === 'undefined') {
-        console.warn('addToCartAndClose not found, creating fallback');
-        window.addToCartAndClose = function() {
-            console.error('addToCartAndClose not properly loaded');
-        };
+    try {
+        initCart();
+        loadCart();
+        
+            // Ensure modal functions are available
+    try {
+        if (typeof window.addToCartAndClose === 'undefined') {
+            console.warn('addToCartAndClose not found, creating fallback');
+            window.addToCartAndClose = function() {
+                console.error('addToCartAndClose not properly loaded');
+            };
+        }
+    } catch (error) {
+        console.error('Failed to ensure modal functions are available:', error);
+    }
+    } catch (error) {
+        console.error('Failed to initialize cart functionality:', error);
     }
 });
 
 // Cart data structure
-if (!window.cartItems) {
+try {
+    if (!window.cartItems) {
+        window.cartItems = [];
+    }
+    if (!Array.isArray(window.cartItems)) {
+        window.cartItems = [];
+    }
+    if (!window.isLoggedIn) {
+        window.isLoggedIn = false;
+    }
+} catch (error) {
+    console.error('Failed to initialize cart data structure:', error);
     window.cartItems = [];
-}
-if (!window.isLoggedIn) {
     window.isLoggedIn = false;
 }
 
 function initCart() {
-    // Initialize cart functionality
-    const checkoutBtn = document.getElementById('checkoutBtn');
-    if (checkoutBtn) {
-        checkoutBtn.addEventListener('click', proceedToCheckout);
+    try {
+        // Initialize cart functionality
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', proceedToCheckout);
+        }
+        
+        // Load cart from localStorage
+        loadCartFromStorage();
+        
+        // Check login status
+        checkLoginStatus();
+    } catch (error) {
+        console.error('Failed to initialize cart:', error);
     }
-    
-    // Load cart from localStorage
-    loadCartFromStorage();
-    
-    // Check login status
-    checkLoginStatus();
 }
 
 // Load cart from localStorage
 function loadCartFromStorage() {
-    const savedCart = localStorage.getItem('zippyCart');
-    if (savedCart) {
-        let loaded = JSON.parse(savedCart);
-        if (!Array.isArray(loaded)) loaded = [];
-        cartItems = loaded;
+    try {
+        const savedCart = localStorage.getItem('zippyCart');
+        if (savedCart) {
+            let loaded = JSON.parse(savedCart);
+            if (!Array.isArray(loaded)) loaded = [];
+            cartItems = loaded;
+            updateCartDisplay();
+        }
+    } catch (error) {
+        console.error('Failed to load cart from localStorage:', error);
+        cartItems = [];
         updateCartDisplay();
     }
 }
 
 // Save cart to localStorage
 function saveCartToStorage() {
-    localStorage.setItem('zippyCart', JSON.stringify(cartItems));
+    try {
+        localStorage.setItem('zippyCart', JSON.stringify(cartItems));
+    } catch (error) {
+        console.error('Failed to save cart to localStorage:', error);
+    }
 }
 
 // Load cart display
 function loadCart() {
+    // Ensure cartItems is an array
+    if (!Array.isArray(cartItems)) {
+        cartItems = [];
+    }
+    
     if (cartItems.length === 0) {
         showEmptyCart();
     } else {
@@ -73,14 +109,18 @@ function showEmptyCart() {
 
 // Update cart display
 function updateCartDisplay() {
-    renderCartItems();
-    updateCartSummary();
-    updateCartCount();
-    
-    // Also update modal if it's open
-    const cartModal = document.getElementById('cartModal');
-    if (cartModal && cartModal.classList.contains('active')) {
-        loadCartModal();
+    try {
+        renderCartItems();
+        updateCartSummary();
+        updateCartCount();
+        
+        // Also update modal if it's open
+        const cartModal = document.getElementById('cartModal');
+        if (cartModal && cartModal.classList.contains('active')) {
+            loadCartModal();
+        }
+    } catch (error) {
+        console.error('Failed to update cart display:', error);
     }
 }
 
@@ -91,6 +131,11 @@ function renderCartItems() {
     const cartSummary = document.getElementById('cartSummary');
     
     if (!cartItemsContainer) return;
+    
+    // Ensure cartItems is an array
+    if (!Array.isArray(cartItems)) {
+        cartItems = [];
+    }
     
     if (cartItems.length === 0) {
         showEmptyCart();
@@ -104,20 +149,20 @@ function renderCartItems() {
     cartItemsContainer.innerHTML = cartItems.map(item => `
         <div class="cart-item" data-item-id="${item.id}">
             <div class="cart-item-image">
-                <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}" onerror="this.src='/images/placeholder.jpg'">
+                <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name || 'Product'}" onerror="this.src='/images/placeholder.jpg'">
             </div>
             <div class="cart-item-details">
-                <h3 class="cart-item-name">${item.name}</h3>
-                <p class="cart-item-description">${item.description}</p>
-                <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+                <h3 class="cart-item-name">${item.name || 'Product'}</h3>
+                <p class="cart-item-description">${item.description || ''}</p>
+                <div class="cart-item-price">$${(item.price || 0).toFixed(2)}</div>
             </div>
             <div class="cart-item-quantity">
                 <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
-                <span class="quantity">${item.quantity}</span>
+                <span class="quantity">${item.quantity || 1}</span>
                 <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
             </div>
             <div class="cart-item-total">
-                $${(item.price * item.quantity).toFixed(2)}
+                $${((item.price || 0) * (item.quantity || 1)).toFixed(2)}
             </div>
             <button class="remove-btn" onclick="removeFromCart(${item.id})">×</button>
         </div>
@@ -126,7 +171,12 @@ function renderCartItems() {
 
 // Update cart summary
 function updateCartSummary() {
-    const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    // Ensure cartItems is an array
+    if (!Array.isArray(cartItems)) {
+        cartItems = [];
+    }
+    
+    const subtotal = cartItems.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0);
     const shipping = subtotal > 0 ? 5.99 : 0;
     const total = subtotal + shipping;
     
@@ -139,38 +189,38 @@ function updateCartSummary() {
     if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
 }
 
-// Update cart display
-function updateCartDisplay() {
-    renderCartItems();
-    updateCartSummary();
-    updateCartCount();
-    
-    // Also update modal if it's open
-    const cartModal = document.getElementById('cartModal');
-    if (cartModal && cartModal.classList.contains('active')) {
-        loadCartModal();
-    }
-}
-
 // Update cart count in navigation
 function updateCartCount() {
     const cartCount = document.getElementById('cartCount');
     if (cartCount) {
-        const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        // Ensure cartItems is an array
+        if (!Array.isArray(cartItems)) {
+            cartItems = [];
+        }
+        const totalItems = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
         cartCount.textContent = totalItems;
     }
 }
 
 // Use the enhanced version from main.js if available
-if (typeof window.updateCartCountLocal === 'function') {
-    window.updateCartCount = window.updateCartCountLocal;
+try {
+    if (typeof window.updateCartCountLocal === 'function') {
+        window.updateCartCount = window.updateCartCountLocal;
+    }
+} catch (error) {
+    console.error('Failed to use enhanced cart count function:', error);
 }
 
 // Update item quantity
 window.updateQuantity = function(itemId, change) {
+    // Ensure cartItems is an array
+    if (!Array.isArray(cartItems)) {
+        cartItems = [];
+    }
+    
     const item = cartItems.find(item => item.id === itemId);
     if (item) {
-        item.quantity += change;
+        item.quantity = (item.quantity || 1) + change;
         if (item.quantity <= 0) {
             removeFromCart(itemId);
         } else {
@@ -182,6 +232,11 @@ window.updateQuantity = function(itemId, change) {
 
 // Remove item from cart
 window.removeFromCart = function(itemId) {
+    // Ensure cartItems is an array
+    if (!Array.isArray(cartItems)) {
+        cartItems = [];
+    }
+    
     cartItems = cartItems.filter(item => item.id !== itemId);
     saveCartToStorage();
     updateCartDisplay();
@@ -203,6 +258,11 @@ window.proceedToCheckout = function() {
         showNotification('Please login to checkout', 'error');
         openAuthModal();
         return;
+    }
+    
+    // Ensure cartItems is an array
+    if (!Array.isArray(cartItems)) {
+        cartItems = [];
     }
     
     if (cartItems.length === 0) {
@@ -240,7 +300,12 @@ function closePaymentModal() {
 
 // Update payment summary
 function updatePaymentSummary() {
-    const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    // Ensure cartItems is an array
+    if (!Array.isArray(cartItems)) {
+        cartItems = [];
+    }
+    
+    const subtotal = cartItems.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0);
     const shipping = subtotal > 0 ? 5.99 : 0;
     const total = subtotal + shipping;
     
@@ -478,6 +543,8 @@ function hideLoading() {
 }
 
 function showNotification(message, type = 'info') {
+    if (!document.body) return;
+    
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.textContent = message;
@@ -497,123 +564,162 @@ function showNotification(message, type = 'info') {
     document.body.appendChild(notification);
     
     setTimeout(() => {
-        notification.remove();
+        if (notification && notification.parentNode) {
+            notification.remove();
+        }
     }, 3000);
 }
 
 // Add event listeners
 document.addEventListener('DOMContentLoaded', function() {
-    // Payment form
-    const paymentForm = document.getElementById('paymentForm');
-    if (paymentForm) {
-        paymentForm.addEventListener('submit', handlePayment);
-    }
-    
-    // Auth form
-    const authForm = document.getElementById('authForm');
-    if (authForm) {
-        authForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            // Simulate login
-            localStorage.setItem('zippyUser', JSON.stringify({ email: 'user@example.com' }));
-            isLoggedIn = true;
-            closeAuthModal();
-            showNotification('Login successful', 'success');
-        });
-    }
-    
-    // Close modals when clicking outside
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('modal')) {
-            e.target.classList.remove('active');
+    try {
+        // Payment form
+        try {
+            const paymentForm = document.getElementById('paymentForm');
+            if (paymentForm) {
+                paymentForm.addEventListener('submit', handlePayment);
+            }
+        } catch (error) {
+            console.error('Failed to initialize payment form:', error);
         }
-    });
-    
-    // Initialize cart modal functionality
-    const closeCartBtn = document.getElementById('closeCartModal');
-    if (closeCartBtn) {
-        closeCartBtn.addEventListener('click', closeCartModal);
-    }
-    
-    // Add event listener for cart count click
-    const cartCount = document.getElementById('cartCount');
-    if (cartCount) {
-        cartCount.addEventListener('click', openCartModal);
+        
+        // Auth form
+        try {
+            const authForm = document.getElementById('authForm');
+            if (authForm) {
+                authForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    try {
+                        // Simulate login
+                        localStorage.setItem('zippyUser', JSON.stringify({ email: 'user@example.com' }));
+                        isLoggedIn = true;
+                        closeAuthModal();
+                        showNotification('Login successful', 'success');
+                    } catch (error) {
+                        console.error('Failed to process login:', error);
+                        showNotification('Login failed', 'error');
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Failed to initialize auth form:', error);
+        }
+        
+        // Close modals when clicking outside
+        try {
+            document.addEventListener('click', function(e) {
+                try {
+                    if (e.target.classList.contains('modal')) {
+                        e.target.classList.remove('active');
+                    }
+                } catch (error) {
+                    console.error('Failed to close modal:', error);
+                }
+            });
+        } catch (error) {
+            console.error('Failed to initialize modal click handler:', error);
+        }
+        
+        // Initialize cart modal functionality
+        try {
+            const closeCartBtn = document.getElementById('closeCartModal');
+            if (closeCartBtn) {
+                closeCartBtn.addEventListener('click', closeCartModal);
+            }
+            
+            // Add event listener for cart count click
+            const cartCount = document.getElementById('cartCount');
+            if (cartCount) {
+                cartCount.addEventListener('click', openCartModal);
+            }
+        } catch (error) {
+            console.error('Failed to initialize cart modal functionality:', error);
+        }
+    } catch (error) {
+        console.error('Failed to initialize cart event listeners:', error);
     }
 });
 
 // Export functions
-window.CartModule = {
-    proceedToCheckout,
-    clearCart,
-    updateQuantity,
-    removeFromCart,
-    openPaymentModal,
-    closePaymentModal,
-    showThankYouModal,
-    closeThankYouModal,
-    viewMyItems,
-    openAuthModal,
-    closeAuthModal,
-    openSearchModal,
-    closeSearchModal,
-    openCartModal,
-    closeCartModal
-};
+try {
+    window.CartModule = {
+        proceedToCheckout,
+        clearCart,
+        updateQuantity,
+        removeFromCart,
+        openPaymentModal,
+        closePaymentModal,
+        showThankYouModal,
+        closeThankYouModal,
+        viewMyItems,
+        openAuthModal,
+        closeAuthModal,
+        openSearchModal,
+        closeSearchModal,
+        openCartModal,
+        closeCartModal
+    };
+} catch (error) {
+    console.error('Failed to export cart module functions:', error);
+}
 
 // Test cart functionality
 function testCartFunctionality() {
-    console.log('Testing cart functionality...');
-    
-    // Test if cart modal exists
-    const cartModal = document.getElementById('cartModal');
-    if (cartModal) {
-        console.log('✅ Cart modal found');
-    } else {
-        console.error('❌ Cart modal not found');
+    try {
+        console.log('Testing cart functionality...');
+        
+        // Test if cart modal exists
+        const cartModal = document.getElementById('cartModal');
+        if (cartModal) {
+            console.log('✅ Cart modal found');
+        } else {
+            console.error('❌ Cart modal not found');
+        }
+        
+        // Test if cart items container exists
+        const cartItems = document.getElementById('cartItems');
+        if (cartItems) {
+            console.log('✅ Cart items container found');
+        } else {
+            console.error('❌ Cart items container not found');
+        }
+        
+        // Test if empty cart message exists
+        const emptyCart = document.getElementById('emptyCart');
+        if (emptyCart) {
+            console.log('✅ Empty cart message found');
+        } else {
+            console.error('❌ Empty cart message not found');
+        }
+        
+        // Test if cart summary exists
+        const cartSummary = document.getElementById('cartSummary');
+        if (cartSummary) {
+            console.log('✅ Cart summary found');
+        } else {
+            console.error('❌ Cart summary not found');
+        }
+        
+        // Test if close button exists
+        const closeBtn = document.getElementById('closeCartModal');
+        if (closeBtn) {
+            console.log('✅ Close button found');
+        } else {
+            console.error('❌ Close button not found');
+        }
+        
+        // Test if checkout button exists
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        if (checkoutBtn) {
+            console.log('✅ Checkout button found');
+        } else {
+            console.error('❌ Checkout button not found');
+        }
+        
+        console.log('Cart functionality test completed');
+    } catch (error) {
+        console.error('Failed to test cart functionality:', error);
     }
-    
-    // Test if cart items container exists
-    const cartItems = document.getElementById('cartItems');
-    if (cartItems) {
-        console.log('✅ Cart items container found');
-    } else {
-        console.error('❌ Cart items container not found');
-    }
-    
-    // Test if empty cart message exists
-    const emptyCart = document.getElementById('emptyCart');
-    if (emptyCart) {
-        console.log('✅ Empty cart message found');
-    } else {
-        console.error('❌ Empty cart message not found');
-    }
-    
-    // Test if cart summary exists
-    const cartSummary = document.getElementById('cartSummary');
-    if (cartSummary) {
-        console.log('✅ Cart summary found');
-    } else {
-        console.error('❌ Cart summary not found');
-    }
-    
-    // Test if close button exists
-    const closeBtn = document.getElementById('closeCartModal');
-    if (closeBtn) {
-        console.log('✅ Close button found');
-    } else {
-        console.error('❌ Close button not found');
-    }
-    
-    // Test if checkout button exists
-    const checkoutBtn = document.getElementById('checkoutBtn');
-    if (checkoutBtn) {
-        console.log('✅ Checkout button found');
-    } else {
-        console.error('❌ Checkout button not found');
-    }
-    
-    console.log('Cart functionality test completed');
 }
 
 // Run test on page load
