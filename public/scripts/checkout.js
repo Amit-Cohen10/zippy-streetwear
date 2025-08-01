@@ -71,20 +71,52 @@ async function checkUserLoginStatus() {
 
 async function loadCheckoutData() {
     try {
-        const response = await fetch('/api/cart', {
-            credentials: 'include'
-        });
+        // Load cart data from localStorage (same as cart page)
+        const savedCart = localStorage.getItem('zippyCart');
         
-        if (!response.ok) {
-            if (response.status === 401) {
-                showNotification('Please log in to continue', 'error');
-                window.location.href = '/';
+        if (savedCart) {
+            const cartItems = JSON.parse(savedCart);
+            console.log('Loaded cart data from localStorage:', cartItems);
+            
+            if (!Array.isArray(cartItems) || cartItems.length === 0) {
+                showNotification('Your cart is empty', 'error');
+                window.location.href = '/cart';
                 return;
             }
-            throw new Error('Failed to load cart');
+            
+            // Convert to expected format for checkout
+            cartData = {
+                items: cartItems.map(item => ({
+                    product: {
+                        title: item.name || item.title,
+                        brand: item.brand || 'Zippy Streetwear',
+                        price: item.price || 0,
+                        images: item.image ? [item.image] : (item.images || ['/images/placeholder.jpg'])
+                    },
+                    quantity: item.quantity || 1,
+                    size: item.size,
+                    color: item.color
+                })),
+                total: cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+            };
+        } else {
+            // Fallback to server data
+            console.log('No cart data in localStorage, trying server...');
+            const response = await fetch('/api/cart', {
+                credentials: 'include'
+            });
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    showNotification('Please log in to continue', 'error');
+                    window.location.href = '/';
+                    return;
+                }
+                throw new Error('Failed to load cart');
+            }
+            
+            cartData = await response.json();
         }
-        
-        cartData = await response.json();
         
         if (!cartData.items || cartData.items.length === 0) {
             showNotification('Your cart is empty', 'error');
@@ -92,6 +124,7 @@ async function loadCheckoutData() {
             return;
         }
         
+        console.log('Final cart data for checkout:', cartData);
         displayOrderItems();
         updateOrderSummary();
         

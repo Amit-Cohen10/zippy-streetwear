@@ -307,7 +307,11 @@ window.proceedToCheckout = function() {
         return;
     }
     
-    console.log('Proceeding to checkout...');
+    console.log('Cart items to checkout:', window.cartItems);
+    
+    // Ensure cart is saved to localStorage (it should already be, but just in case)
+    saveCartToStorage();
+    
     // Navigate to checkout page
     window.location.href = '/checkout';
 }
