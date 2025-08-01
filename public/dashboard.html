@@ -297,12 +297,26 @@
                 <div id="cartItems" class="cart-items">
                     <!-- Cart items will be populated here -->
                 </div>
-                <div class="cart-summary">
-                    <div class="cart-total">
+                <div class="empty-cart" id="emptyCart" style="display: none;">
+                    <div class="empty-cart-icon">🛒</div>
+                    <h3>Your cart is empty</h3>
+                    <p>Add some items to get started!</p>
+                </div>
+                <div class="cart-summary" id="cartSummary">
+                    <div class="summary-item">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Shipping:</span>
+                        <span id="shipping">$0.00</span>
+                    </div>
+                    <div class="summary-item total">
                         <span>Total:</span>
-                        <span id="cartTotal">$0.00</span>
+                        <span id="total">$0.00</span>
                     </div>
                     <button class="cyber-btn primary" id="checkoutBtn">Checkout</button>
+                    <button class="cyber-btn secondary" onclick="clearCart()">Clear Cart</button>
                 </div>
             </div>
         </div>

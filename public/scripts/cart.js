@@ -38,7 +38,9 @@ function initCart() {
 function loadCartFromStorage() {
     const savedCart = localStorage.getItem('zippyCart');
     if (savedCart) {
-        cartItems = JSON.parse(savedCart);
+        let loaded = JSON.parse(savedCart);
+        if (!Array.isArray(loaded)) loaded = [];
+        cartItems = loaded;
         updateCartDisplay();
     }
 }
@@ -67,6 +69,19 @@ function showEmptyCart() {
     if (cartItems) cartItems.style.display = 'none';
     if (emptyCart) emptyCart.style.display = 'block';
     if (cartSummary) cartSummary.style.display = 'none';
+}
+
+// Update cart display
+function updateCartDisplay() {
+    renderCartItems();
+    updateCartSummary();
+    updateCartCount();
+    
+    // Also update modal if it's open
+    const cartModal = document.getElementById('cartModal');
+    if (cartModal && cartModal.classList.contains('active')) {
+        loadCartModal();
+    }
 }
 
 // Render cart items
@@ -361,66 +376,20 @@ function closeSearchModal() {
 
 // Open cart modal
 window.openCartModal = function() {
-    // Create cart modal if it doesn't exist
-    let cartModal = document.getElementById('cartModal');
+    const cartModal = document.getElementById('cartModal');
     
-    if (!cartModal) {
-        cartModal = document.createElement('div');
-        cartModal.id = 'cartModal';
-        cartModal.className = 'modal';
-        cartModal.innerHTML = `
-            <div class="modal-container">
-                <div class="modal-header">
-                    <h2>Your Cart</h2>
-                    <button class="close-btn" onclick="closeCartModal()">×</button>
-                </div>
-                <div class="modal-body">
-                    <div class="cart-modal-content">
-                        <div class="cart-items" id="modalCartItems">
-                            <!-- Cart items will be loaded here -->
-                        </div>
-                        <div class="empty-cart" id="modalEmptyCart" style="display: none;">
-                            <div class="empty-cart-icon">🛒</div>
-                            <h3>Your cart is empty</h3>
-                            <p>Add some items to get started!</p>
-                        </div>
-                        <div class="cart-summary" id="modalCartSummary">
-                            <div class="summary-item">
-                                <span>Subtotal:</span>
-                                <span id="modalSubtotal">$0.00</span>
-                            </div>
-                            <div class="summary-item">
-                                <span>Shipping:</span>
-                                <span id="modalShipping">$0.00</span>
-                            </div>
-                            <div class="summary-item total">
-                                <span>Total:</span>
-                                <span id="modalTotal">$0.00</span>
-                            </div>
-                            <button class="btn-primary checkout-btn" onclick="proceedToCheckout()">
-                                Checkout
-                            </button>
-                            <button class="btn-secondary clear-cart-btn" onclick="clearCart()">
-                                Clear Cart
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(cartModal);
+    if (cartModal) {
+        // Load cart data into modal
+        loadCartModal();
+        
+        // Show modal
+        cartModal.classList.add('active');
+        
+        // Center modal on screen
+        setTimeout(() => {
+            cartModal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
     }
-    
-    // Load cart data into modal
-    loadCartModal();
-    
-    // Show modal
-    cartModal.classList.add('active');
-    
-    // Center modal on screen
-    setTimeout(() => {
-        cartModal.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 100);
 }
 
 // Close cart modal
@@ -431,23 +400,31 @@ window.closeCartModal = function() {
     }
 }
 
+// Add event listener for close button
+document.addEventListener('DOMContentLoaded', function() {
+    const closeCartBtn = document.getElementById('closeCartModal');
+    if (closeCartBtn) {
+        closeCartBtn.addEventListener('click', closeCartModal);
+    }
+});
+
 // Load cart data into modal
 function loadCartModal() {
     const cartItems = JSON.parse(localStorage.getItem('zippyCart') || '[]');
-    const modalCartItems = document.getElementById('modalCartItems');
-    const modalEmptyCart = document.getElementById('modalEmptyCart');
-    const modalCartSummary = document.getElementById('modalCartSummary');
+    const cartItemsContainer = document.getElementById('cartItems');
+    const emptyCart = document.getElementById('emptyCart');
+    const cartSummary = document.getElementById('cartSummary');
     
     if (cartItems.length === 0) {
-        if (modalCartItems) modalCartItems.style.display = 'none';
-        if (modalEmptyCart) modalEmptyCart.style.display = 'block';
-        if (modalCartSummary) modalCartSummary.style.display = 'none';
+        if (cartItemsContainer) cartItemsContainer.style.display = 'none';
+        if (emptyCart) emptyCart.style.display = 'block';
+        if (cartSummary) cartSummary.style.display = 'none';
     } else {
-        if (modalEmptyCart) modalEmptyCart.style.display = 'none';
-        if (modalCartSummary) modalCartSummary.style.display = 'block';
+        if (emptyCart) emptyCart.style.display = 'none';
+        if (cartSummary) cartSummary.style.display = 'block';
         
-        if (modalCartItems) {
-            modalCartItems.innerHTML = cartItems.map(item => `
+        if (cartItemsContainer) {
+            cartItemsContainer.innerHTML = cartItems.map(item => `
                 <div class="cart-item" data-item-id="${item.id}">
                     <div class="cart-item-image">
                         <img src="${item.image || '/images/placeholder.jpg'}" alt="${item.name}" onerror="this.src='/images/placeholder.jpg'">
@@ -475,13 +452,13 @@ function loadCartModal() {
         const shipping = subtotal > 0 ? 5.99 : 0;
         const total = subtotal + shipping;
         
-        const modalSubtotal = document.getElementById('modalSubtotal');
-        const modalShipping = document.getElementById('modalShipping');
-        const modalTotal = document.getElementById('modalTotal');
+        const subtotalEl = document.getElementById('subtotal');
+        const shippingEl = document.getElementById('shipping');
+        const totalEl = document.getElementById('total');
         
-        if (modalSubtotal) modalSubtotal.textContent = `$${subtotal.toFixed(2)}`;
-        if (modalShipping) modalShipping.textContent = `$${shipping.toFixed(2)}`;
-        if (modalTotal) modalTotal.textContent = `$${total.toFixed(2)}`;
+        if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+        if (shippingEl) shippingEl.textContent = `$${shipping.toFixed(2)}`;
+        if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
     }
 }
 
@@ -551,6 +528,18 @@ document.addEventListener('DOMContentLoaded', function() {
             e.target.classList.remove('active');
         }
     });
+    
+    // Initialize cart modal functionality
+    const closeCartBtn = document.getElementById('closeCartModal');
+    if (closeCartBtn) {
+        closeCartBtn.addEventListener('click', closeCartModal);
+    }
+    
+    // Add event listener for cart count click
+    const cartCount = document.getElementById('cartCount');
+    if (cartCount) {
+        cartCount.addEventListener('click', openCartModal);
+    }
 });
 
 // Export functions
@@ -571,3 +560,63 @@ window.CartModule = {
     openCartModal,
     closeCartModal
 };
+
+// Test cart functionality
+function testCartFunctionality() {
+    console.log('Testing cart functionality...');
+    
+    // Test if cart modal exists
+    const cartModal = document.getElementById('cartModal');
+    if (cartModal) {
+        console.log('✅ Cart modal found');
+    } else {
+        console.error('❌ Cart modal not found');
+    }
+    
+    // Test if cart items container exists
+    const cartItems = document.getElementById('cartItems');
+    if (cartItems) {
+        console.log('✅ Cart items container found');
+    } else {
+        console.error('❌ Cart items container not found');
+    }
+    
+    // Test if empty cart message exists
+    const emptyCart = document.getElementById('emptyCart');
+    if (emptyCart) {
+        console.log('✅ Empty cart message found');
+    } else {
+        console.error('❌ Empty cart message not found');
+    }
+    
+    // Test if cart summary exists
+    const cartSummary = document.getElementById('cartSummary');
+    if (cartSummary) {
+        console.log('✅ Cart summary found');
+    } else {
+        console.error('❌ Cart summary not found');
+    }
+    
+    // Test if close button exists
+    const closeBtn = document.getElementById('closeCartModal');
+    if (closeBtn) {
+        console.log('✅ Close button found');
+    } else {
+        console.error('❌ Close button not found');
+    }
+    
+    // Test if checkout button exists
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    if (checkoutBtn) {
+        console.log('✅ Checkout button found');
+    } else {
+        console.error('❌ Checkout button not found');
+    }
+    
+    console.log('Cart functionality test completed');
+}
+
+// Run test on page load
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(testCartFunctionality, 1000);
+});

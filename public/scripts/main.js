@@ -52,7 +52,11 @@ async function apiCall(endpoint, options = {}) {
         
         if (!response.ok) {
             const error = await response.json();
-            throw new Error(error.error || 'API request failed');
+            // Add status code to error message for better handling
+            const errorMessage = error.error || 'API request failed';
+            const enhancedError = new Error(`${response.status}: ${errorMessage}`);
+            enhancedError.status = response.status;
+            throw enhancedError;
         }
         
         return await response.json();
@@ -72,6 +76,16 @@ async function checkAuth() {
         }
         return true;
     } catch (error) {
+        // Don't treat 401 as an error - it's normal when user is not logged in
+        if (error.status === 401 || (error.message && error.message.includes('401'))) {
+            window.currentUser = null;
+            if (typeof window.updateAuthUI === 'function') {
+                window.updateAuthUI();
+            }
+            return false;
+        }
+        // For other errors, still set user to null but don't throw
+        console.warn('Auth check failed:', error.message);
         window.currentUser = null;
         if (typeof window.updateAuthUI === 'function') {
             window.updateAuthUI();
@@ -362,7 +376,7 @@ function initModals() {
     // Cart modal
     const cartBtn = document.getElementById('cartBtn');
     const cartModal = document.getElementById('cartModal');
-    const closeCart = document.getElementById('closeCart');
+    const closeCart = document.getElementById('closeCartModal');
     
     if (cartBtn && cartModal) {
         cartBtn.onclick = () => {
@@ -370,9 +384,11 @@ function initModals() {
             loadCart();
         };
         
-        closeCart.onclick = () => {
-            cartModal.style.display = 'none';
-        };
+        if (closeCart) {
+            closeCart.onclick = () => {
+                cartModal.style.display = 'none';
+            };
+        }
         
         cartModal.onclick = (e) => {
             if (e.target === cartModal) {
@@ -418,10 +434,28 @@ async function init() {
     showLoading();
     
     try {
-        await checkAuth();
-        await loadFeaturedProducts();
-        await loadExchangeStats();
+        // Check auth - don't fail if user is not logged in
+        try {
+            await checkAuth();
+        } catch (authError) {
+            console.warn('Auth check failed (this is normal for non-logged users):', authError.message);
+        }
         
+        // Load featured products - use fallback if API fails
+        try {
+            await loadFeaturedProducts();
+        } catch (productsError) {
+            console.warn('Failed to load featured products, using fallback:', productsError.message);
+        }
+        
+        // Load exchange stats - don't fail if API is not available
+        try {
+            await loadExchangeStats();
+        } catch (statsError) {
+            console.warn('Failed to load exchange stats:', statsError.message);
+        }
+        
+        // Initialize UI components
         initModals();
         initSearch();
         
@@ -435,8 +469,10 @@ async function init() {
             });
         });
         
+        console.log('Application initialized successfully');
+        
     } catch (error) {
-        console.error('Initialization error:', error);
+        console.error('Critical initialization error:', error);
         showNotification('Failed to initialize application', 'error');
     } finally {
         hideLoading();
@@ -479,145 +515,5 @@ window.ZippyApp = {
                 <div class="add-to-cart-product-price">$${product.price.toFixed(2)}</div>
             </div>
         `;
-        
-        // Show modal with animation
-        modal.classList.add('active');
-        
-        // Store product for later use
-        window.currentProduct = product;
-        
-        // Auto-scroll to top to ensure modal is visible
-        setTimeout(() => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        }, 100);
     }
-
-    function closeAddToCartModal() {
-        const modal = document.getElementById('addToCartModal');
-        if (modal) {
-            modal.classList.remove('active');
-        }
-        window.currentProduct = null;
-    }
-
-    function addToCartAndClose() {
-        console.log('addToCartAndClose called. window.currentProduct:', window.currentProduct);
-        if (window.currentProduct) {
-            addToCartLocal(window.currentProduct);
-            closeAddToCartModal();
-            
-            // Show success notification
-            showNotification('Product added to cart successfully!', 'success');
-        }
-    }
-
-    function addToCartLocal(product) {
-        if (!window.cartItems) {
-            window.cartItems = [];
-        }
-        
-        // Check if product already exists in cart with same size
-        const existingItem = window.cartItems.find(item => 
-            item.id === product.id && item.size === product.size
-        );
-        
-        if (existingItem) {
-            // Add the new quantity to existing quantity
-            existingItem.quantity += (product.quantity || 1);
-        } else {
-            window.cartItems.push({
-                ...product,
-                quantity: product.quantity || 1
-            });
-        }
-        
-        // Save to localStorage
-        localStorage.setItem('zippyCart', JSON.stringify(window.cartItems));
-        
-        // Update cart count
-        updateCartCountLocal();
-        
-        // Update cart display if on cart page
-        if (typeof updateCartDisplay === 'function') {
-            updateCartDisplay();
-        }
-    }
-
-    function updateCartCountLocal() {
-        const cartCountElement = document.getElementById('cartCount');
-        if (!cartCountElement) return;
-        
-        const totalItems = window.cartItems ? window.cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
-        
-        cartCountElement.textContent = totalItems;
-        
-        // Add animation class if items were added
-        if (totalItems > 0) {
-            cartCountElement.style.animation = 'none';
-            setTimeout(() => {
-                cartCountElement.style.animation = 'cart-count-pulse 0.6s ease-in-out';
-            }, 10);
-        }
-    }
-
-    function directOrder(product) {
-        // Add to cart first
-        addToCartLocal(product);
-        
-        // Show success notification
-        showNotification('Product added to cart! Redirecting to checkout...', 'success');
-        
-        // Redirect to cart page after a short delay
-        setTimeout(() => {
-            window.location.href = '/cart';
-        }, 1500);
-    }
-
-    // Make all functions globally available
-    window.showAddToCartModal = showAddToCartModal;
-    window.closeAddToCartModal = closeAddToCartModal;
-    window.addToCartAndClose = addToCartAndClose;
-    window.addToCartLocal = addToCartLocal;
-    window.updateCartCountLocal = updateCartCountLocal;
-    window.directOrder = directOrder;
-
-    // Also make the old functions available for backward compatibility
-    window.addToCart = addToCartLocal;
-    window.updateCartCount = updateCartCountLocal;
-    
-    // Debug: Log that functions are available
-    console.log('Modal functions loaded:', {
-        showAddToCartModal: typeof window.showAddToCartModal,
-        closeAddToCartModal: typeof window.closeAddToCartModal,
-        addToCartAndClose: typeof window.addToCartAndClose,
-        addToCartLocal: typeof window.addToCartLocal,
-        updateCartCountLocal: typeof window.updateCartCountLocal,
-        directOrder: typeof window.directOrder
-    });
-    
-    // Also ensure functions are available on window load
-    window.addEventListener('load', function() {
-        console.log('Window loaded - checking modal functions:', {
-            addToCartAndClose: typeof window.addToCartAndClose,
-            showAddToCartModal: typeof window.showAddToCartModal
-        });
-    });
-    
-    // Ensure functions are available immediately after DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded - checking modal functions:', {
-                addToCartAndClose: typeof window.addToCartAndClose,
-                showAddToCartModal: typeof window.showAddToCartModal
-            });
-        });
-    } else {
-        console.log('DOM already loaded - checking modal functions:', {
-            addToCartAndClose: typeof window.addToCartAndClose,
-            showAddToCartModal: typeof window.showAddToCartModal
-        });
-    }
-})(); 
+})();
