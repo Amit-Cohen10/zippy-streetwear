@@ -184,9 +184,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Scroll to modal and center it
                     setTimeout(() => {
+                        // Scroll page to top first
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Then scroll modal to top
                         createPostModal.scrollIntoView({ 
                             behavior: 'smooth', 
-                            block: 'center' 
+                            block: 'start' 
                         });
                     }, 100);
                 });
@@ -199,9 +206,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Scroll to modal and center it
                     setTimeout(() => {
+                        // Scroll page to top first
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Then scroll modal to top
                         uploadOutfitModal.scrollIntoView({ 
                             behavior: 'smooth', 
-                            block: 'center' 
+                            block: 'start' 
                         });
                     }, 100);
                 });
@@ -668,11 +682,18 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add modal to page
         document.body.insertAdjacentHTML('beforeend', modalContent);
         
-        // Center modal on screen
+        // Center modal on screen and scroll to top
         setTimeout(() => {
+            // Scroll page to top first
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            
+            // Then scroll modal to top
             const modal = document.getElementById('postDetailModal');
             if (modal) {
-                modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                modal.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }, 100);
         
@@ -806,11 +827,18 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add modal to page
         document.body.insertAdjacentHTML('beforeend', modalContent);
         
-        // Center modal on screen
+        // Center modal on screen and scroll to top
         setTimeout(() => {
+            // Scroll page to top first
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            
+            // Then scroll modal to top
             const modal = document.getElementById('commentModal');
             if (modal) {
-                modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                modal.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }, 100);
         

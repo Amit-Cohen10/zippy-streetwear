@@ -104,9 +104,16 @@ function openSearchModal() {
     if (modal) {
         modal.classList.add('active');
         
-        // Center modal on screen
+        // Center modal on screen and scroll to top
         setTimeout(() => {
-            modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Scroll page to top first
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            
+            // Then scroll modal to top
+            modal.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
     }
 }
@@ -125,9 +132,16 @@ function openAuthModal() {
     if (modal) {
         modal.classList.add('active');
         
-        // Center modal on screen
+        // Center modal on screen and scroll to top
         setTimeout(() => {
-            modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Scroll page to top first
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            
+            // Then scroll modal to top
+            modal.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
     }
 }

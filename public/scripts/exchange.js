@@ -299,25 +299,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 const createModal = document.getElementById('createExchangeModal');
                 createModal.classList.add('active');
                 
-                // Ensure modal is centered in viewport
+                // Ensure modal is centered in viewport and scroll to top
                 setTimeout(() => {
-                    const modalRect = createModal.getBoundingClientRect();
-                    const viewportHeight = window.innerHeight;
-                    const viewportWidth = window.innerWidth;
+                    // Scroll page to top first
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
                     
-                    const isNotFullyVisible = 
-                        modalRect.top < 0 || 
-                        modalRect.bottom > viewportHeight ||
-                        modalRect.left < 0 ||
-                        modalRect.right > viewportWidth;
-                    
-                    if (isNotFullyVisible) {
-                        createModal.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center',
-                            inline: 'center'
-                        });
-                    }
+                    // Then scroll modal to top
+                    createModal.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start',
+                        inline: 'nearest'
+                    });
                 }, 100);
             }, { passive: true });
         }
@@ -494,26 +489,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const detailModal = document.getElementById('exchangeDetailModal');
         detailModal.classList.add('active');
         
-        // Ensure modal is centered in viewport
+        // Ensure modal is centered in viewport and scroll to top
         setTimeout(() => {
-            const modalRect = detailModal.getBoundingClientRect();
-            const viewportHeight = window.innerHeight;
-            const viewportWidth = window.innerWidth;
+            // Scroll page to top first
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
             
-            // Check if modal is not fully visible
-            const isNotFullyVisible = 
-                modalRect.top < 0 || 
-                modalRect.bottom > viewportHeight ||
-                modalRect.left < 0 ||
-                modalRect.right > viewportWidth;
-            
-            if (isNotFullyVisible) {
-                detailModal.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center',
-                    inline: 'center'
-                });
-            }
+            // Then scroll modal to top
+            detailModal.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+                inline: 'nearest'
+            });
         }, 100);
         
         // Setup modal event listeners
@@ -849,19 +838,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const viewportHeight = window.innerHeight;
             const viewportWidth = window.innerWidth;
             
-            const isNotFullyVisible = 
-                modalRect.top < 0 || 
-                modalRect.bottom > viewportHeight ||
-                modalRect.left < 0 ||
-                modalRect.right > viewportWidth;
+            // Scroll page to top first
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
             
-            if (isNotFullyVisible) {
-                counterModal.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center',
-                    inline: 'center'
-                });
-            }
+            // Then scroll modal to top
+            counterModal.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+                inline: 'nearest'
+            });
         }, 100);
     }
 
