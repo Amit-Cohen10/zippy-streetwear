@@ -1,14 +1,74 @@
 // Checkout functionality
+// ===== CHECKOUT STEP MANAGEMENT =====
 let currentStep = 1;
+
+// Step definitions
+const STEPS = {
+    ORDER_REVIEW: 1,
+    SHIPPING_INFO: 2, 
+    PAYMENT_INFO: 3,
+    CONFIRMATION: 4
+};
+
+// Step configuration
+const STEP_CONFIG = {
+    [STEPS.ORDER_REVIEW]: {
+        name: 'Order Review',
+        section: 'orderReviewSection',
+        canGoNext: true,
+        canGoBack: false,
+        showNextBtn: true,
+        showBackBtn: false,
+        showPlaceOrderBtn: false
+    },
+    [STEPS.SHIPPING_INFO]: {
+        name: 'Shipping Info', 
+        section: 'shippingSection',
+        canGoNext: true,
+        canGoBack: true,
+        showNextBtn: true,
+        showBackBtn: true,
+        showPlaceOrderBtn: false
+    },
+    [STEPS.PAYMENT_INFO]: {
+        name: 'Payment Info',
+        section: 'paymentSection', 
+        canGoNext: true,
+        canGoBack: true,
+        showNextBtn: true,
+        showBackBtn: true,
+        showPlaceOrderBtn: false
+    },
+    [STEPS.CONFIRMATION]: {
+        name: 'Confirmation',
+        section: 'confirmationSection',
+        canGoNext: false,
+        canGoBack: true, 
+        showNextBtn: false,
+        showBackBtn: true,
+        showPlaceOrderBtn: true
+    }
+};
 let cartData = null;
 let orderData = {};
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 CHECKOUT PAGE LOADED');
+    console.log('📊 Initial State:', {
+        currentStep,
+        stepName: STEP_CONFIG[currentStep].name,
+        canGoNext: STEP_CONFIG[currentStep].canGoNext,
+        canGoBack: STEP_CONFIG[currentStep].canGoBack
+    });
     initCheckout();
 });
 
 async function initCheckout() {
     try {
+        // Reset to step 1 when page loads
+        console.log('🔄 Resetting to step 1');
+        currentStep = STEPS.ORDER_REVIEW;
+        
         // Check if user is logged in first
         const isLoggedIn = await checkUserLoginStatus();
         
@@ -528,8 +588,13 @@ function validateShippingField(fieldId) {
 }
 
 function updateStepDisplay() {
+    const stepConfig = STEP_CONFIG[currentStep];
+    console.log(`📋 Updating display for step: ${currentStep} (${stepConfig.name})`);
+    
     // Update step indicators
     const steps = document.querySelectorAll('.step');
+    console.log(`Found ${steps.length} step elements`);
+    
     steps.forEach((step, index) => {
         const stepNumber = index + 1;
         if (stepNumber < currentStep) {
@@ -538,71 +603,98 @@ function updateStepDisplay() {
         } else if (stepNumber === currentStep) {
             step.classList.add('active');
             step.classList.remove('completed');
+            console.log(`✅ Step ${stepNumber} (${stepConfig.name}) is now active`);
         } else {
             step.classList.remove('active', 'completed');
         }
     });
     
-    // Show/hide sections
+    // Hide all sections first
     const sections = document.querySelectorAll('.checkout-section');
-    sections.forEach(section => section.style.display = 'none');
+    console.log(`Found ${sections.length} checkout sections`);
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
     
-    switch(currentStep) {
-        case 1:
-            document.getElementById('orderReviewSection').style.display = 'block';
-            break;
-        case 2:
-            document.getElementById('shippingSection').style.display = 'block';
-            break;
-        case 3:
-            document.getElementById('paymentSection').style.display = 'block';
-            break;
-        case 4:
-            document.getElementById('confirmationSection').style.display = 'block';
+    // Show current section
+    const currentSectionId = stepConfig.section;
+    const currentSection = document.getElementById(currentSectionId);
+    if (currentSection) {
+        currentSection.style.display = 'block';
+        console.log(`✅ Showing section: ${currentSectionId}`);
+        
+        // Special handling for confirmation step
+        if (currentStep === STEPS.CONFIRMATION) {
             displayConfirmation();
-            break;
+        }
+    } else {
+        console.error(`❌ Section not found: ${currentSectionId}`);
     }
     
-    // Update buttons
+    // Update buttons based on step configuration
     updateButtons();
 }
 
 function updateButtons() {
+    const stepConfig = STEP_CONFIG[currentStep];
     const backBtn = document.getElementById('backBtn');
     const nextBtn = document.getElementById('nextBtn');
     const placeOrderBtn = document.getElementById('placeOrderBtn');
     
+    console.log(`🔘 Updating buttons for step ${currentStep}: Back=${stepConfig.showBackBtn}, Next=${stepConfig.showNextBtn}, PlaceOrder=${stepConfig.showPlaceOrderBtn}`);
+    
     // Back button
-    if (currentStep > 1) {
+    if (stepConfig.showBackBtn && backBtn) {
         backBtn.style.display = 'inline-block';
-    } else {
+    } else if (backBtn) {
         backBtn.style.display = 'none';
     }
     
-    // Next/Place Order buttons
-    if (currentStep < 4) {
+    // Next button  
+    if (stepConfig.showNextBtn && nextBtn) {
         nextBtn.style.display = 'inline-block';
-        placeOrderBtn.style.display = 'none';
-    } else {
+    } else if (nextBtn) {
         nextBtn.style.display = 'none';
+    }
+    
+    // Place Order button
+    if (stepConfig.showPlaceOrderBtn && placeOrderBtn) {
         placeOrderBtn.style.display = 'inline-block';
+    } else if (placeOrderBtn) {
+        placeOrderBtn.style.display = 'none';
     }
 }
 
+// ===== NAVIGATION FUNCTIONS =====
 function goNext() {
-    console.log('🔄 goNext called, current step:', currentStep);
+    console.log(`🔄 goNext called, current step: ${currentStep} (${STEP_CONFIG[currentStep].name})`);
     
     try {
+        // Check if this step allows going next
+        if (!STEP_CONFIG[currentStep].canGoNext) {
+            console.log('❌ Cannot go next from this step');
+            showNotification('Cannot proceed from this step', 'error');
+            return;
+        }
+        
+        // Validate current step
         const isValid = validateCurrentStep();
         console.log('✅ Validation result:', isValid);
         
         if (isValid) {
-            currentStep++;
-            console.log('➡️ Moving to step:', currentStep);
-            updateStepDisplay();
-            showNotification('✅ Step completed successfully!', 'success');
+            // Move to next step
+            const nextStep = currentStep + 1;
+            if (nextStep <= STEPS.CONFIRMATION) {
+                console.log(`➡️ Moving from step ${currentStep} to step ${nextStep}`);
+                currentStep = nextStep;
+                updateStepDisplay();
+                showNotification(`✅ Moved to ${STEP_CONFIG[currentStep].name}!`, 'success');
+            } else {
+                console.log('❌ Already at final step');
+                showNotification('Already at final step', 'info');
+            }
         } else {
-            console.log('❌ Validation failed for step:', currentStep);
+            console.log('❌ Validation failed for current step');
             // The validation functions will show their own error messages
         }
     } catch (error) {
@@ -613,22 +705,58 @@ function goNext() {
 
 // Make goNext globally accessible
 window.goNext = goNext;
+console.log('✅ goNext is now global:', typeof window.goNext);
 
 function goBack() {
-    console.log('goBack called, current step:', currentStep);
-    if (currentStep > 1) {
-        currentStep--;
-        console.log('Moving back to step:', currentStep);
-        updateStepDisplay();
-        showNotification('↩️ Moved to previous step', 'info');
-    } else {
-        console.log('Cannot go back from step 1');
-        showNotification('Already at first step', 'info');
+    console.log(`⬅️ goBack called, current step: ${currentStep} (${STEP_CONFIG[currentStep].name})`);
+    
+    try {
+        // Check if this step allows going back
+        if (!STEP_CONFIG[currentStep].canGoBack) {
+            console.log('❌ Cannot go back from this step');
+            showNotification('Cannot go back from this step', 'info');
+            return;
+        }
+        
+        // Move to previous step
+        const previousStep = currentStep - 1;
+        if (previousStep >= STEPS.ORDER_REVIEW) {
+            console.log(`⬅️ Moving from step ${currentStep} to step ${previousStep}`);
+            currentStep = previousStep;
+            updateStepDisplay();
+            showNotification(`↩️ Moved back to ${STEP_CONFIG[currentStep].name}`, 'info');
+        } else {
+            console.log('❌ Already at first step');
+            showNotification('Already at first step', 'info');
+        }
+    } catch (error) {
+        console.error('❌ Error in goBack:', error);
+        showNotification('Error occurred. Check console.', 'error');
     }
 }
 
 // Make goBack globally accessible
 window.goBack = goBack;
+console.log('✅ goBack is now global:', typeof window.goBack);
+
+function placeOrder() {
+    console.log('🛒 Place order called');
+    if (currentStep === STEPS.CONFIRMATION) {
+        console.log('✅ Processing order...');
+        showNotification('🎉 Order placed successfully!', 'success');
+        // Here you would normally send order to server
+        setTimeout(() => {
+            window.location.href = '/thank-you';
+        }, 2000);
+    } else {
+        console.log('❌ Cannot place order from this step');
+        showNotification('Please complete checkout first', 'error');
+    }
+}
+
+// Make placeOrder globally accessible
+window.placeOrder = placeOrder;
+console.log('✅ placeOrder is now global:', typeof window.placeOrder);
 
 function validateCurrentStep() {
     console.log('🔍 Validating step:', currentStep);
@@ -747,13 +875,16 @@ function validateShipping() {
 }
 
 function validatePayment() {
-    console.log('Validating payment...');
+    console.log('💳 Validating payment...');
     const paymentMethodElement = document.querySelector('input[name="paymentMethod"]:checked');
     
     if (!paymentMethodElement) {
-        console.log('No payment method selected, allowing to continue');
-        return true;
+        console.log('❌ No payment method selected');
+        showNotification('❌ Please select a payment method', 'error');
+        return false;
     }
+    
+    console.log('✅ Payment method selected:', paymentMethodElement.value);
     
     const paymentMethod = paymentMethodElement.value;
     
@@ -796,6 +927,8 @@ function validatePayment() {
         };
     }
     
+    console.log('✅ Payment validation passed');
+    showNotification('✅ Payment information validated!', 'success');
     return true;
 }
 
@@ -951,50 +1084,4 @@ function checkLoginStatus() {
     }
 }
 
-// Make functions globally available
-console.log('Making functions globally available...');
-window.goNext = goNext;
-window.goBack = goBack;
-window.placeOrder = placeOrder;
-window.validateCurrentStep = validateCurrentStep;
-window.updateStepDisplay = updateStepDisplay;
-
-// Test if functions are working
-console.log('Functions available:', {
-    goNext: typeof window.goNext,
-    goBack: typeof window.goBack,
-    placeOrder: typeof window.placeOrder
-});
-
-// Add click handlers as backup
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Adding backup click handlers...');
-    
-    const nextBtn = document.getElementById('nextBtn');
-    const backBtn = document.getElementById('backBtn');
-    const placeOrderBtn = document.getElementById('placeOrderBtn');
-    
-    if (nextBtn) {
-        nextBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Next button clicked via event listener');
-            goNext();
-        });
-    }
-    
-    if (backBtn) {
-        backBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Back button clicked via event listener');
-            goBack();
-        });
-    }
-    
-    if (placeOrderBtn) {
-        placeOrderBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Place order button clicked via event listener');
-            placeOrder();
-        });
-    }
-});
+// Old duplicate code removed - using new step management system above
