@@ -346,6 +346,12 @@ async function handleLogout() {
 }
 
 function updateAuthUI() {
+    // אם הסקריפט החדש פועל, אל תפריע לו
+    if (window.blockGlobalUserMenu) {
+        console.log('🚫 Auth UI update blocked by simple-user-menu.js');
+        return;
+    }
+    
     console.log('Updating auth UI...');
     const authBtn = document.getElementById('authBtn');
     const userMenu = document.getElementById('userMenu');

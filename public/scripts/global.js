@@ -242,6 +242,12 @@ async function logout() {
 
 // User menu functionality
 function initializeUserMenu() {
+    // אם הסקריפט החדש פועל, אל תטפל בכפתור המשתמש
+    if (window.blockGlobalUserMenu) {
+        console.log('🚫 Global user menu blocked by simple-user-menu.js');
+        return;
+    }
+    
     console.log('Initializing user menu...');
     
     // Try multiple times since elements might not be ready
