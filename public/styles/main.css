@@ -1639,6 +1639,67 @@ body.theme-light .auth-container {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* Shipping Options Styles */
+.shipping-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.shipping-method {
+  position: relative;
+}
+
+.shipping-method input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.radio-label {
+  display: block;
+  padding: 1rem;
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.radio-label:hover {
+  border-color: rgba(0, 255, 255, 0.6);
+  background: rgba(0, 255, 255, 0.1);
+}
+
+.shipping-method input[type="radio"]:checked + .radio-label {
+  border-color: var(--neon-cyan);
+  background: rgba(0, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.method-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.method-name {
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.method-price {
+  font-weight: bold;
+  color: var(--neon-cyan);
+}
+
+.method-description {
+  font-size: 0.9rem;
+  color: var(--text-gray);
+}
+
 /* Notification Styles */
 .notification {
   position: fixed;

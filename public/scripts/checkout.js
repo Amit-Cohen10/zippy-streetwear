@@ -245,6 +245,9 @@ function initFormHandlers() {
     paymentMethods.forEach(method => {
         method.addEventListener('change', togglePaymentMethod);
     });
+    
+    // Shipping form validation
+    initShippingValidation();
 }
 
 function formatCardNumber(e) {
@@ -432,6 +435,98 @@ function getCardType(number) {
     return 'Unknown';
 }
 
+// Initialize shipping form validation
+function initShippingValidation() {
+    console.log('Initializing shipping validation...');
+    
+    const shippingFields = ['firstName', 'lastName', 'address', 'city', 'zipCode', 'phone'];
+    
+    shippingFields.forEach(fieldId => {
+        const input = document.getElementById(fieldId);
+        if (input) {
+            input.addEventListener('blur', function() {
+                validateShippingField(fieldId);
+            });
+            input.addEventListener('input', function() {
+                // Clear error styling while typing
+                input.classList.remove('invalid');
+                const messageEl = document.getElementById(fieldId + 'Validation');
+                if (messageEl && input.value.trim()) {
+                    validateShippingField(fieldId);
+                }
+            });
+        }
+    });
+    
+    // Add shipping method validation
+    const shippingMethods = document.querySelectorAll('input[name="shippingMethod"]');
+    shippingMethods.forEach(method => {
+        method.addEventListener('change', function() {
+            const messageEl = document.getElementById('shippingMethodValidation');
+            if (messageEl) {
+                messageEl.textContent = '✅ Shipping method selected';
+                messageEl.className = 'validation-message success';
+            }
+        });
+    });
+}
+
+// Validate individual shipping field
+function validateShippingField(fieldId) {
+    const input = document.getElementById(fieldId);
+    const messageEl = document.getElementById(fieldId + 'Validation');
+    
+    if (!input || !messageEl) return;
+    
+    const value = input.value.trim();
+    const fieldNames = {
+        'firstName': 'First Name',
+        'lastName': 'Last Name', 
+        'address': 'Address',
+        'city': 'City',
+        'zipCode': 'ZIP Code',
+        'phone': 'Phone Number'
+    };
+    
+    const fieldName = fieldNames[fieldId];
+    
+    if (!value) {
+        input.classList.add('invalid');
+        input.classList.remove('valid');
+        messageEl.textContent = `❌ ${fieldName} is required`;
+        messageEl.className = 'validation-message error';
+        return false;
+    }
+    
+    // Specific validations
+    if (fieldId === 'zipCode') {
+        // Remove any non-digit characters for validation
+        const cleanZip = value.replace(/\D/g, '');
+        if (cleanZip.length < 4 || cleanZip.length > 6) {
+            input.classList.add('invalid');
+            input.classList.remove('valid');
+            messageEl.textContent = '❌ ZIP should be 4-6 digits only';
+            messageEl.className = 'validation-message error';
+            return false;
+        }
+    }
+    
+    if (fieldId === 'phone' && value.replace(/[\s\-\+\(\)]/g, '').length < 9) {
+        input.classList.add('invalid');
+        input.classList.remove('valid');
+        messageEl.textContent = '❌ Phone number too short';
+        messageEl.className = 'validation-message error';
+        return false;
+    }
+    
+    // Field is valid
+    input.classList.remove('invalid');
+    input.classList.add('valid');
+    messageEl.textContent = `✅ Valid ${fieldName.toLowerCase()}`;
+    messageEl.className = 'validation-message success';
+    return true;
+}
+
 function updateStepDisplay() {
     // Update step indicators
     const steps = document.querySelectorAll('.step');
@@ -495,15 +590,29 @@ function updateButtons() {
 }
 
 function goNext() {
-    console.log('goNext called, current step:', currentStep);
-    if (validateCurrentStep()) {
-        currentStep++;
-        console.log('Moving to step:', currentStep);
-        updateStepDisplay();
-    } else {
-        console.log('Validation failed for step:', currentStep);
+    console.log('🔄 goNext called, current step:', currentStep);
+    
+    try {
+        const isValid = validateCurrentStep();
+        console.log('✅ Validation result:', isValid);
+        
+        if (isValid) {
+            currentStep++;
+            console.log('➡️ Moving to step:', currentStep);
+            updateStepDisplay();
+            showNotification('✅ Step completed successfully!', 'success');
+        } else {
+            console.log('❌ Validation failed for step:', currentStep);
+            // The validation functions will show their own error messages
+        }
+    } catch (error) {
+        console.error('❌ Error in goNext:', error);
+        showNotification('Error occurred. Check console.', 'error');
     }
 }
+
+// Make goNext globally accessible
+window.goNext = goNext;
 
 function goBack() {
     console.log('goBack called, current step:', currentStep);
@@ -511,21 +620,30 @@ function goBack() {
         currentStep--;
         console.log('Moving back to step:', currentStep);
         updateStepDisplay();
+        showNotification('↩️ Moved to previous step', 'info');
     } else {
         console.log('Cannot go back from step 1');
+        showNotification('Already at first step', 'info');
     }
 }
 
+// Make goBack globally accessible
+window.goBack = goBack;
+
 function validateCurrentStep() {
-    console.log('Validating step:', currentStep);
+    console.log('🔍 Validating step:', currentStep);
     switch(currentStep) {
         case 1:
+            console.log('📋 Validating Order Review...');
             return validateOrderReview();
         case 2:
+            console.log('🚚 Validating Shipping...');
             return validateShipping();
         case 3:
+            console.log('💳 Validating Payment...');
             return validatePayment();
         default:
+            console.log('❓ Unknown step, allowing...');
             return true;
     }
 }
@@ -544,19 +662,87 @@ function validateOrderReview() {
 }
 
 function validateShipping() {
-    console.log('Validating shipping...');
+    console.log('🚚 Validating shipping...');
     const form = document.getElementById('shippingForm');
     
     if (!form) {
-        console.log('Shipping form not found, allowing to continue');
-        return true;
+        console.log('❌ Shipping form not found!');
+        showNotification('Shipping form error', 'error');
+        return false;
     }
     
-    const formData = new FormData(form);
+    // Check shipping method is selected
+    const shippingMethod = document.querySelector('input[name="shippingMethod"]:checked');
+    console.log('📦 Selected shipping method:', shippingMethod ? shippingMethod.value : 'none');
+    if (!shippingMethod) {
+        showNotification('❌ Please select a shipping method', 'error');
+        return false;
+    }
     
-    // For now, just store whatever data is available
+    // Check required fields
+    const requiredFields = [
+        { id: 'firstName', name: 'First Name' },
+        { id: 'lastName', name: 'Last Name' },
+        { id: 'address', name: 'Address' },
+        { id: 'city', name: 'City' },
+        { id: 'zipCode', name: 'ZIP Code' },
+        { id: 'phone', name: 'Phone Number' }
+    ];
+    
+    const missingFields = [];
+    
+    for (const field of requiredFields) {
+        const input = document.getElementById(field.id);
+        const value = input ? input.value.trim() : '';
+        console.log(`📝 Field ${field.id}: "${value}" (${value ? 'filled' : 'empty'})`);
+        
+        if (!input || !value) {
+            missingFields.push(field.name);
+            
+            // Add error styling
+            if (input) {
+                input.classList.add('invalid');
+                const messageEl = document.getElementById(field.id + 'Validation');
+                if (messageEl) {
+                    messageEl.textContent = `❌ ${field.name} is required`;
+                    messageEl.className = 'validation-message error';
+                }
+            }
+        } else {
+            // Add success styling
+            input.classList.remove('invalid');
+            input.classList.add('valid');
+            const messageEl = document.getElementById(field.id + 'Validation');
+            if (messageEl) {
+                messageEl.textContent = `✅ Valid ${field.name.toLowerCase()}`;
+                messageEl.className = 'validation-message success';
+            }
+        }
+    }
+    
+    if (missingFields.length > 0) {
+        const missingText = missingFields.join(', ');
+        showNotification(`Please fill in: ${missingText}`, 'error');
+        console.log('Missing shipping fields:', missingFields);
+        
+        // Focus on first missing field
+        const firstMissingId = requiredFields.find(f => missingFields.includes(f.name))?.id;
+        if (firstMissingId) {
+            const firstField = document.getElementById(firstMissingId);
+            if (firstField) {
+                firstField.focus();
+            }
+        }
+        
+        return false;
+    }
+    
+    // Store shipping data
+    const formData = new FormData(form);
     orderData.shipping = Object.fromEntries(formData);
     console.log('Shipping data stored:', orderData.shipping);
+    
+    showNotification('✅ Shipping information completed!', 'success');
     return true;
 }
 
@@ -733,15 +919,29 @@ function hideLoadingModal() {
 
 // Notification function (if not available from global.js)
 function showNotification(message, type = 'info') {
-    // Try to use global notification function first
-    if (window.showNotification) {
+    // Check if global notification function exists and is different from this one
+    if (typeof window.showNotification === 'function' && window.showNotification !== showNotification) {
         window.showNotification(message, type);
         return;
     }
     
-    // Fallback notification
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 3000);
+    
+    // Also log to console
     console.log(`${type.toUpperCase()}: ${message}`);
-    alert(message);
 }
 
 // Check login status function (if not available from auth.js)

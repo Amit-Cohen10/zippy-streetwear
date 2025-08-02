@@ -131,45 +131,65 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="firstName">First Name</label>
-                                <input type="text" id="firstName" name="firstName" required>
+                                <input type="text" id="firstName" name="firstName" placeholder="John" required>
+                                <div class="validation-message" id="firstNameValidation"></div>
                             </div>
                             <div class="form-group">
                                 <label for="lastName">Last Name</label>
-                                <input type="text" id="lastName" name="lastName" required>
+                                <input type="text" id="lastName" name="lastName" placeholder="Doe" required>
+                                <div class="validation-message" id="lastNameValidation"></div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="address">Address</label>
-                            <input type="text" id="address" name="address" required>
+                            <label for="address">Street Address</label>
+                            <input type="text" id="address" name="address" placeholder="123 Main Street, Apt 4B" required>
+                            <div class="validation-message" id="addressValidation"></div>
+                            <div class="field-help">Your complete street address</div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="city">City</label>
-                                <input type="text" id="city" name="city" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="state">State</label>
-                                <input type="text" id="state" name="state" required>
+                                <input type="text" id="city" name="city" placeholder="Tel Aviv" required>
+                                <div class="validation-message" id="cityValidation"></div>
                             </div>
                             <div class="form-group">
                                 <label for="zipCode">ZIP Code</label>
-                                <input type="text" id="zipCode" name="zipCode" required>
+                                <input type="text" id="zipCode" name="zipCode" placeholder="12345" required>
+                                <div class="validation-message" id="zipValidation"></div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="country">Country</label>
-                            <select id="country" name="country" required>
-                                <option value="US">United States</option>
-                                <option value="CA">Canada</option>
-                                <option value="UK">United Kingdom</option>
-                                <option value="IL">Israel</option>
-                                <option value="DE">Germany</option>
-                                <option value="FR">France</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
                             <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone">
+                            <input type="tel" id="phone" name="phone" placeholder="050-1234567" required>
+                            <div class="validation-message" id="phoneValidation"></div>
+                            <div class="field-help">For delivery coordination</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Shipping Method</label>
+                            <div class="shipping-options">
+                                <div class="shipping-method">
+                                    <input type="radio" id="standard" name="shippingMethod" value="standard" checked>
+                                    <label for="standard" class="radio-label">
+                                        <div class="method-details">
+                                            <span class="method-name">🚚 Standard Shipping</span>
+                                            <span class="method-price">₪9.99</span>
+                                        </div>
+                                        <div class="method-description">5-7 business days</div>
+                                    </label>
+                                </div>
+                                <div class="shipping-method">
+                                    <input type="radio" id="free" name="shippingMethod" value="free">
+                                    <label for="free" class="radio-label">
+                                        <div class="method-details">
+                                            <span class="method-name">📦 Free Shipping</span>
+                                            <span class="method-price">FREE</span>
+                                        </div>
+                                        <div class="method-description">7-10 business days (orders over ₪100)</div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="validation-message" id="shippingMethodValidation"></div>
                         </div>
                     </form>
                 </div>
