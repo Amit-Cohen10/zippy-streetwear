@@ -1,13 +1,21 @@
 // Products Page JavaScript
+
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on products page
     if (!window.location.pathname.includes('products')) {
         return;
     }
 
-    // Load products from server
     let products = [];
-    
+    let filteredProducts = [];
+    let isInitialized = false;
+    let currentView = 'grid';
+    let lastRenderTime = 0;
+    const RENDER_THROTTLE = 100; // Prevent excessive re-renders
+    let lastCount = -1;
+    let lastFilterState = '';
+
+    // Load products from server
     async function loadProducts() {
         try {
             const response = await fetch('/api/products');
@@ -23,97 +31,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     brand: product.brand,
                     sizes: product.sizes
                 }));
-                console.log('✅ Products loaded from server:', products.length);
             } else {
-                console.error('❌ Failed to load products from server');
-                // Fallback to sample data
-                products = [
-                    { id: "prod-006", name: "Neural Network Hoodie", price: 149.99, category: "hoodies", image: "/images/neural-hoodie-1.jpg", status: "available", brand: "Zippy Originals", sizes: ["S", "M", "L", "XL", "XXL"] }
-                ];
+                // fallback to empty
+                products = [];
             }
         } catch (error) {
-            console.error('❌ Error loading products:', error);
-            // Fallback to sample data
-            products = [
-                { id: "prod-006", name: "Neural Network Hoodie", price: 149.99, category: "hoodies", image: "/images/neural-hoodie-1.jpg", status: "available", brand: "Zippy Originals", sizes: ["S", "M", "L", "XL", "XXL"] }
-            ];
+            products = [];
         }
+        filteredProducts = [...products];
     }
 
-    let filteredProducts = [...products];
-    let isInitialized = false;
-    let currentView = 'grid';
-    let lastRenderTime = 0;
-    const RENDER_THROTTLE = 100; // Prevent excessive re-renders
-
-    // Initialize the page
-    async function init() {
-        if (isInitialized) return;
-        
-        try {
-            // Load products from server first
-            await loadProducts();
-            
-            // Pre-load critical elements
-            const criticalElements = [
-                'productsGrid',
-                'categoryFilter',
-                'brandFilter',
-                'sizeFilter',
-                'sortFilter',
-                'minPrice',
-                'maxPrice',
-                'applyFilters',
-                'clearFilters',
-                'resultsCount'
-            ];
-            
-            const missingElements = criticalElements.filter(id => !document.getElementById(id));
-            if (missingElements.length > 0) {
-                console.warn('Missing critical elements:', missingElements);
-                // Wait a bit and try again
-                setTimeout(init, 100);
-                return;
-            }
-            
-            // Initialize with requestAnimationFrame for better performance
-            requestAnimationFrame(() => {
-                try {
-                    renderProducts();
-                    setupEventListeners();
-                    updateResultsCount();
-                    isInitialized = true;
-                    
-                    // Hide loading overlay if exists
-                    const loadingOverlay = document.getElementById('loadingOverlay');
-                    if (loadingOverlay) {
-                        loadingOverlay.style.display = 'none';
-                    }
-                    
-                    console.log('Products page initialized successfully');
-                } catch (error) {
-                    console.error('Error in initialization animation frame:', error);
-                    // Fallback initialization
-                    setTimeout(() => {
-                        try {
-                            renderProducts();
-                            setupEventListeners();
-                            updateResultsCount();
-                            isInitialized = true;
-                        } catch (fallbackError) {
-                            console.error('Fallback initialization failed:', fallbackError);
-                        }
-                    }, 500);
-                }
-            });
-        } catch (error) {
-            console.error('Error initializing products page:', error);
-            // Final fallback
-            setTimeout(init, 1000);
-        }
-    }
-
-    // Optimized render function with throttling
     function renderProducts() {
         const now = Date.now();
         if (now - lastRenderTime < RENDER_THROTTLE) {
@@ -127,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Products grid not found');
             return;
         }
-        
         if (filteredProducts.length === 0) {
             grid.innerHTML = `
                 <div class="no-products" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
@@ -137,15 +63,11 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             return;
         }
-
-        // Use DocumentFragment for better performance
         const fragment = document.createDocumentFragment();
-        
         filteredProducts.forEach(product => {
             const productCard = document.createElement('div');
             productCard.className = 'product-card';
             productCard.dataset.productId = product.id;
-            
             productCard.innerHTML = `
                 <div class="product-image-wrapper">
                     <div class="product-placeholder">
@@ -167,24 +89,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 </div>
             `;
-            
-            // Add click handler
             productCard.addEventListener('click', function() {
                 const productId = this.dataset.productId;
                 if (productId) {
                     window.location.href = `/product-detail.html?id=${productId}`;
                 }
             });
-            
             fragment.appendChild(productCard);
         });
-        
-        // Clear and append in one operation
         grid.innerHTML = '';
         grid.appendChild(fragment);
     }
 
-    // Setup event listeners with error handling
     function setupEventListeners() {
         const elements = {
             categoryFilter: document.getElementById('categoryFilter'),
@@ -196,8 +112,6 @@ document.addEventListener('DOMContentLoaded', function() {
             applyFilters: document.getElementById('applyFilters'),
             clearFilters: document.getElementById('clearFilters')
         };
-
-        // Add event listeners only if elements exist
         Object.entries(elements).forEach(([key, element]) => {
             if (element) {
                 if (key === 'applyFilters' || key === 'clearFilters') {
@@ -207,16 +121,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-
-        // Add input listeners for price filters with debouncing
         if (elements.minPrice) {
             elements.minPrice.addEventListener('input', debounce(applyFilters, 300), { passive: true });
         }
         if (elements.maxPrice) {
             elements.maxPrice.addEventListener('input', debounce(applyFilters, 300), { passive: true });
         }
-        
-        // View buttons with passive listeners
         document.querySelectorAll('.view-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -226,27 +136,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }, { passive: false });
         });
-        
-        // Add scroll optimization
         let scrollTimeout;
         window.addEventListener('scroll', function() {
             if (scrollTimeout) {
                 clearTimeout(scrollTimeout);
             }
             scrollTimeout = setTimeout(() => {
-                // Optimize scroll performance
                 document.body.style.pointerEvents = 'auto';
             }, 100);
         }, { passive: true });
-        
-        // Add resize optimization
         let resizeTimeout;
         window.addEventListener('resize', function() {
             if (resizeTimeout) {
                 clearTimeout(resizeTimeout);
             }
             resizeTimeout = setTimeout(() => {
-                // Re-render on resize if needed
                 if (isInitialized) {
                     renderProducts();
                 }
@@ -254,7 +158,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, { passive: true });
     }
 
-    // Enhanced debounce function with better performance
     function debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
@@ -267,49 +170,13 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // Memory cleanup function
     function cleanup() {
-        // Remove event listeners to prevent memory leaks
         const elements = document.querySelectorAll('.product-card, .view-btn, .filter-group select, .filter-group input');
         elements.forEach(element => {
             element.replaceWith(element.cloneNode(true));
         });
     }
 
-    // Enhanced error handling
-    window.addEventListener('error', function(e) {
-        console.error('Global error caught:', e.error);
-        // Try to recover gracefully
-        if (isInitialized) {
-            setTimeout(() => {
-                try {
-                    renderProducts();
-                } catch (error) {
-                    console.error('Recovery failed:', error);
-                }
-            }, 1000);
-        }
-    });
-
-    // Performance monitoring
-    let performanceObserver;
-    if ('PerformanceObserver' in window) {
-        try {
-            performanceObserver = new PerformanceObserver((list) => {
-                for (const entry of list.getEntries()) {
-                    if (entry.entryType === 'longtask') {
-                        console.warn('Long task detected:', entry.duration);
-                    }
-                }
-            });
-            performanceObserver.observe({ entryTypes: ['longtask'] });
-        } catch (error) {
-            console.warn('PerformanceObserver not supported');
-        }
-    }
-
-    // Optimized apply filters with memoization
-    let lastFilterState = '';
     function applyFilters() {
         try {
             const category = document.getElementById('categoryFilter')?.value || '';
@@ -318,16 +185,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const sortBy = document.getElementById('sortFilter')?.value || 'createdAt';
             const minPrice = document.getElementById('minPrice')?.value || '';
             const maxPrice = document.getElementById('maxPrice')?.value || '';
-
-            // Create filter state string for memoization
             const filterState = `${category}-${brand}-${size}-${sortBy}-${minPrice}-${maxPrice}`;
-            
-            // Skip if filter state hasn't changed
             if (filterState === lastFilterState) {
                 return;
             }
             lastFilterState = filterState;
-
             filteredProducts = products.filter(product => {
                 if (category && product.category !== category) return false;
                 if (brand && brand !== 'Zippy Originals') return false;
@@ -335,7 +197,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (maxPrice && product.price > parseInt(maxPrice)) return false;
                 return true;
             });
-
             sortProducts(sortBy);
             renderProducts();
             updateResultsCount();
@@ -344,7 +205,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Optimized sort products
     function sortProducts(sortBy) {
         try {
             switch(sortBy) {
@@ -358,7 +218,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
                     break;
                 default:
-                    // Keep original order
                     break;
             }
         } catch (error) {
@@ -366,7 +225,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Optimized clear filters
     function clearFilters() {
         try {
             const elements = {
@@ -377,20 +235,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 minPrice: document.getElementById('minPrice'),
                 maxPrice: document.getElementById('maxPrice')
             };
-
-            // Clear values only if elements exist
             Object.values(elements).forEach(element => {
                 if (element) {
                     element.value = '';
                 }
             });
-
-            // Reset sort to default
             if (elements.sortFilter) {
                 elements.sortFilter.value = 'createdAt';
             }
-            
-            // Reset filter state
             lastFilterState = '';
             filteredProducts = [...products];
             renderProducts();
@@ -400,17 +252,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Optimized set view mode
     function setView(view) {
         try {
-            if (currentView === view) return; // Skip if view hasn't changed
-            
+            if (currentView === view) return;
             currentView = view;
-            
             document.querySelectorAll('.view-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.view === view);
             });
-            
             const grid = document.getElementById('productsGrid');
             if (grid) {
                 grid.className = `products-grid stussy-style ${view === 'list' ? 'list-view' : ''}`;
@@ -421,13 +269,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Optimized update results count
-    let lastCount = -1;
     function updateResultsCount() {
         try {
             const count = filteredProducts.length;
-            if (count === lastCount) return; // Skip if count hasn't changed
-            
+            if (count === lastCount) return;
             lastCount = count;
             const countElement = document.getElementById('resultsCount');
             if (countElement) {
@@ -438,23 +283,62 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Initialize the page with a small delay to ensure DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => init().catch(error => {
-            console.error('Failed to initialize products page:', error);
-        }));
-    } else {
-        // DOM is already ready
-        setTimeout(() => init().catch(error => {
-            console.error('Failed to initialize products page:', error);
-        }), 0);
+    async function init() {
+        if (isInitialized) return;
+        try {
+            // Pre-load critical elements
+            const criticalElements = [
+                'productsGrid',
+                'categoryFilter',
+                'brandFilter',
+                'sizeFilter',
+                'sortFilter',
+                'minPrice',
+                'maxPrice',
+                'applyFilters',
+                'clearFilters',
+                'resultsCount'
+            ];
+            const missingElements = criticalElements.filter(id => !document.getElementById(id));
+            if (missingElements.length > 0) {
+                setTimeout(init, 100);
+                return;
+            }
+            await loadProducts();
+            filteredProducts = [...products];
+            requestAnimationFrame(() => {
+                try {
+                    renderProducts();
+                    setupEventListeners();
+                    updateResultsCount();
+                    isInitialized = true;
+                    const loadingOverlay = document.getElementById('loadingOverlay');
+                    if (loadingOverlay) {
+                        loadingOverlay.style.display = 'none';
+                    }
+                } catch (error) {
+                    setTimeout(() => {
+                        try {
+                            renderProducts();
+                            setupEventListeners();
+                            updateResultsCount();
+                            isInitialized = true;
+                        } catch (fallbackError) {}
+                    }, 500);
+                }
+            });
+        } catch (error) {
+            setTimeout(init, 1000);
+        }
     }
 
-    // Cleanup on page unload
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        setTimeout(init, 0);
+    }
+
     window.addEventListener('beforeunload', function() {
-        if (performanceObserver) {
-            performanceObserver.disconnect();
-        }
         cleanup();
     });
 }); 

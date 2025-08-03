@@ -222,6 +222,45 @@
       "status": "processing",
       "trackingNumber": "ZIPPYMDVLF1FT3JR1SH",
       "createdAt": "2025-08-03T11:23:25.577Z"
+    },
+    {
+      "id": "order-1754221606942-z813aubjq",
+      "userId": "user-1753901439175-sl80wbwx7",
+      "items": [
+        {
+          "productId": "prod-006",
+          "title": "Neural Network Hoodie",
+          "price": 149.99,
+          "quantity": 4,
+          "size": "S",
+          "brand": "Zippy Originals",
+          "image": "/images/neural-hoodie-1.jpg"
+        }
+      ],
+      "total": 599.96,
+      "shippingAddress": {
+        "firstName": "qwewqe",
+        "lastName": "qweqwe",
+        "address": "qweqwewe",
+        "city": "wqewqewq",
+        "zipCode": "erwerewr",
+        "phone": "eewqrewrewrewr",
+        "shippingMethod": "standard"
+      },
+      "billingAddress": {
+        "firstName": "qwewqe",
+        "lastName": "qweqwe",
+        "address": "qweqwewe",
+        "city": "wqewqewq",
+        "zipCode": "erwerewr",
+        "phone": "eewqrewrewrewr",
+        "shippingMethod": "standard"
+      },
+      "paymentMethod": "credit",
+      "paymentId": "pay_1754221606941_9ybeh1gp9",
+      "status": "processing",
+      "trackingNumber": "ZIPPYMDVM92QM4PG4EV",
+      "createdAt": "2025-08-03T11:46:46.942Z"
     }
   ]
 }
