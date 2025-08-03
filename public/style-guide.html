@@ -6,6 +6,7 @@
     <title>Style Guide - Zippy Streetwear</title>
     <link rel="stylesheet" href="styles/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* Enhanced Style Guide Styles */
         .style-guide {
@@ -668,25 +669,41 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="cyber-nav">
+    <nav class="navbar">
         <div class="nav-container">
-            <div class="nav-brand">
-                <a href="/" class="logo">ZIPPY</a>
+            <div class="nav-logo">
+                <h1 class="logo-text">ZIPPY</h1>
+                <div class="logo-glow"></div>
             </div>
-            <div class="nav-links">
+            <div class="nav-menu">
                 <a href="/" class="nav-link">Home</a>
                 <a href="/products" class="nav-link">Shop</a>
                 <a href="/exchange" class="nav-link">Exchange</a>
                 <a href="/community" class="nav-link">Community</a>
-                <a href="/brands" class="nav-link">Brands</a>
                 <a href="/style-guide" class="nav-link active">Style Guide</a>
+                <a href="/brands" class="nav-link">Brands</a>
             </div>
             <div class="nav-actions">
+                <button class="search-btn" id="searchBtn">
+                    <span class="search-icon">🔍</span>
+                </button>
                 <button class="cart-btn" id="cartBtn">
                     <span class="cart-icon">🛒</span>
                     <span class="cart-count" id="cartCount">0</span>
                 </button>
-                <button class="auth-btn" id="authBtn">Login</button>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+                    <i class="fas fa-sun" id="themeIcon"></i>
+                </button>
+                <div class="auth-section">
+                    <button class="auth-btn" id="authBtn" onclick="openAuthModal()">LOGIN</button>
+                    <div class="user-menu" id="userMenu" style="display: none;">
+                        <button class="user-menu-toggle" id="userMenuToggle">
+                            <i class="fas fa-user"></i>
+                            <span id="usernameDisplay">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
@@ -1170,6 +1187,16 @@
                     this.style.transform = 'translateY(0)';
                 });
             });
+        });
+    </script>
+    
+    <!-- Add required scripts -->
+    <script src="scripts/main.js"></script>
+    <script>
+        // Initialize cart count and auth button
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+            updateAuthButton();
         });
     </script>
 </body>
