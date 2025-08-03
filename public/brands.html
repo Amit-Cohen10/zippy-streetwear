@@ -28,13 +28,12 @@
                 <a href="/community" class="nav-link">Community</a>
                 <a href="/style-guide" class="nav-link">Style Guide</a>
                 <a href="/brands" class="nav-link active">Brands</a>
-                <a href="/dashboard" class="nav-link">Dashboard</a>
             </div>
             <div class="nav-actions">
-                <button class="search-btn" id="searchBtn">
+                <button class="search-btn" id="searchBtn" onclick="openSearchModal()">
                     <span class="search-icon">🔍</span>
                 </button>
-                <button class="cart-btn" id="cartBtn">
+                <button class="cart-btn" id="cartBtn" onclick="openCartModal()">
                     <span class="cart-icon">🛒</span>
                     <span class="cart-count" id="cartCount">0</span>
                 </button>
@@ -44,7 +43,7 @@
                 <div class="auth-section">
                     <button class="auth-btn" id="authBtn" onclick="openAuthModal()">LOGIN</button>
                     <div class="user-menu" id="userMenu" style="display: none;">
-                        <button class="user-menu-toggle" id="userMenuToggle">
+                        <button class="user-menu-toggle" id="userMenuToggle" onclick="toggleUserDropdown()">
                             <i class="fas fa-user"></i>
                             <span id="usernameDisplay">User</span>
                             <i class="fas fa-chevron-down"></i>
@@ -262,7 +261,7 @@
         <div class="modal-content cyber-modal">
             <div class="modal-header">
                 <h2 class="modal-title" id="brandModalTitle">Brand Name</h2>
-                <button class="modal-close" id="closeBrandModal">&times;</button>
+                <button class="modal-close" id="closeBrandModal" onclick="document.getElementById('brandModal').style.display='none'">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="brand-detail-content">
@@ -298,7 +297,7 @@
         <div class="modal-content cyber-modal">
             <div class="modal-header">
                 <h2 class="modal-title" id="authTitle">Login</h2>
-                <button class="modal-close" id="closeAuthModal">&times;</button>
+                <button class="modal-close" id="closeAuthModal" onclick="closeAuthModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="authForm" class="auth-form">
@@ -334,18 +333,46 @@
         <div class="modal-content cyber-modal">
             <div class="modal-header">
                 <h2 class="modal-title">Shopping Cart</h2>
-                <button class="modal-close" id="closeCartModal">&times;</button>
+                <button class="modal-close" id="closeCartModal" onclick="closeCartModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <div id="cartItems" class="cart-items">
                     <!-- Cart items will be populated here -->
                 </div>
-                <div class="cart-summary">
-                    <div class="cart-total">
+                <div class="empty-cart" id="emptyCart" style="display: none;">
+                    <div class="empty-cart-icon">🛒</div>
+                    <h3>Your cart is empty</h3>
+                    <p>Add some items to get started!</p>
+                </div>
+                <div class="cart-summary" id="cartSummary">
+                    <div class="summary-item">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Shipping:</span>
+                        <span id="shipping">$0.00</span>
+                    </div>
+                    <div class="summary-item total">
                         <span>Total:</span>
-                        <span id="cartTotal">$0.00</span>
+                        <span id="total">$0.00</span>
                     </div>
                     <button class="cyber-btn primary" id="checkoutBtn">Checkout</button>
+                    <button class="cyber-btn secondary" onclick="clearCart()">Clear Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-container">
+            <button class="close-btn" onclick="closeSearchModal()">×</button>
+            <div class="search-content">
+                <h2>Search Products</h2>
+                <div class="search-input-wrapper">
+                    <input type="text" id="searchInput" placeholder="Search for products, brands, styles..." class="search-input">
+                    <div id="searchSuggestions" class="search-suggestions"></div>
                 </div>
             </div>
         </div>
@@ -363,7 +390,7 @@
             </div>
             <div class="add-to-cart-actions">
                 <button class="add-to-cart-btn" onclick="addToCartAndClose()">Add to Cart</button>
-                <button class="add-to-cart-close-btn" onclick="closeAddToCartModal()">Continue Shopping</button>
+                <button class="add-to-cart-close-btn" onclick="document.getElementById('addToCartModal').style.display='none'">Continue Shopping</button>
             </div>
         </div>
     </div>
@@ -551,11 +578,121 @@
                 return card;
             }
 
-            function filterBrandsByCategory(category) {
-                console.log('Filtering brands by category:', category);
-                // Implement category filtering
+                    function filterBrandsByCategory(category) {
+            console.log('Filtering brands by category:', category);
+            // Implement category filtering
+        }
+    });
+
+    // Cart functionality
+    function openCartModal() {
+        const cartModal = document.getElementById('cartModal');
+        if (cartModal) {
+            cartModal.classList.add('active');
+            // Load cart data
+            if (typeof loadCart === 'function') {
+                loadCart();
             }
-        });
+            // Auto-scroll to top when opening cart
+            setTimeout(() => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }, 100);
+        }
+    }
+
+    function closeCartModal() {
+        const cartModal = document.getElementById('cartModal');
+        if (cartModal) {
+            cartModal.classList.remove('active');
+        }
+    }
+
+    // User dropdown functionality
+    function toggleUserDropdown() {
+        const userDropdown = document.getElementById('userDropdown');
+        if (userDropdown) {
+            const computedDisplay = getComputedStyle(userDropdown).display;
+            const isVisible = computedDisplay === 'block';
+            
+            if (isVisible) {
+                userDropdown.style.setProperty('display', 'none', 'important');
+            } else {
+                // Position dropdown below button
+                const userMenuToggle = document.getElementById('userMenuToggle');
+                if (userMenuToggle && userDropdown) {
+                    const buttonRect = userMenuToggle.getBoundingClientRect();
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+                    
+                    const top = buttonRect.bottom + scrollTop + 5;
+                    const left = buttonRect.right + scrollLeft - 220;
+                    
+                    userDropdown.style.setProperty('position', 'absolute', 'important');
+                    userDropdown.style.setProperty('top', top + 'px', 'important');
+                    userDropdown.style.setProperty('left', left + 'px', 'important');
+                    userDropdown.style.setProperty('right', 'auto', 'important');
+                }
+                
+                userDropdown.style.setProperty('display', 'block', 'important');
+                userDropdown.style.setProperty('visibility', 'visible', 'important');
+                userDropdown.style.setProperty('opacity', '1', 'important');
+                userDropdown.style.setProperty('z-index', '999999', 'important');
+            }
+        }
+    }
+
+    // Logout functionality
+    function logout() {
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('zippyCart');
+        
+        // Update UI
+        const authBtn = document.getElementById('authBtn');
+        const userMenu = document.getElementById('userMenu');
+        
+        if (authBtn) authBtn.style.display = 'inline-block';
+        if (userMenu) userMenu.style.display = 'none';
+        
+        // Close dropdown
+        const userDropdown = document.getElementById('userDropdown');
+        if (userDropdown) userDropdown.style.display = 'none';
+        
+        // Update cart count
+        if (typeof updateCartCount === 'function') {
+            updateCartCount();
+        }
+        
+        console.log('User logged out');
+    }
+
+    // Theme toggle functionality
+    function toggleTheme() {
+        const body = document.body;
+        const themeIcon = document.getElementById('themeIcon');
+        
+        if (body.classList.contains('theme-light')) {
+            body.classList.remove('theme-light');
+            if (themeIcon) themeIcon.className = 'fas fa-sun';
+        } else {
+            body.classList.add('theme-light');
+            if (themeIcon) themeIcon.className = 'fas fa-moon';
+        }
+    }
+
+    // Clear cart functionality
+    function clearCart() {
+        localStorage.removeItem('zippyCart');
+        if (typeof updateCartCount === 'function') {
+            updateCartCount();
+        }
+        if (typeof loadCart === 'function') {
+            loadCart();
+        }
+        console.log('Cart cleared');
+    }
 
         // Global functions for brand interactions
         function viewBrand(brandId) {
@@ -576,14 +713,12 @@
         }
     </script>
     
-    <!-- Add required scripts -->
-    <script src="scripts/main.js"></script>
-    <script>
-        // Initialize cart count and auth button
-        document.addEventListener('DOMContentLoaded', function() {
-            updateCartCount();
-            updateAuthButton();
-        });
-    </script>
+    <!-- Scripts -->
+    <script src="/scripts/global.js"></script>
+    <script src="/scripts/main.js"></script>
+    <script src="/scripts/auth.js"></script>
+    <script src="/scripts/cart.js"></script>
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/simple-user-menu.js"></script>
 </body>
 </html> 
