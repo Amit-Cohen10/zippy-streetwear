@@ -255,6 +255,11 @@ async function handleLogin(e) {
             closeAuthModal();
             updateAuthUI();
             
+            // Refresh the page to ensure UI is properly updated
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+            
         } else {
             throw new Error(data.error || 'Login failed');
         }
@@ -311,6 +316,11 @@ async function handleRegister(e) {
             
             closeAuthModal();
             updateAuthUI();
+            
+            // Refresh the page to ensure UI is properly updated
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
             
         } else {
             throw new Error(data.error || 'Registration failed');
