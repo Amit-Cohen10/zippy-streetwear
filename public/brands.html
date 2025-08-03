@@ -934,43 +934,56 @@
             object-fit: cover !important;
         }
 
-        /* Fix double scrollbar issue */
+        /* Fix double scrollbar issue - Hide default scrollbar completely */
         html {
-            scrollbar-width: thin;
-            scrollbar-color: var(--accent-neon-cyan) var(--secondary-dark);
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
             overflow-x: hidden;
             scroll-behavior: smooth;
             scroll-padding-top: 100px;
         }
 
+        html::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
         body {
             overflow-x: hidden;
-            scrollbar-width: thin;
-            scrollbar-color: var(--accent-neon-cyan) var(--secondary-dark);
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+
+        body::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
         }
 
         .brands-page {
             overflow-x: hidden;
-            scrollbar-width: thin;
-            scrollbar-color: var(--accent-neon-cyan) var(--secondary-dark);
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
         }
 
-        /* Custom scrollbar for webkit browsers */
-        ::-webkit-scrollbar {
+        .brands-page::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        /* Custom scrollbar - Only show when needed */
+        .brands-page:hover::-webkit-scrollbar {
             width: 8px;
+            display: block;
         }
 
-        ::-webkit-scrollbar-track {
+        .brands-page:hover::-webkit-scrollbar-track {
             background: var(--secondary-dark);
         }
 
-        ::-webkit-scrollbar-thumb {
+        .brands-page:hover::-webkit-scrollbar-thumb {
             background: var(--accent-neon-cyan);
             border-radius: 4px;
             transition: background 0.3s ease;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
+        .brands-page:hover::-webkit-scrollbar-thumb:hover {
             background: var(--accent-neon-pink);
         }
 
@@ -986,10 +999,40 @@
             overflow-x: hidden;
         }
 
-        /* Ensure smooth scrolling */
+        /* Ensure smooth scrolling and hide default scrollbar */
         .brands-page {
             overflow-x: hidden;
             scroll-behavior: smooth;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+
+        .brands-page::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        /* Hide scrollbar on all elements */
+        *::-webkit-scrollbar {
+            display: none;
+        }
+
+        * {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+
+        /* Additional fixes to prevent large scrollbar */
+        html, body, .brands-page, .container, main {
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar,
+        .brands-page::-webkit-scrollbar,
+        .container::-webkit-scrollbar,
+        main::-webkit-scrollbar {
+            display: none !important;
         }
 
 
@@ -1402,6 +1445,28 @@
     <script>
         // Brands page specific functionality
         document.addEventListener('DOMContentLoaded', function() {
+            // Hide scrollbar immediately to prevent flickering
+            document.documentElement.style.scrollbarWidth = 'none';
+            document.documentElement.style.msOverflowStyle = 'none';
+            document.body.style.scrollbarWidth = 'none';
+            document.body.style.msOverflowStyle = 'none';
+            
+            // Force hide scrollbar on all elements
+            const style = document.createElement('style');
+            style.textContent = `
+                html, body, .brands-page, .container, main {
+                    scrollbar-width: none !important;
+                    -ms-overflow-style: none !important;
+                }
+                html::-webkit-scrollbar,
+                body::-webkit-scrollbar,
+                .brands-page::-webkit-scrollbar,
+                .container::-webkit-scrollbar,
+                main::-webkit-scrollbar {
+                    display: none !important;
+                }
+            `;
+            document.head.appendChild(style);
             const brandsGrid = document.getElementById('brandsGrid');
             const storiesContainer = document.getElementById('storiesContainer');
             const brandModal = document.getElementById('brandModal');
