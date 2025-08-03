@@ -343,10 +343,48 @@ window.MyItemsPage = {
     forceAuthCheck
 };
 
+// Safe cart opening function with multiple fallbacks
+function safeOpenCart() {
+    console.log('🛒 Attempting to open cart...');
+    
+    try {
+        // Method 1: Try global openCartModal function
+        if (window.openCartModal && typeof window.openCartModal === 'function') {
+            console.log('✅ Using global openCartModal');
+            window.openCartModal();
+            return;
+        }
+        
+        // Method 2: Try GlobalModule
+        if (window.GlobalModule && window.GlobalModule.openCartModal) {
+            console.log('✅ Using GlobalModule openCartModal');
+            window.GlobalModule.openCartModal();
+            return;
+        }
+        
+        // Method 3: Try CartModule directly
+        if (window.CartModule && window.CartModule.openCartModal) {
+            console.log('✅ Using CartModule openCartModal');
+            window.CartModule.openCartModal();
+            return;
+        }
+        
+        // Method 4: Direct redirect with smooth scrolling
+        console.log('🔄 Redirecting to cart page');
+        window.location.href = '/cart';
+        
+    } catch (error) {
+        console.error('❌ Error opening cart:', error);
+        // Final fallback - simple redirect
+        window.location.href = '/cart';
+    }
+}
+
 // Make functions globally available for onclick handlers
 window.tryOpenAuth = tryOpenAuth;
 window.loadOrders = loadOrders;
 window.forceAuthCheck = forceAuthCheck;
 window.clearSessionAndRetry = clearSessionAndRetry;
+window.safeOpenCart = safeOpenCart;
 
 console.log('✅ My Items script loaded successfully');

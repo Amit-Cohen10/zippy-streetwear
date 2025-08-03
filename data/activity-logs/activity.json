@@ -234,5 +234,29 @@
     },
     "timestamp": "2025-08-01T22:55:18.142Z",
     "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754211246172-jhpow58ev",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-03T08:54:06.172Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754215675612-skjvnkjyz",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-03T10:07:55.612Z",
+    "ip": "127.0.0.1"
   }
 ]

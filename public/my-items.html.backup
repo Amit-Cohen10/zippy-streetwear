@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart - Zippy Streetwear</title>
+    <title>My Items - Zippy Streetwear</title>
     <link rel="stylesheet" href="/styles/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -13,22 +13,22 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <h1 class="logo-text">ZIPPY</h1>
+                <span class="logo-text">ZIPPY</span>
                 <div class="logo-glow"></div>
             </div>
-            <div class="nav-menu">
-                <a href="/" class="nav-link">Home</a>
-                <a href="/products" class="nav-link">Shop</a>
-                <a href="/exchange" class="nav-link">Exchange</a>
-                <a href="/community" class="nav-link">Community</a>
-                <a href="/brands" class="nav-link">Brands</a>
-            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">HOME</a></li>
+                <li><a href="/shop" class="nav-link">SHOP</a></li>
+                <li><a href="/exchange" class="nav-link">EXCHANGE</a></li>
+                <li><a href="/community" class="nav-link">COMMUNITY</a></li>
+                <li><a href="/brands" class="nav-link">BRANDS</a></li>
+            </ul>
             <div class="nav-actions">
                 <button class="search-btn" onclick="openSearchModal()">
                     <i class="fas fa-search"></i>
                 </button>
-                <button class="cart-btn" id="cartBtn">
-                    <span class="cart-icon">🛒</span>
+                <button class="cart-btn" onclick="openCartModal()">
+                    <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count" id="cartCount">0</span>
                 </button>
                 <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
@@ -167,56 +167,27 @@
     </div>
 
     <!-- Main Content -->
-    <main class="cart-page">
+    <main class="my-items-page">
         <div class="container">
-            <!-- Cart Header -->
+            <!-- Page Header -->
             <div class="page-header">
-                <h1 class="page-title">Shopping Cart</h1>
-                <p class="page-subtitle">Review your items and proceed to checkout</p>
+                <h1 class="page-title">My Items</h1>
+                <p class="page-subtitle">View all your purchased items</p>
             </div>
 
-            <!-- Cart Content -->
-            <div class="cart-content">
-                <!-- Cart Items Section -->
-                <div class="cart-section" id="cartItemsSection">
-                    <div class="cart-items" id="cartItems">
-                        <!-- Cart items will be loaded here -->
-                    </div>
-                    
-                    <!-- Empty Cart Message -->
-                    <div class="empty-cart" id="emptyCart" style="display: none;">
-                        <div class="empty-cart-icon">🛒</div>
-                        <h3>Your cart is empty</h3>
-                        <p>Add some items to get started!</p>
-                        <a href="/products" class="btn-primary">Continue Shopping</a>
-                    </div>
+            <!-- My Items Content -->
+            <div class="my-items-content">
+                <!-- Items Grid -->
+                <div class="items-grid" id="myItemsGrid">
+                    <!-- Items will be loaded here -->
                 </div>
-
-                <!-- Cart Summary -->
-                <div class="cart-summary" id="cartSummary">
-                    <h3>Order Summary</h3>
-                    <div class="summary-item">
-                        <span>Subtotal:</span>
-                        <span id="subtotal">$0.00</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>Shipping:</span>
-                        <span id="shipping">$0.00</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>Tax:</span>
-                        <span id="tax">$0.00</span>
-                    </div>
-                    <div class="summary-item total">
-                        <span>Total:</span>
-                        <span id="total">$0.00</span>
-                    </div>
-                    <button class="btn-primary checkout-btn" id="checkoutBtn" onclick="proceedToCheckout()">
-                        Proceed to Checkout
-                    </button>
-                    <button class="btn-secondary clear-cart-btn" onclick="clearCart()">
-                        Clear Cart
-                    </button>
+                
+                <!-- Empty State -->
+                <div class="empty-items" id="emptyItems" style="display: none;">
+                    <div class="empty-items-icon">📦</div>
+                    <h3>No items yet</h3>
+                    <p>You haven't purchased any items yet. Start shopping to see your items here!</p>
+                    <a href="/shop" class="btn-primary">Start Shopping</a>
                 </div>
             </div>
         </div>
@@ -262,129 +233,11 @@
         </div>
     </div>
 
-    <!-- Payment Modal -->
-    <div class="modal" id="paymentModal">
-        <div class="modal-container large">
-            <div class="modal-header">
-                <h2>Payment Details</h2>
-                <button class="close-btn" onclick="closePaymentModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <form id="paymentForm" class="payment-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="cardName">Cardholder Name</label>
-                            <input type="text" id="cardName" class="form-input" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="cardNumber">Card Number</label>
-                            <input type="text" id="cardNumber" class="form-input" placeholder="1234 5678 9012 3456" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="expiryDate">Expiry Date</label>
-                            <input type="text" id="expiryDate" class="form-input" placeholder="MM/YY" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="cvv">CVV</label>
-                            <input type="text" id="cvv" class="form-input" placeholder="123" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="billingAddress">Billing Address</label>
-                        <textarea id="billingAddress" class="form-textarea" rows="3" required></textarea>
-                    </div>
-                    <div class="payment-summary">
-                        <h3>Order Summary</h3>
-                        <div class="summary-item">
-                            <span>Subtotal:</span>
-                            <span id="paymentSubtotal">$0.00</span>
-                        </div>
-                        <div class="summary-item">
-                            <span>Shipping:</span>
-                            <span id="paymentShipping">$0.00</span>
-                        </div>
-                        <div class="summary-item total">
-                            <span>Total:</span>
-                            <span id="paymentTotal">$0.00</span>
-                        </div>
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn-secondary" onclick="closePaymentModal()">Cancel</button>
-                        <button type="submit" class="btn-primary">Pay Now</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Thank You Modal -->
-    <div class="modal" id="thankYouModal">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h2>Thank You!</h2>
-                <button class="close-btn" onclick="closeThankYouModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="thank-you-content">
-                    <div class="success-icon">✅</div>
-                    <h3>Payment Successful!</h3>
-                    <p>Your order has been placed successfully. You will receive a confirmation email shortly.</p>
-                    <div class="order-details">
-                        <p><strong>Order ID:</strong> <span id="orderId">#12345</span></p>
-                        <p><strong>Total Amount:</strong> <span id="orderTotal">$0.00</span></p>
-                    </div>
-                    <div class="thank-you-actions">
-                        <button class="btn-primary" onclick="viewMyItems()">View My Items</button>
-                        <button class="btn-secondary" onclick="closeThankYouModal()">Continue Shopping</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner">
             <div class="spinner-ring"></div>
             <div class="spinner-text">Loading...</div>
-        </div>
-    </div>
-
-    <!-- Cart Modal -->
-    <div class="modal" id="cartModal">
-        <div class="modal-content cyber-modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Shopping Cart</h2>
-                <button class="modal-close" id="closeCartModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="cartItems" class="cart-items">
-                    <!-- Cart items will be populated here -->
-                </div>
-                <div class="empty-cart" id="emptyCart" style="display: none;">
-                    <div class="empty-cart-icon">🛒</div>
-                    <h3>Your cart is empty</h3>
-                    <p>Add some items to get started!</p>
-                </div>
-                <div class="cart-summary" id="cartSummary">
-                    <div class="summary-item">
-                        <span>Subtotal:</span>
-                        <span id="subtotal">$0.00</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>Shipping:</span>
-                        <span id="shipping">$0.00</span>
-                    </div>
-                    <div class="summary-item total">
-                        <span>Total:</span>
-                        <span id="total">$0.00</span>
-                    </div>
-                    <button class="cyber-btn primary" id="checkoutBtn">Checkout</button>
-                    <button class="cyber-btn secondary" onclick="clearCart()">Clear Cart</button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -407,11 +260,9 @@
 
     <!-- Scripts -->
     <script src="/scripts/global.js"></script>
-    <script src="/scripts/main.js"></script>
     <script src="/scripts/auth.js"></script>
-    <script src="/scripts/cart.js"></script>
+    <script src="/scripts/my-items.js"></script>
     <script src="/scripts/search.js"></script>
     <script src="/scripts/simple-user-menu.js"></script>
-    <script src="/scripts/payment.js"></script>
 </body>
 </html> 
