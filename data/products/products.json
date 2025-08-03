@@ -137,5 +137,34 @@
     "exchangeable": true,
     "condition": "new",
     "createdAt": "2025-07-30T13:53:39.225Z"
+  },
+  {
+    "id": "prod-006",
+    "title": "Neural Network Hoodie",
+    "description": "AI-inspired hoodie with neural network pattern design",
+    "price": 149.99,
+    "images": [
+      "/images/neural-hoodie-1.jpg",
+      "/images/neural-hoodie-2.jpg"
+    ],
+    "category": "hoodies",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "stock": {
+      "S": 8,
+      "M": 8,
+      "L": 3,
+      "XL": 10,
+      "XXL": 6
+    },
+    "brand": "Zippy Originals",
+    "exchangeable": true,
+    "condition": "new",
+    "createdAt": "2025-07-30T13:53:39.225Z"
   }
 ]

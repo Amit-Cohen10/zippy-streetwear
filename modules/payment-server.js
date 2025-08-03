@@ -331,8 +331,8 @@ async function processMockPayment(paymentData) {
     };
   }
   
-  // Simulate random payment failures (5% chance)
-  if (Math.random() < 0.05) {
+  // Simulate random payment failures (0% chance for testing)
+  if (Math.random() < 0.00) {
     return {
       success: false,
       message: 'Payment declined. Please try again.'

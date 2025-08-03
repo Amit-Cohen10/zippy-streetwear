@@ -7000,3 +7000,130 @@ body.theme-light .auth-container {
 .validation-icon.error {
   color: #ff6b6b;
 }
+
+/* Thank You Page Styles */
+.thank-you-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.thank-you-content {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 2px solid var(--accent-color);
+    box-shadow: 0 8px 32px rgba(0, 255, 255, 0.2);
+}
+
+.success-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: successPulse 2s ease-in-out infinite;
+}
+
+@keyframes successPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.thank-you-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--accent-color);
+    font-family: 'Orbitron', monospace;
+}
+
+.thank-you-content h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.thank-you-content p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    color: var(--text-secondary);
+}
+
+.order-details {
+    background: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+    text-align: left;
+}
+
+.order-details h3 {
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+    font-family: 'Orbitron', monospace;
+}
+
+.order-details p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}
+
+.thank-you-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.thank-you-actions .btn-primary,
+.thank-you-actions .btn-secondary {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.thank-you-actions .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 255, 255, 0.3);
+}
+
+.thank-you-actions .btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .thank-you-content {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .thank-you-content h1 {
+        font-size: 2rem;
+    }
+    
+    .thank-you-content h2 {
+        font-size: 1.25rem;
+    }
+    
+    .thank-you-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .thank-you-actions .btn-primary,
+    .thank-you-actions .btn-secondary {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+    }
+}

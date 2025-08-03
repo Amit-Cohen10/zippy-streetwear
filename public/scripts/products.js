@@ -5,43 +5,40 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Sample product data
-    const products = [
-        { id: 1, name: "Neural Network Hoodie", price: 459, category: "hoodies", image: "/images/products/neural-network-hoodie.jpg", status: "available" },
-        { id: 2, name: "Glitch Reality Hoodie", price: 429, category: "hoodies", image: "/images/products/glitch-reality-hoodie.jpg", status: "sold-out" },
-        { id: 3, name: "Cyber Samurai Hoodie", price: 489, category: "hoodies", image: "/images/products/cyber-samurai-hoodie.jpg", status: "available" },
-        { id: 4, name: "Data Stream Hoodie", price: 449, category: "hoodies", image: "/images/products/data-stream-hoodie.jpg", status: "available" },
-        { id: 5, name: "Neon Skyline Hoodie", price: 469, category: "hoodies", image: "/images/products/neon-skyline-hoodie.jpg", status: "available" },
-        { id: 6, name: "Hologram Hoodie", price: 499, category: "hoodies", image: "/images/products/hologram-hoodie.jpg", status: "available" },
-        { id: 7, name: "Matrix Rain Hoodie", price: 439, category: "hoodies", image: "/images/products/matrix-rain-hoodie.jpg", status: "available" },
-        { id: 8, name: "Quantum Hoodie", price: 479, category: "hoodies", image: "/images/products/quantum-hoodie.jpg", status: "available" },
-        { id: 9, name: "Retro Future Hoodie", price: 459, category: "hoodies", image: "/images/products/retro-future-hoodie.jpg", status: "available" },
-        { id: 10, name: "Digital Camo Hoodie", price: 449, category: "hoodies", image: "/images/products/digital-camo-hoodie.jpg", status: "available" },
-        
-        // T-Shirts
-        { id: 11, name: "404 Not Found Tee", price: 189, category: "t-shirts", image: "/images/products/404-not-found-tee.jpg", status: "available" },
-        { id: 12, name: "System Override Tee", price: 179, category: "t-shirts", image: "/images/products/system-override-tee.jpg", status: "available" },
-        { id: 13, name: "Neon Pulse Tee", price: 199, category: "t-shirts", image: "/images/products/neon-pulse-tee.jpg", status: "available" },
-        { id: 14, name: "Crypto Punk Tee", price: 209, category: "t-shirts", image: "/images/products/crypto-punk-tee.jpg", status: "available" },
-        { id: 15, name: "Augmented Tee", price: 189, category: "t-shirts", image: "/images/products/augmented-tee.jpg", status: "available" },
-        { id: 16, name: "Vapor Dream Tee", price: 179, category: "t-shirts", image: "/images/products/vapor-dream-tee.jpg", status: "available" },
-        { id: 17, name: "Code Warrior Tee", price: 199, category: "t-shirts", image: "/images/products/code-warrior-tee.jpg", status: "available" },
-        { id: 18, name: "Electric Night Tee", price: 189, category: "t-shirts", image: "/images/products/electric-night-tee.jpg", status: "available" },
-        { id: 19, name: "Pixel Art Tee", price: 169, category: "t-shirts", image: "/images/products/pixel-art-tee.jpg", status: "available" },
-        { id: 20, name: "Cyber Rose Tee", price: 199, category: "t-shirts", image: "/images/products/cyber-rose-tee.jpg", status: "available" },
-        
-        // Pants
-        { id: 21, name: "Tactical Tech Cargo", price: 589, category: "pants", image: "/images/products/tactical-tech-cargo.jpg", status: "available" },
-        { id: 22, name: "Data Runner Pants", price: 549, category: "pants", image: "/images/products/data-runner-pants.jpg", status: "available" },
-        { id: 23, name: "Urban Operator Pants", price: 599, category: "pants", image: "/images/products/urban-operator-pants.jpg", status: "available" },
-        { id: 24, name: "Neon Racer Pants", price: 569, category: "pants", image: "/images/products/neon-racer-pants.jpg", status: "available" },
-        { id: 25, name: "Grid Walker Pants", price: 579, category: "pants", image: "/images/products/grid-walker-pants.jpg", status: "available" },
-        { id: 26, name: "Shadow Tech Pants", price: 559, category: "pants", image: "/images/products/shadow-tech-pants.jpg", status: "available" },
-        { id: 27, name: "Circuit Breaker Pants", price: 589, category: "pants", image: "/images/products/circuit-breaker-pants.jpg", status: "available" },
-        { id: 28, name: "Holo Flex Pants", price: 629, category: "pants", image: "/images/products/holo-flex-pants.jpg", status: "available" },
-        { id: 29, name: "Code Cargo Pants", price: 579, category: "pants", image: "/images/products/code-cargo-pants.jpg", status: "available" },
-        { id: 30, name: "Cyber Ninja Pants", price: 599, category: "pants", image: "/images/products/cyber-ninja-pants.jpg", status: "available" }
-    ];
+    // Load products from server
+    let products = [];
+    
+    async function loadProducts() {
+        try {
+            const response = await fetch('/api/products');
+            if (response.ok) {
+                const data = await response.json();
+                products = data.products.map(product => ({
+                    id: product.id,
+                    name: product.title,
+                    price: product.price,
+                    category: product.category,
+                    image: product.images && product.images.length > 0 ? product.images[0] : '/images/placeholder.jpg',
+                    status: "available",
+                    brand: product.brand,
+                    sizes: product.sizes
+                }));
+                console.log('✅ Products loaded from server:', products.length);
+            } else {
+                console.error('❌ Failed to load products from server');
+                // Fallback to sample data
+                products = [
+                    { id: "prod-006", name: "Neural Network Hoodie", price: 149.99, category: "hoodies", image: "/images/neural-hoodie-1.jpg", status: "available", brand: "Zippy Originals", sizes: ["S", "M", "L", "XL", "XXL"] }
+                ];
+            }
+        } catch (error) {
+            console.error('❌ Error loading products:', error);
+            // Fallback to sample data
+            products = [
+                { id: "prod-006", name: "Neural Network Hoodie", price: 149.99, category: "hoodies", image: "/images/neural-hoodie-1.jpg", status: "available", brand: "Zippy Originals", sizes: ["S", "M", "L", "XL", "XXL"] }
+            ];
+        }
+    }
 
     let filteredProducts = [...products];
     let isInitialized = false;
@@ -50,10 +47,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const RENDER_THROTTLE = 100; // Prevent excessive re-renders
 
     // Initialize the page
-    function init() {
+    async function init() {
         if (isInitialized) return;
         
         try {
+            // Load products from server first
+            await loadProducts();
+            
             // Pre-load critical elements
             const criticalElements = [
                 'productsGrid',
@@ -440,10 +440,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize the page with a small delay to ensure DOM is ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', () => init().catch(error => {
+            console.error('Failed to initialize products page:', error);
+        }));
     } else {
         // DOM is already ready
-        setTimeout(init, 0);
+        setTimeout(() => init().catch(error => {
+            console.error('Failed to initialize products page:', error);
+        }), 0);
     }
 
     // Cleanup on page unload

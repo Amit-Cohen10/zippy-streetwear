@@ -258,5 +258,255 @@
     },
     "timestamp": "2025-08-03T10:07:55.612Z",
     "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754218614287-eu9bkmgw5",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-03T10:56:54.287Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754219227397-ku2vd3sqa",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-006",
+      "quantity": 1,
+      "size": "M",
+      "productTitle": "Neural Network Hoodie"
+    },
+    "timestamp": "2025-08-03T11:07:07.397Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754219244496-2etfxf9ys",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "order_placed",
+    "details": {
+      "orderId": "order-1754219244494-pqcdcpddi",
+      "total": 149.99,
+      "itemCount": 1
+    },
+    "timestamp": "2025-08-03T11:07:24.496Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754219597182-dqhxpnal3",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-006",
+      "quantity": 1,
+      "size": "M",
+      "productTitle": "Neural Network Hoodie"
+    },
+    "timestamp": "2025-08-03T11:13:17.182Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754219605776-v9miz8s4l",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "order_placed",
+    "details": {
+      "orderId": "order-1754219605773-jp1tow3ri",
+      "total": 149.99,
+      "itemCount": 1
+    },
+    "timestamp": "2025-08-03T11:13:25.776Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754219652091-vfupluky3",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-006",
+      "quantity": 2,
+      "size": "L",
+      "productTitle": "Neural Network Hoodie"
+    },
+    "timestamp": "2025-08-03T11:14:12.091Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754219711466-00yha46ju",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-006",
+      "quantity": 2,
+      "size": "L",
+      "productTitle": "Neural Network Hoodie"
+    },
+    "timestamp": "2025-08-03T11:15:11.466Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754219715685-noqcr85cs",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-006",
+      "quantity": 2,
+      "size": "L",
+      "productTitle": "Neural Network Hoodie"
+    },
+    "timestamp": "2025-08-03T11:15:15.685Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754219796749-62vywwzx2",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-006",
+      "quantity": 1,
+      "size": "M",
+      "productTitle": "Neural Network Hoodie"
+    },
+    "timestamp": "2025-08-03T11:16:36.749Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754219812069-7btrwkigw",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "order_placed",
+    "details": {
+      "orderId": "order-1754219812063-id8in5kxa",
+      "total": 1049.93,
+      "itemCount": 2
+    },
+    "timestamp": "2025-08-03T11:16:52.069Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754219884689-mxhrlbt5p",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-006",
+      "quantity": 2,
+      "size": "L",
+      "productTitle": "Neural Network Hoodie"
+    },
+    "timestamp": "2025-08-03T11:18:04.689Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754219890473-27bv9den8",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-006",
+      "quantity": 2,
+      "size": "L",
+      "productTitle": "Neural Network Hoodie"
+    },
+    "timestamp": "2025-08-03T11:18:10.473Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754219954822-isn1t781k",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "order_placed",
+    "details": {
+      "orderId": "order-1754219954817-q84jy8rpn",
+      "total": 599.96,
+      "itemCount": 1
+    },
+    "timestamp": "2025-08-03T11:19:14.822Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754220001871-0ezeyxytq",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-006",
+      "quantity": 2,
+      "size": "L",
+      "productTitle": "Neural Network Hoodie"
+    },
+    "timestamp": "2025-08-03T11:20:01.871Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754220011906-fgu1agc4w",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-006",
+      "quantity": 2,
+      "size": "L",
+      "productTitle": "Neural Network Hoodie"
+    },
+    "timestamp": "2025-08-03T11:20:11.906Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754220086554-f5yn937v1",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_clear",
+    "details": {
+      "itemCount": 1
+    },
+    "timestamp": "2025-08-03T11:21:26.554Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754220111250-biet2jfmh",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-006",
+      "quantity": 1,
+      "size": "M",
+      "productTitle": "Neural Network Hoodie"
+    },
+    "timestamp": "2025-08-03T11:21:51.250Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754220117696-3l4um09sv",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "order_placed",
+    "details": {
+      "orderId": "order-1754220117694-izokrpcd0",
+      "total": 149.99,
+      "itemCount": 1
+    },
+    "timestamp": "2025-08-03T11:21:57.696Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754220204565-vp6qukf6g",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-006",
+      "quantity": 2,
+      "size": "L",
+      "productTitle": "Neural Network Hoodie"
+    },
+    "timestamp": "2025-08-03T11:23:24.565Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1754220205580-ki98b1jlk",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "order_placed",
+    "details": {
+      "orderId": "order-1754220205577-esi5gs5g3",
+      "total": 299.98,
+      "itemCount": 1
+    },
+    "timestamp": "2025-08-03T11:23:25.580Z",
+    "ip": "unknown"
   }
 ]

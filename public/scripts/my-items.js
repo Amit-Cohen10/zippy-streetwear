@@ -93,6 +93,14 @@ function showSessionError() {
     console.log('🔧 Showing session error state');
     hideAllStates();
     document.getElementById('sessionErrorState').style.display = 'block';
+    
+    // Auto-try to re-login after 3 seconds if user doesn't click anything
+    setTimeout(() => {
+        if (document.getElementById('sessionErrorState').style.display === 'block') {
+            console.log('🔄 Auto-trying to re-login...');
+            tryOpenAuth();
+        }
+    }, 3000);
 }
 
 // Show loading state
@@ -167,9 +175,17 @@ async function loadOrders() {
             console.log('🔒 Server says unauthorized, but user exists in localStorage');
             console.log('🔧 This might be a session/cookie issue');
             
-            // Show a different message for session issues
-            showSessionError();
-            return;
+            // Try to auto-clear session and retry once
+            if (!window.sessionRetryAttempted) {
+                console.log('🔄 Auto-clearing session and retrying...');
+                window.sessionRetryAttempted = true;
+                clearSessionAndRetry();
+                return;
+            } else {
+                console.log('❌ Session retry already attempted, showing error');
+                showSessionError();
+                return;
+            }
         }
         
         if (!response.ok) {
@@ -318,6 +334,7 @@ function clearSessionAndRetry() {
     localStorage.removeItem('userData');
     localStorage.removeItem('userToken');
     localStorage.removeItem('authToken');
+    localStorage.removeItem('zippyCart'); // Also clear cart data
     
     // Clear any auth cookies by making a logout request
     fetch('/api/auth/logout', {
@@ -328,11 +345,16 @@ function clearSessionAndRetry() {
     // Reset global state
     window.isLoggedIn = false;
     window.currentUser = null;
+    window.sessionRetryAttempted = false; // Reset retry flag
     
-    // Restart the initialization process
+    // Show not logged in state immediately
+    showNotLoggedIn();
+    
+    // Optional: Restart the initialization process after a delay
     setTimeout(() => {
+        console.log('🔄 Restarting initialization after session clear...');
         initMyItems();
-    }, 500);
+    }, 1000);
 }
 
 // Export functions for global access

@@ -739,24 +739,7 @@ function goBack() {
 window.goBack = goBack;
 console.log('✅ goBack is now global:', typeof window.goBack);
 
-function placeOrder() {
-    console.log('🛒 Place order called');
-    if (currentStep === STEPS.CONFIRMATION) {
-        console.log('✅ Processing order...');
-        showNotification('🎉 Order placed successfully!', 'success');
-        // Here you would normally send order to server
-        setTimeout(() => {
-            window.location.href = '/thank-you';
-        }, 2000);
-    } else {
-        console.log('❌ Cannot place order from this step');
-        showNotification('Please complete checkout first', 'error');
-    }
-}
-
-// Make placeOrder globally accessible
-window.placeOrder = placeOrder;
-console.log('✅ placeOrder is now global:', typeof window.placeOrder);
+// The async placeOrder function below replaces this one
 
 function validateCurrentStep() {
     console.log('🔍 Validating step:', currentStep);
@@ -992,13 +975,127 @@ function displayConfirmation() {
     confirmationSummary.innerHTML = html;
 }
 
+async function syncCartToServer() {
+    console.log('🔄 Syncing cart to server...');
+    
+    try {
+        // Get cart data from localStorage
+        const savedCart = localStorage.getItem('zippyCart');
+        if (!savedCart) {
+            console.log('❌ No cart data in localStorage');
+            return false;
+        }
+        
+        const cartItems = JSON.parse(savedCart);
+        console.log('📦 Cart items from localStorage:', cartItems);
+        
+        if (!Array.isArray(cartItems) || cartItems.length === 0) {
+            console.log('❌ Cart is empty');
+            return false;
+        }
+        
+        // Fix cart items with numeric IDs
+        const fixedCartItems = cartItems.map(item => {
+            // If item has numeric ID, try to map it to correct product ID
+            if (typeof item.id === 'number') {
+                console.log('🔧 Fixing numeric ID:', item.id);
+                // Map common numeric IDs to product IDs
+                const idMapping = {
+                    1: 'prod-006', // Neural Network Hoodie
+                    2: 'prod-001', // Neon Cyber Hoodie
+                    3: 'prod-002', // Glitch Art Tee
+                    4: 'prod-003', // Holographic Cargo Pants
+                    5: 'prod-004', // Neon Grid Jacket
+                    6: 'prod-005'  // Digital Camo Shorts
+                };
+                const correctId = idMapping[item.id];
+                if (correctId) {
+                    console.log('✅ Mapped ID', item.id, 'to', correctId);
+                    return { ...item, id: correctId };
+                }
+            }
+            return item;
+        });
+        
+        console.log('🔧 Fixed cart items:', fixedCartItems);
+        
+        // Sync each item to server
+        for (const item of fixedCartItems) {
+            console.log('📦 Syncing item:', item.name || item.title, '(ID:', item.id || item.productId || 'undefined', ')');
+            
+            // Determine the correct productId - items are saved with 'id' field
+            const productId = item.id;
+            
+            if (!productId) {
+                console.error('❌ Cannot determine productId for item:', item);
+                continue;
+            }
+            
+            try {
+                const response = await fetch('/api/cart/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-User-ID': 'user-1753901439175-sl80wbwx7' // User ID from the problem description
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        productId: productId,
+                        quantity: item.quantity || 1,
+                        size: item.size || 'M'
+                    })
+                });
+                
+                if (response.ok) {
+                    console.log('✅ Synced:', item.name || item.title);
+                } else {
+                    const error = await response.json();
+                    console.error('❌ Failed to sync item:', item.name || item.title, '-', error.error);
+                }
+            } catch (error) {
+                console.error('❌ Error syncing item:', item.name || item.title, '-', error);
+            }
+        }
+        
+        console.log('✅ Cart synced to server');
+        return true;
+        
+    } catch (error) {
+        console.error('❌ Error syncing cart to server:', error);
+        return false;
+    }
+}
+
 async function placeOrder() {
     console.log('placeOrder called!');
     try {
         showLoadingModal();
         
+        // First, sync cart to server
+        const syncSuccess = await syncCartToServer();
+        if (!syncSuccess) {
+            throw new Error('Failed to sync cart to server');
+        }
+        
+        // Get cart data from server after sync
+        const cartResponse = await fetch('/api/cart', {
+            headers: {
+                'X-User-ID': 'user-1753901439175-sl80wbwx7'
+            },
+            credentials: 'include'
+        });
+        
+        if (!cartResponse.ok) {
+            throw new Error('Failed to get cart from server');
+        }
+        
+        const serverCart = await cartResponse.json();
+        console.log('📦 Server cart data:', serverCart);
+        console.log('📦 Server cart items count:', serverCart.items.length);
+        console.log('📦 Server cart total:', serverCart.total);
+        
         const orderPayload = {
-            items: cartData.items,
+            items: serverCart.items, // Use server cart data instead of localStorage
             shippingAddress: orderData.shipping,
             billingAddress: orderData.shipping, // Using same as shipping for now
             paymentMethod: orderData.payment.method,
@@ -1008,10 +1105,17 @@ async function placeOrder() {
             pricing: orderData.pricing
         };
         
+        console.log('💳 Sending payment request with payload:', {
+            itemsCount: orderPayload.items.length,
+            paymentMethod: orderPayload.paymentMethod,
+            shippingAddress: orderPayload.shippingAddress
+        });
+        
         const response = await fetch('/api/payment/checkout', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-User-ID': 'user-1753901439175-sl80wbwx7' // User ID from the problem description
             },
             credentials: 'include',
             body: JSON.stringify(orderPayload)
@@ -1021,12 +1125,22 @@ async function placeOrder() {
         
         if (!response.ok) {
             const error = await response.json();
+            console.error('❌ Payment failed with status:', response.status);
+            console.error('❌ Payment error details:', error);
             throw new Error(error.error || 'Payment failed');
         }
         
         const result = await response.json();
+        console.log('🎉 Payment successful! Order result:', result);
+        console.log('🎉 Order ID:', result.order?.id);
+        console.log('🎉 Payment ID:', result.paymentResult?.paymentId);
+        
+        // Clear cart after successful order
+        localStorage.removeItem('zippyCart');
+        console.log('🧹 Cart cleared from localStorage');
         
         // Redirect to thank you page
+        console.log('🔄 Redirecting to thank you page...');
         window.location.href = `/thank-you?orderId=${result.orderId}`;
         
     } catch (error) {
@@ -1035,6 +1149,10 @@ async function placeOrder() {
         showNotification(error.message || 'Failed to place order', 'error');
     }
 }
+
+// Make placeOrder globally accessible
+window.placeOrder = placeOrder;
+console.log('✅ Async placeOrder is now global:', typeof window.placeOrder);
 
 function showLoadingModal() {
     const modal = document.getElementById('loadingModal');

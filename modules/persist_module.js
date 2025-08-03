@@ -226,8 +226,33 @@ class PersistModule {
   }
 
   async getUserFromToken(req) {
+    // Check for X-User-ID header first (for development/testing)
+    const userId = req.headers['x-user-id'];
+    console.log('🔍 Checking X-User-ID header:', userId);
+    
+    if (userId) {
+      try {
+        const users = await this.readData(this.usersFile);
+        console.log('📋 Loaded users:', users.length);
+        const user = users.find(u => u.id === userId);
+        if (user) {
+          console.log('✅ User found via X-User-ID header:', userId);
+          return user;
+        } else {
+          console.log('❌ User not found with ID:', userId);
+          console.log('Available user IDs:', users.map(u => u.id));
+        }
+      } catch (error) {
+        console.error('❌ Error reading users file:', error);
+      }
+    }
+    
+    // Fallback to token-based authentication
     const token = req.cookies.token || req.headers.authorization?.replace('Bearer ', '');
-    if (!token) return null;
+    if (!token) {
+      console.log('❌ No token found in request');
+      return null;
+    }
     return await this.validateToken(token);
   }
 }

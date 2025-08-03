@@ -16,13 +16,13 @@
                 <span class="logo-text">ZIPPY</span>
                 <div class="logo-glow"></div>
             </div>
-            <ul class="nav-menu">
-                <li><a href="/" class="nav-link">HOME</a></li>
-                <li><a href="/products" class="nav-link">SHOP</a></li>
-                <li><a href="/exchange" class="nav-link">EXCHANGE</a></li>
-                <li><a href="/community" class="nav-link">COMMUNITY</a></li>
-                <li><a href="/brands" class="nav-link">BRANDS</a></li>
-            </ul>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/products" class="nav-link">Shop</a>
+                <a href="/exchange" class="nav-link">Exchange</a>
+                <a href="/community" class="nav-link">Community</a>
+                <a href="/brands" class="nav-link">Brands</a>
+            </div>
             <div class="nav-actions">
                 <button class="search-btn" onclick="openSearchModal()">
                     <i class="fas fa-search"></i>
@@ -42,283 +42,69 @@
                             <span id="usernameDisplay">User</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
-
                     </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- סקריפט מיידי לעדכון מצב הכפתור ללא עיכוב -->
-    <script>
-    (function() {
-        console.log("⚡ Immediate button state check...");
-        
-        // בדיקה מיידית של מצב ההתחברות
-        const savedUser = localStorage.getItem("currentUser");
-        let isLoggedIn = false;
-        let username = "";
-        
-        if (savedUser) {
-            try {
-                const user = JSON.parse(savedUser);
-                isLoggedIn = true;
-                username = user.profile?.displayName || user.username || "User";
-                console.log("⚡ Found user immediately:", username);
-            } catch (e) {
-                console.log("❌ Error parsing user data:", e);
-            }
-        }
-        
-        // עדכון מיידי כשהדף נטען
-        function updateButtonImmediate() {
-            const authBtn = document.getElementById("authBtn");
-            const userMenu = document.getElementById("userMenu");
-            const usernameDisplay = document.getElementById("usernameDisplay");
-            
-            if (isLoggedIn && username) {
-                // משתמש מחובר - הצג את שם המשתמש מיד
-                if (authBtn) authBtn.style.display = "none";
-                if (userMenu) userMenu.style.display = "inline-block";
-                if (usernameDisplay) usernameDisplay.textContent = username;
-                console.log("⚡ Button set to username immediately:", username);
-            } else {
-                // משתמש לא מחובר - הצג LOGIN מיד
-                if (authBtn) authBtn.style.display = "inline-block";
-                if (userMenu) userMenu.style.display = "none";
-                console.log("⚡ Button set to LOGIN immediately");
-            }
-        }
-        
-        // נסה עכשיו מיד, ואם לא עובד אז כשהדף יסיים לטעון
-        updateButtonImmediate();
-        
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", updateButtonImmediate);
-        }
-    })();
-    </script>
-
-    <!-- User Dropdown Menu (Outside navbar to avoid clipping) -->
-    <div class="user-dropdown" id="userDropdown" style="
-        position: fixed !important;
-        top: 70px !important; 
-        right: 20px !important;
-        background: #1a1a1a !important;
-        border: 2px solid #00ffff !important;
-        border-radius: 8px !important;
-        min-width: 220px !important;
-        box-shadow: 0 8px 32px rgba(0, 255, 255, 0.3) !important;
-        z-index: 999999 !important;
-        display: none !important;
-        overflow: visible !important;
-        padding: 8px 0 !important;
-    ">
-        <a href="/dashboard.html" class="dropdown-item" style="
-            display: block !important; padding: 12px 16px !important; 
-            color: #00ffff !important; text-decoration: none !important;
-            border-bottom: 1px solid rgba(0,255,255,0.3) !important;
-            transition: all 0.3s ease !important; font-size: 14px !important;
-        " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
-            <i class="fas fa-tachometer-alt" style="margin-right: 10px; width: 16px;"></i> Dashboard
-        </a>
-        <a href="/my-items.html" class="dropdown-item" style="
-            display: block !important; padding: 12px 16px !important; 
-            color: #00ffff !important; text-decoration: none !important;
-            border-bottom: 1px solid rgba(0,255,255,0.3) !important;
-            transition: all 0.3s ease !important; font-size: 14px !important;
-        " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
-            <i class="fas fa-shopping-bag" style="margin-right: 10px; width: 16px;"></i> My Items
-        </a>
-        <a href="/wishlist.html" class="dropdown-item" style="
-            display: block !important; padding: 12px 16px !important; 
-            color: #00ffff !important; text-decoration: none !important;
-            border-bottom: 1px solid rgba(0,255,255,0.3) !important;
-            transition: all 0.3s ease !important; font-size: 14px !important;
-        " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
-            <i class="fas fa-heart" style="margin-right: 10px; width: 16px;"></i> Wishlist
-        </a>
-        <a href="#" onclick="event.preventDefault(); document.getElementById('cartModal').style.display='flex'; loadCart(); setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 100);" class="dropdown-item" style="
-            display: block !important; padding: 12px 16px !important; 
-            color: #00ffff !important; text-decoration: none !important;
-            border-bottom: 1px solid rgba(0,255,255,0.3) !important;
-            transition: all 0.3s ease !important; font-size: 14px !important;
-        " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
-            <i class="fas fa-shopping-cart" style="margin-right: 10px; width: 16px;"></i> My Cart
-        </a>
-        <a href="/exchange.html" class="dropdown-item" style="
-            display: block !important; padding: 12px 16px !important; 
-            color: #00ffff !important; text-decoration: none !important;
-            border-bottom: 1px solid rgba(0,255,255,0.3) !important;
-            transition: all 0.3s ease !important; font-size: 14px !important;
-        " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
-            <i class="fas fa-exchange-alt" style="margin-right: 10px; width: 16px;"></i> Exchange
-        </a>
-        <div class="dropdown-divider" style="height: 1px; background: rgba(0,255,255,0.3); margin: 8px 0;"></div>
-        <button class="dropdown-item logout-item" onclick="logout()" style="
-            width: 100% !important; text-align: left !important; 
-            background: none !important; border: none !important;
-            padding: 12px 16px !important; color: #ff4757 !important; 
-            cursor: pointer !important; transition: all 0.3s ease !important; 
-            font-size: 14px !important;
-        " onmouseover="this.style.background='rgba(255,71,87,0.1)'" onmouseout="this.style.background='transparent'">
-            <i class="fas fa-sign-out-alt" style="margin-right: 10px; width: 16px;"></i> Logout
-        </button>
-    </div>
-
     <!-- Main Content -->
     <main class="thank-you-page">
         <div class="container">
-            <!-- Success Animation -->
-            <div class="success-animation">
-                <div class="success-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="success-glow"></div>
-            </div>
-
-            <!-- Thank You Message -->
             <div class="thank-you-content">
-                <h1 class="thank-you-title">Thank You for Your Order!</h1>
-                <p class="thank-you-subtitle">Your payment was successful and your order is being processed</p>
+                <div class="success-icon">✅</div>
+                <h1>Thank You!</h1>
+                <h2>Order Placed Successfully</h2>
+                <p>Your order has been placed successfully. You will receive a confirmation email shortly.</p>
                 
-                <!-- Order Details -->
-                <div class="order-confirmation">
-                    <div class="confirmation-card">
-                        <div class="card-header">
-                            <h2><i class="fas fa-receipt"></i> Order Confirmation</h2>
-                        </div>
-                        <div class="card-content">
-                            <div class="order-info">
-                                <div class="info-row">
-                                    <span class="info-label">Order Number:</span>
-                                    <span class="info-value" id="orderNumber">Loading...</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Order Date:</span>
-                                    <span class="info-value" id="orderDate">Loading...</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Total Amount:</span>
-                                    <span class="info-value" id="totalAmount">Loading...</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Payment Method:</span>
-                                    <span class="info-value" id="paymentMethod">Loading...</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Order Items -->
-                            <div class="order-items-summary">
-                                <h3>Items Ordered</h3>
-                                <div class="items-list" id="orderItemsList">
-                                    <!-- Items will be loaded here -->
-                                </div>
-                            </div>
-                            
-                            <!-- Shipping Info -->
-                            <div class="shipping-info">
-                                <h3>Shipping Information</h3>
-                                <div class="shipping-details" id="shippingDetails">
-                                    <!-- Shipping details will be loaded here -->
-                                </div>
-                                <div class="estimated-delivery">
-                                    <p><i class="fas fa-truck"></i> Estimated delivery: <span id="estimatedDelivery">3-5 business days</span></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="order-details" id="orderDetails">
+                    <h3>Order Details</h3>
+                    <p><strong>Order ID:</strong> <span id="orderId">Loading...</span></p>
+                    <p><strong>Status:</strong> <span id="orderStatus">Processing</span></p>
+                    <p><strong>Estimated Delivery:</strong> <span id="estimatedDelivery">3-5 business days</span></p>
                 </div>
-
-                <!-- Next Steps -->
-                <div class="next-steps">
-                    <h2>What's Next?</h2>
-                    <div class="steps-grid">
-                        <div class="step-card">
-                            <div class="step-icon">
-                                <i class="fas fa-envelope"></i>
-                            </div>
-                            <h3>Confirmation Email</h3>
-                            <p>You'll receive an email confirmation with your order details within the next few minutes.</p>
-                        </div>
-                        <div class="step-card">
-                            <div class="step-icon">
-                                <i class="fas fa-box"></i>
-                            </div>
-                            <h3>Order Processing</h3>
-                            <p>Your order is being prepared and will be packed with care for shipping.</p>
-                        </div>
-                        <div class="step-card">
-                            <div class="step-icon">
-                                <i class="fas fa-shipping-fast"></i>
-                            </div>
-                            <h3>Tracking Information</h3>
-                            <p>Once shipped, you'll receive tracking information to monitor your delivery.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <a href="/my-items" class="btn-primary">
-                        <i class="fas fa-package"></i>
-                        View My Orders
-                    </a>
-                    <a href="/products" class="btn-secondary">
-                        <i class="fas fa-shopping-bag"></i>
-                        Continue Shopping
-                    </a>
-                    <button class="btn-outline" onclick="printOrderDetails()">
-                        <i class="fas fa-print"></i>
-                        Print Receipt
-                    </button>
-                </div>
-
-                <!-- Social Sharing -->
-                <div class="social-sharing">
-                    <p>Share your style:</p>
-                    <div class="social-buttons">
-                        <button class="social-btn twitter" onclick="shareOnTwitter()">
-                            <i class="fab fa-twitter"></i>
-                        </button>
-                        <button class="social-btn instagram" onclick="shareOnInstagram()">
-                            <i class="fab fa-instagram"></i>
-                        </button>
-                        <button class="social-btn facebook" onclick="shareOnFacebook()">
-                            <i class="fab fa-facebook"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Customer Support -->
-                <div class="customer-support">
-                    <div class="support-card">
-                        <h3><i class="fas fa-headset"></i> Need Help?</h3>
-                        <p>Our customer support team is here to help with any questions about your order.</p>
-                        <div class="support-options">
-                            <a href="/support" class="support-link">
-                                <i class="fas fa-chat"></i>
-                                Live Chat
-                            </a>
-                            <a href="mailto:support@zippy.com" class="support-link">
-                                <i class="fas fa-envelope"></i>
-                                Email Support
-                            </a>
-                            <a href="tel:+1-800-ZIPPY" class="support-link">
-                                <i class="fas fa-phone"></i>
-                                Call Us
-                            </a>
-                        </div>
-                    </div>
+                
+                <div class="thank-you-actions">
+                    <a href="/my-items.html" class="btn-primary">View My Items</a>
+                    <a href="/products" class="btn-secondary">Continue Shopping</a>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Include common modals and scripts -->
+    <!-- Scripts -->
     <script src="/scripts/global.js"></script>
     <script src="/scripts/auth.js"></script>
-    <script src="/scripts/thank-you.js"></script>
     <script src="/scripts/simple-user-menu.js"></script>
+    
+    <script>
+        // Get order ID from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId');
+        
+        if (orderId) {
+            document.getElementById('orderId').textContent = orderId;
+        }
+        
+        // Update cart count
+        function updateCartCount() {
+            const savedCart = localStorage.getItem('zippyCart');
+            const cartCount = document.getElementById('cartCount');
+            if (cartCount) {
+                if (savedCart) {
+                    const cartItems = JSON.parse(savedCart);
+                    const totalItems = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+                    cartCount.textContent = totalItems;
+                } else {
+                    cartCount.textContent = '0';
+                }
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+        });
+    </script>
 </body>
 </html>
