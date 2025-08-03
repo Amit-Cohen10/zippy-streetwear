@@ -32,23 +32,31 @@ function initMyItems() {
 // Check if user is logged in (improved version)
 function checkUserLogin() {
     try {
+        console.log('🔍 Checking login status...');
+        
         const userData = localStorage.getItem('currentUser');
+        console.log('📦 Raw user data from localStorage:', userData);
+        
         if (!userData) {
             console.log('❌ No user data found in localStorage');
             return null;
         }
         
         const user = JSON.parse(userData);
+        console.log('👤 Parsed user object:', user);
         
-        // Check if user object has required fields
-        if (!user || (!user.username && !user.email)) {
-            console.log('❌ Invalid user data structure');
-            localStorage.removeItem('currentUser');
+        // More flexible check - accept any user object with some identifying field
+        if (!user || (!user.username && !user.email && !user.id)) {
+            console.log('❌ Invalid user data structure - no username, email, or id');
+            console.log('User keys:', Object.keys(user || {}));
             return null;
         }
         
-        console.log('👤 Found valid user:', user.username || user.email);
-        console.log('👤 User profile:', user.profile?.displayName || 'No display name');
+        console.log('✅ Found valid user!');
+        console.log('  - Username:', user.username);
+        console.log('  - Email:', user.email);
+        console.log('  - ID:', user.id);
+        console.log('  - Profile:', user.profile);
         
         // Set global login status for other scripts to use
         window.isLoggedIn = true;
@@ -57,7 +65,7 @@ function checkUserLogin() {
         return user;
     } catch (error) {
         console.error('❌ Error checking login:', error);
-        localStorage.removeItem('currentUser');
+        // Don't remove user data if there's just a parsing error
         return null;
     }
 }
