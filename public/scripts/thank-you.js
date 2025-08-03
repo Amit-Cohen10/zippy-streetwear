@@ -112,12 +112,10 @@ function formatPaymentMethod(paymentMethod) {
     switch(paymentMethod) {
         case 'credit':
             return 'Credit Card';
-        case 'paypal':
-            return 'PayPal';
         case 'debit':
             return 'Debit Card';
         default:
-            return 'Other';
+            return 'Credit Card';
     }
 }
 

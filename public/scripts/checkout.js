@@ -871,44 +871,38 @@ function validatePayment() {
     
     const paymentMethod = paymentMethodElement.value;
     
-    if (paymentMethod === 'credit') {
-        const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
-        const expiryDate = document.getElementById('expiryDate').value;
-        const cvv = document.getElementById('cvv').value;
-        const cardName = document.getElementById('cardName').value;
-        
-        if (!cardNumber || cardNumber.length < 13) {
-            showNotification('Please enter a valid card number', 'error');
-            return false;
-        }
-        
-        if (!expiryDate || !expiryDate.match(/^\d{2}\/\d{2}$/)) {
-            showNotification('Please enter a valid expiry date (MM/YY)', 'error');
-            return false;
-        }
-        
-        if (!cvv || cvv.length < 3) {
-            showNotification('Please enter a valid CVV', 'error');
-            return false;
-        }
-        
-        if (!cardName) {
-            showNotification('Please enter the name on card', 'error');
-            return false;
-        }
-        
-        // Store payment data (don't store sensitive info in real app)
-        orderData.payment = {
-            method: 'credit',
-            cardLast4: cardNumber.slice(-4),
-            expiryDate,
-            cardName
-        };
-    } else {
-        orderData.payment = {
-            method: 'paypal'
-        };
+    const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+    const expiryDate = document.getElementById('expiryDate').value;
+    const cvv = document.getElementById('cvv').value;
+    const cardName = document.getElementById('cardName').value;
+    
+    if (!cardNumber || cardNumber.length < 13) {
+        showNotification('Please enter a valid card number', 'error');
+        return false;
     }
+    
+    if (!expiryDate || !expiryDate.match(/^\d{2}\/\d{2}$/)) {
+        showNotification('Please enter a valid expiry date (MM/YY)', 'error');
+        return false;
+    }
+    
+    if (!cvv || cvv.length < 3) {
+        showNotification('Please enter a valid CVV', 'error');
+        return false;
+    }
+    
+    if (!cardName) {
+        showNotification('Please enter the name on card', 'error');
+        return false;
+    }
+    
+    // Store payment data (don't store sensitive info in real app)
+    orderData.payment = {
+        method: 'credit',
+        cardLast4: cardNumber.slice(-4),
+        expiryDate,
+        cardName
+    };
     
     console.log('✅ Payment validation passed');
     showNotification('✅ Payment information validated!', 'success');
@@ -964,10 +958,7 @@ function displayConfirmation() {
         <div class="confirmation-section">
             <h3>Payment Method</h3>
             <div class="payment-details">
-                ${orderData.payment.method === 'credit' ? 
-                    `<p>Credit Card ending in ${orderData.payment.cardLast4}</p>` :
-                    `<p>PayPal</p>`
-                }
+                <p>Credit Card ending in ${orderData.payment.cardLast4}</p>
             </div>
         </div>
     `;
