@@ -195,14 +195,14 @@ function renderCartItems() {
                 <div class="cart-item-price">$${(item.price || 0).toFixed(2)}</div>
             </div>
             <div class="cart-item-quantity">
-                <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                <button class="quantity-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
                 <span class="quantity">${item.quantity || 1}</span>
-                <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                <button class="quantity-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
             </div>
             <div class="cart-item-total">
                 $${((item.price || 0) * (item.quantity || 1)).toFixed(2)}
             </div>
-            <button class="remove-btn" onclick="removeFromCart(${item.id})">×</button>
+            <button class="remove-btn" onclick="removeFromCart('${item.id}')">×</button>
         </div>
     `).join('');
 }
@@ -563,14 +563,14 @@ function loadCartModal() {
                         <div class="cart-item-price">$${item.price.toFixed(2)}</div>
                     </div>
                     <div class="cart-item-quantity">
-                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <button class="quantity-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
                         <span class="quantity">${item.quantity}</span>
-                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        <button class="quantity-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
                     </div>
                     <div class="cart-item-total">
                         $${(item.price * item.quantity).toFixed(2)}
                     </div>
-                    <button class="remove-btn" onclick="removeFromCart(${item.id})">×</button>
+                    <button class="remove-btn" onclick="removeFromCart('${item.id}')">×</button>
                 </div>
             `).join('');
         }

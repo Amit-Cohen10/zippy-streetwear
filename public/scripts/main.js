@@ -124,37 +124,8 @@ async function loadFeaturedProducts() {
         renderFeaturedProducts();
     } catch (error) {
         console.error('Failed to load featured products:', error);
-        // Fallback to sample data
-        featuredProducts = [
-            {
-                id: 1,
-                title: "Neural Network Hoodie",
-                price: 459,
-                images: ["/images/products/neural-network-hoodie.jpg"],
-                description: "Experience the future of streetwear with this cutting-edge neural network design."
-            },
-            {
-                id: 2,
-                title: "Glitch Reality Hoodie",
-                price: 429,
-                images: ["/images/products/glitch-reality-hoodie.jpg"],
-                description: "Embrace the digital distortion with this glitch reality hoodie."
-            },
-            {
-                id: 3,
-                title: "Cyber Samurai Hoodie",
-                price: 489,
-                images: ["/images/products/cyber-samurai-hoodie.jpg"],
-                description: "Channel your inner warrior with this cyber samurai design."
-            },
-            {
-                id: 4,
-                title: "Data Stream Hoodie",
-                price: 449,
-                images: ["/images/products/data-stream-hoodie.jpg"],
-                description: "Flow with the digital current in this data stream hoodie."
-            }
-        ];
+        // Fallback to empty array - don't show wrong data
+        featuredProducts = [];
         renderFeaturedProducts();
     }
 }
@@ -163,8 +134,13 @@ function renderFeaturedProducts() {
     const container = document.getElementById('featuredProducts');
     if (!container) return;
     
+    if (featuredProducts.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-gray);">Loading featured products...</p>';
+        return;
+    }
+    
     container.innerHTML = featuredProducts.map((product, idx) => `
-        <div class="product-card" onclick="window.location.href='/product/${product.id}'">
+        <div class="product-card" onclick="window.location.href='/product-detail.html?id=${product.id}'">
             <div class="product-image">
                 ${product.images && product.images.length > 0 ? 
                     `<img src="${product.images[0]}" alt="${product.title}" style="width: 100%; height: 100%; object-fit: cover;">` :
@@ -172,7 +148,7 @@ function renderFeaturedProducts() {
                 }
             </div>
             <h3 class="product-title">${product.title}</h3>
-            <div class="product-price">$${product.price.toFixed(2)}</div>
+            <div class="product-price">${product.price} NIS</div>
             <button class="add-to-cart-btn" data-product-idx="${idx}">
                 Add to Cart
             </button>

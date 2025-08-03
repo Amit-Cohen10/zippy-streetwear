@@ -5,90 +5,83 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Product data - replace with actual API call
-    const products = {
-        1: {
-            id: 1,
-            name: "Neural Network Hoodie",
-            price: 459,
-            category: "hoodies",
-            status: "available",
-            description: "Experience the future of streetwear with this cutting-edge neural network design. Crafted with premium materials and featuring our signature cyberpunk aesthetic with LED-embedded circuit patterns.",
-            images: [
-                "/images/products/neural-network-hoodie.jpg",
-                "/images/products/neural-network-hoodie-2.jpg",
-                "/images/products/neural-network-hoodie-3.jpg",
-                "/images/products/neural-network-hoodie-4.jpg"
-            ],
-            sizes: ["XS", "S", "M", "L", "XL", "XXL"],
-            specifications: {
-                "Material": "Premium Cotton Blend with LED Elements",
-                "Weight": "320g",
-                "Fit": "Regular with slight oversize",
-                "Care": "Machine wash cold, tumble dry low",
-                "Features": "LED circuit patterns, neon accents, reflective details",
-                "Origin": "Designed in Neo Tokyo, Made in Japan"
-            },
-            reviews: [
-                {
-                    author: "CyberUser_42",
-                    rating: 5,
-                    comment: "Amazing quality and the LED effects are incredible! The neural network pattern is so unique."
-                },
-                {
-                    author: "NeonLover",
-                    rating: 5,
-                    comment: "Perfect fit and the cyberpunk aesthetic is on point! The quality is outstanding."
-                },
-                {
-                    author: "StreetGuru",
-                    rating: 4,
-                    comment: "Great design and comfortable fit. The LED elements really make it stand out."
-                }
-            ]
-        },
-        2: {
-            id: 2,
-            name: "Glitch Reality Hoodie",
-            price: 429,
-            category: "hoodies",
-            status: "sold-out",
-            description: "Embrace the digital distortion with this glitch reality hoodie. Features corrupted graphics and neon glitch effects that create a truly unique cyberpunk aesthetic.",
-            images: [
-                "/images/products/glitch-reality-hoodie.jpg",
-                "/images/products/glitch-reality-hoodie-2.jpg",
-                "/images/products/glitch-reality-hoodie-3.jpg"
-            ],
-            sizes: ["S", "M", "L", "XL"],
-            specifications: {
-                "Material": "Premium Cotton Blend",
-                "Weight": "300g",
-                "Fit": "Oversized",
-                "Care": "Machine wash cold",
-                "Features": "Glitch graphics, neon accents, digital distortion effects",
-                "Origin": "Designed in Cyber City, Made in Korea"
-            },
-            reviews: []
-        }
-    };
-
     let currentProduct = null;
     let selectedSize = 'M';
     let quantity = 1;
 
+    // Load product data from server
+    async function loadProductFromServer(productId) {
+        try {
+            const response = await fetch('/api/products');
+            if (response.ok) {
+                const data = await response.json();
+                const product = data.products.find(p => p.id === productId);
+                
+                if (product) {
+                    return {
+                        id: product.id,
+                        name: product.title,
+                        price: product.price,
+                        category: product.category,
+                        status: "available",
+                        description: product.description,
+                        images: product.images || ["/images/placeholder.jpg"],
+                        sizes: product.sizes || ["S", "M", "L", "XL"],
+                        specifications: {
+                            "Material": "Premium Cotton Blend",
+                            "Weight": "320g",
+                            "Fit": "Regular",
+                            "Care": "Machine wash cold",
+                            "Features": "Premium quality, comfortable fit",
+                            "Origin": "Designed in Israel"
+                        },
+                        reviews: [
+                            {
+                                author: "User_1",
+                                rating: 5,
+                                comment: "Great quality and comfortable fit!"
+                            },
+                            {
+                                author: "User_2",
+                                rating: 4,
+                                comment: "Love the design and material."
+                            }
+                        ]
+                    };
+                }
+            }
+        } catch (error) {
+            console.error('Error loading product:', error);
+        }
+        
+        // Fallback product if not found
+        return {
+            id: productId,
+            name: "Product Not Found",
+            price: 0,
+            category: "unknown",
+            status: "unavailable",
+            description: "This product could not be loaded.",
+            images: ["/images/placeholder.jpg"],
+            sizes: ["M"],
+            specifications: {},
+            reviews: []
+        };
+    }
+
     // Initialize the page
-    function init() {
-        loadProductData();
+    async function init() {
+        await loadProductData();
         setupEventListeners();
         setupTabs();
     }
 
     // Load product data from URL
-    function loadProductData() {
+    async function loadProductData() {
         const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get('id') || '1';
+        const productId = urlParams.get('id') || 'prod-001';
         
-        currentProduct = products[productId] || products[1];
+        currentProduct = await loadProductFromServer(productId);
         displayProduct(currentProduct);
     }
 
@@ -98,24 +91,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('productName').textContent = product.name;
         document.title = `${product.name} - Zippy Streetwear`;
 
-        // Update main product info
+        // Update product title and price
         document.getElementById('productTitle').textContent = product.name;
         document.getElementById('productPrice').textContent = `${product.price} NIS`;
         document.getElementById('productDescription').textContent = product.description;
 
-        // Update status
+        // Update product status
         const statusElement = document.getElementById('productStatus');
         if (product.status === 'sold-out') {
-            statusElement.textContent = 'SOLD OUT';
-            statusElement.style.display = 'block';
+            statusElement.textContent = 'Sold Out';
+            statusElement.className = 'product-status sold-out';
         } else {
-            statusElement.style.display = 'none';
+            statusElement.textContent = 'In Stock';
+            statusElement.className = 'product-status in-stock';
         }
 
         // Load main image
         const mainImage = document.getElementById('mainProductImage');
-        mainImage.src = product.images[0];
-        mainImage.alt = product.name;
+        if (product.images && product.images.length > 0) {
+            mainImage.src = product.images[0];
+            mainImage.alt = product.name;
+        }
 
         // Create thumbnail gallery
         createThumbnailGallery(product.images);
@@ -130,86 +126,87 @@ document.addEventListener('DOMContentLoaded', function() {
         loadRelatedProducts(product.id);
     }
 
-    // Create thumbnail gallery
     function createThumbnailGallery(images) {
         const gallery = document.getElementById('thumbnailGallery');
-        gallery.innerHTML = images.map((image, index) => `
-            <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="changeMainImage('${image}', this)">
-                <img src="${image}" alt="Product thumbnail" onerror="this.src='/images/placeholder-product.jpg'">
-            </div>
-        `).join('');
+        if (!gallery) return;
+
+        gallery.innerHTML = '';
+        images.forEach((image, index) => {
+            const thumbnail = document.createElement('div');
+            thumbnail.className = 'thumbnail-item';
+            thumbnail.onclick = () => changeMainImage(image, thumbnail);
+            
+            const img = document.createElement('img');
+            img.src = image;
+            img.alt = `Product image ${index + 1}`;
+            
+            thumbnail.appendChild(img);
+            gallery.appendChild(thumbnail);
+        });
     }
 
-    // Change main image
     function changeMainImage(imageSrc, thumbnailElement) {
         const mainImage = document.getElementById('mainProductImage');
         mainImage.src = imageSrc;
-
-        // Update active thumbnail
-        document.querySelectorAll('.thumbnail').forEach(thumb => {
-            thumb.classList.remove('active');
-        });
-        if (thumbnailElement) {
-            thumbnailElement.classList.add('active');
-        }
-    }
-
-    // Load specifications
-    function loadSpecifications(specs) {
-        const specsContainer = document.querySelector('.spec-grid');
-        if (specsContainer) {
-            specsContainer.innerHTML = Object.entries(specs).map(([key, value]) => `
-                <div class="spec-item">
-                    <span class="spec-label">${key}:</span>
-                    <span class="spec-value">${value}</span>
-                </div>
-            `).join('');
-        }
-    }
-
-    // Load reviews
-    function loadReviews(reviews) {
-        const reviewsContainer = document.querySelector('.reviews-list');
-        if (reviewsContainer) {
-            if (reviews.length === 0) {
-                reviewsContainer.innerHTML = `
-                    <div class="review-item">
-                        <p class="review-text">No reviews yet. Be the first to review this product!</p>
-                    </div>
-                `;
-            } else {
-                reviewsContainer.innerHTML = reviews.map(review => `
-                    <div class="review-item">
-                        <div class="review-header">
-                            <span class="reviewer-name">${review.author}</span>
-                            <span class="review-rating">${'⭐'.repeat(review.rating)}</span>
-                        </div>
-                        <p class="review-text">${review.comment}</p>
-                    </div>
-                `).join('');
-            }
-        }
-    }
-
-    // Load related products
-    function loadRelatedProducts(currentProductId) {
-        const relatedProducts = Object.values(products).filter(p => p.id !== parseInt(currentProductId)).slice(0, 4);
-        const relatedGrid = document.getElementById('relatedProducts');
         
-        if (relatedGrid) {
-            relatedGrid.innerHTML = relatedProducts.map(product => `
-                <div class="related-item" onclick="viewProduct(${product.id})">
-                    <img src="${product.images[0]}" alt="${product.name}" onerror="this.src='/images/placeholder-product.jpg'">
-                    <div class="related-item-info">
-                        <div class="related-item-name">${product.name}</div>
-                        <div class="related-item-price">${product.price} NIS</div>
+        // Update active thumbnail
+        document.querySelectorAll('.thumbnail-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        thumbnailElement.classList.add('active');
+    }
+
+    function loadSpecifications(specs) {
+        const specsContainer = document.getElementById('specificationsList');
+        if (!specsContainer) return;
+
+        specsContainer.innerHTML = '';
+        Object.entries(specs).forEach(([key, value]) => {
+            const specItem = document.createElement('div');
+            specItem.className = 'spec-item';
+            specItem.innerHTML = `
+                <span class="spec-label">${key}:</span>
+                <span class="spec-value">${value}</span>
+            `;
+            specsContainer.appendChild(specItem);
+        });
+    }
+
+    function loadReviews(reviews) {
+        const reviewsContainer = document.getElementById('reviewsList');
+        if (!reviewsContainer) return;
+
+        if (reviews.length === 0) {
+            reviewsContainer.innerHTML = '<p class="no-reviews">No reviews yet. Be the first to review this product!</p>';
+            return;
+        }
+
+        reviewsContainer.innerHTML = '';
+        reviews.forEach(review => {
+            const reviewItem = document.createElement('div');
+            reviewItem.className = 'review-item';
+            reviewItem.innerHTML = `
+                <div class="review-header">
+                    <span class="review-author">${review.author}</span>
+                    <div class="review-rating">
+                        ${'⭐'.repeat(review.rating)}
                     </div>
                 </div>
-            `).join('');
+                <p class="review-comment">${review.comment}</p>
+            `;
+            reviewsContainer.appendChild(reviewItem);
+        });
+    }
+
+    function loadRelatedProducts(currentProductId) {
+        // This would typically load from an API
+        // For now, we'll show a placeholder
+        const relatedContainer = document.getElementById('relatedProducts');
+        if (relatedContainer) {
+            relatedContainer.innerHTML = '<p class="no-related">Related products will be loaded here.</p>';
         }
     }
 
-    // Setup event listeners
     function setupEventListeners() {
         // Size selection
         document.querySelectorAll('.size-btn').forEach(btn => {
@@ -221,99 +218,83 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Quantity controls
-        document.getElementById('decreaseQuantity').addEventListener('click', function() {
-            const input = document.getElementById('quantityInput');
-            const currentValue = parseInt(input.value);
-            if (currentValue > 1) {
-                input.value = currentValue - 1;
-                quantity = currentValue - 1;
-            }
-        });
+        const decreaseBtn = document.getElementById('decreaseQuantity');
+        const increaseBtn = document.getElementById('increaseQuantity');
+        const quantityInput = document.getElementById('quantityInput');
 
-        document.getElementById('increaseQuantity').addEventListener('click', function() {
-            const input = document.getElementById('quantityInput');
-            const currentValue = parseInt(input.value);
-            if (currentValue < 10) {
-                input.value = currentValue + 1;
-                quantity = currentValue + 1;
-            }
-        });
+        if (decreaseBtn) {
+            decreaseBtn.addEventListener('click', () => {
+                if (quantity > 1) {
+                    quantity--;
+                    quantityInput.value = quantity;
+                }
+            });
+        }
 
-        document.getElementById('quantityInput').addEventListener('change', function() {
-            quantity = parseInt(this.value) || 1;
-        });
+        if (increaseBtn) {
+            increaseBtn.addEventListener('click', () => {
+                if (quantity < 10) {
+                    quantity++;
+                    quantityInput.value = quantity;
+                }
+            });
+        }
 
-        // Action buttons
-        document.getElementById('addToCartBtn').addEventListener('click', addToCart);
-        document.getElementById('buyNowBtn').addEventListener('click', buyNow);
+        if (quantityInput) {
+            quantityInput.addEventListener('change', () => {
+                quantity = parseInt(quantityInput.value) || 1;
+                quantity = Math.max(1, Math.min(10, quantity));
+                quantityInput.value = quantity;
+            });
+        }
+
+        // Add to cart button
+        const addToCartBtn = document.getElementById('addToCartBtn');
+        if (addToCartBtn) {
+            addToCartBtn.addEventListener('click', addToCart);
+        }
+
+        // Buy now button
+        const buyNowBtn = document.getElementById('buyNowBtn');
+        if (buyNowBtn) {
+            buyNowBtn.addEventListener('click', buyNow);
+        }
 
         // Image zoom
-        document.getElementById('mainProductImage').addEventListener('click', function() {
-            // Create lightbox effect
-            const lightbox = document.createElement('div');
-            lightbox.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.9);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10000;
-                cursor: pointer;
-            `;
-            
-            const img = document.createElement('img');
-            img.src = this.src;
-            img.style.cssText = `
-                max-width: 90%;
-                max-height: 90%;
-                object-fit: contain;
-            `;
-            
-            lightbox.appendChild(img);
-            document.body.appendChild(lightbox);
-            
-            lightbox.addEventListener('click', function() {
-                document.body.removeChild(lightbox);
+        const mainImage = document.getElementById('mainProductImage');
+        if (mainImage) {
+            mainImage.addEventListener('click', () => {
+                // Implement image zoom functionality
+                console.log('Image zoom clicked');
             });
-        });
+        }
     }
 
-    // Setup tabs
     function setupTabs() {
         const tabButtons = document.querySelectorAll('.tab-btn');
-        const tabPanels = document.querySelectorAll('.tab-panel');
+        const tabContents = document.querySelectorAll('.tab-content');
 
-        tabButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const targetTab = this.dataset.tab;
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetTab = button.dataset.tab;
                 
-                // Update active button
-                tabButtons.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
+                // Update active tab button
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
                 
-                // Update active panel
-                tabPanels.forEach(panel => {
-                    panel.classList.remove('active');
-                    if (panel.id === targetTab) {
-                        panel.classList.add('active');
+                // Show target tab content
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === targetTab) {
+                        content.classList.add('active');
                     }
                 });
             });
         });
     }
 
-    // Add to cart
     function addToCart() {
         if (!currentProduct) return;
-        
-        if (currentProduct.status === 'sold-out') {
-            showNotification('This product is sold out!', 'error');
-            return;
-        }
 
         const cartItem = {
             id: currentProduct.id,
@@ -321,51 +302,80 @@ document.addEventListener('DOMContentLoaded', function() {
             price: currentProduct.price,
             size: selectedSize,
             quantity: quantity,
-            image: currentProduct.images[0],
-            description: currentProduct.description
+            image: currentProduct.images[0]
         };
 
-        // Show the new modal instead of direct add
-        showAddToCartModal(cartItem);
+        // Get existing cart
+        let cart = JSON.parse(localStorage.getItem('zippyCart') || '[]');
+        
+        // Check if item already exists with same size
+        const existingIndex = cart.findIndex(item => 
+            item.id === cartItem.id && item.size === cartItem.size
+        );
+
+        if (existingIndex !== -1) {
+            cart[existingIndex].quantity += quantity;
+        } else {
+            cart.push(cartItem);
+        }
+
+        // Save to localStorage
+        localStorage.setItem('zippyCart', JSON.stringify(cart));
+        
+        // Update cart count
+        updateCartCount();
+        
+        // Show success message
+        showNotification('Added to cart successfully!', 'success');
     }
 
-    // Buy now
     function buyNow() {
-        if (!currentProduct) return;
+        addToCart();
+        // Redirect to checkout
+        setTimeout(() => {
+            window.location.href = '/checkout';
+        }, 1000);
+    }
+
+    function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('zippyCart') || '[]');
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
         
-        if (currentProduct.status === 'sold-out') {
-            showNotification('This product is sold out!', 'error');
-            return;
+        const cartCount = document.getElementById('cartCount');
+        if (cartCount) {
+            cartCount.textContent = totalItems;
         }
+    }
 
-        const cartItem = {
-            id: currentProduct.id,
-            name: currentProduct.name,
-            price: currentProduct.price,
-            size: selectedSize,
-            quantity: quantity,
-            image: currentProduct.images[0],
-            description: currentProduct.description
-        };
-
-        // Use the direct order function
-        directOrder(cartItem);
+    function showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        // Add to page
+        document.body.appendChild(notification);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
     }
 
     // Initialize the page
     init();
 });
 
-// Global functions for external access
+// Global functions for external use
 function changeMainImage(imageSrc, thumbnailElement) {
     const mainImage = document.getElementById('mainProductImage');
     if (mainImage) {
         mainImage.src = imageSrc;
     }
-
+    
     // Update active thumbnail
-    document.querySelectorAll('.thumbnail').forEach(thumb => {
-        thumb.classList.remove('active');
+    document.querySelectorAll('.thumbnail-item').forEach(item => {
+        item.classList.remove('active');
     });
     if (thumbnailElement) {
         thumbnailElement.classList.add('active');
