@@ -905,6 +905,193 @@
             height: auto;
         }
 
+        /* Enhanced Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(10, 10, 10, 0.95));
+            border: 2px solid #00ffff;
+            border-radius: 15px;
+            margin: 5% auto;
+            padding: 0;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.3);
+            animation: modalSlideIn 0.4s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px) scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(90deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00ffff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: 2px solid #ff00ff;
+            color: #ff00ff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 0, 255, 0.2);
+            color: #ffffff;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .brand-detail-content {
+            color: #ffffff;
+        }
+
+        .brand-info {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            align-items: flex-start;
+        }
+
+        .brand-info .brand-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .brand-details h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00ffff;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .brand-details p {
+            color: #cccccc;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .brand-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .brand-stats .stat {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: #00ffff;
+            font-weight: 600;
+        }
+
+        .brand-collections h4,
+        .brand-story h4 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ff00ff;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+        }
+
+        .collections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .collection-item {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .collection-item:hover {
+            background: rgba(0, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .brand-story p {
+            color: #cccccc;
+            font-size: 1rem;
+            line-height: 1.7;
+            text-align: justify;
+        }
+
         /* Specific fixes for brand logos */
         .brand-logo {
             width: 80px !important;
@@ -1192,7 +1379,7 @@
         <div class="modal-content cyber-modal">
             <div class="modal-header">
                 <h2 class="modal-title" id="brandModalTitle">Brand Name</h2>
-                <button class="modal-close" id="closeBrandModal" onclick="document.getElementById('brandModal').style.display='none'">&times;</button>
+                <button class="modal-close" id="closeBrandModal" onclick="closeBrandModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="brand-detail-content">
@@ -1655,8 +1842,99 @@
         // Global functions for brand interactions
         function viewBrand(brandId) {
             console.log('Viewing brand:', brandId);
-            // Open brand detail modal
-            document.getElementById('brandModal').style.display = 'flex';
+            
+            // Auto-scroll to top when opening modal
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            
+            // Brand data with images
+            const brandData = {
+                '1': {
+                    name: 'Zippy Originals',
+                    logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAiIHkxPSIwIiB4Mj0iMTIwIiB5Mj0iMTIwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEZGRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSI1MCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMDAwRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojRkYwMEZGO3N0b3Atb3BhY2l0eToxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzIi8+Cjx0ZXh0IHg9IjYwIiB5PSI2NSIgZm9udC1mYW1pbHk9Ik9yYml0cm9uLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjRkZGRkZGIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5aSVBQWTwvdGV4dD4KPC9zdmc+',
+                    description: 'Futuristic streetwear with neon accents and cyberpunk aesthetics',
+                    founded: '2020',
+                    location: 'Tel Aviv, Israel',
+                    style: 'Cyberpunk',
+                    story: 'נולד מהמהפכה הדיגיטלית, Zippy Originals משלב טכנולוגיה מתקדמת עם תרבות הסטריטוור. המותג מתמחה בעיצובים עתידניים עם אפקטים ניאונים וסגנון סייברפונק ייחודי.'
+                },
+                '2': {
+                    name: 'Street Tech',
+                    logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAiIHkxPSIwIiB4Mj0iMTIwIiB5Mj0iMTIwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEZGRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMDA4MEZGO3N0b3Atb3BhY2l0eToxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPHBhdGggZD0iTTMwIDMwTDUwIDUwTDMwIDcwTTkwIDMwTDcwIDUwTDkwIDcwIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIvPgo8Y2lyY2xlIGN4PSI2MCIgY3k9IjYwIiByPSIyMCIgZmlsbD0iI0ZGRkZGRiIvPgo8dGV4dCB4PSI2MCIgeT0iODAiIGZvbnQtZmFtaWx5PSJPcmJpdHJvbiwgbW9ub3NwYWNlIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI0ZGRkZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEVDSDwvdGV4dD4KPC9zdmc+',
+                    description: 'Urban techwear for the modern digital nomad',
+                    founded: '2019',
+                    location: 'New York, USA',
+                    style: 'Techwear',
+                    story: 'Street Tech נולד מהצטלבות הטכנולוגיה עם תרבות הרחוב. המותג מתמחה בבגדים טכניים עירוניים המותאמים לנומאדים הדיגיטליים של העידן המודרני.'
+                },
+                '3': {
+                    name: 'Future Wear',
+                    logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAiIHkxPSIwIiB4Mj0iMTIwIiB5Mj0iMTIwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEZGRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMDBGRjAwO3N0b3Atb3BhY2l0eToxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxwYXRoIGQ9Ik00NSA0NUw3NSA3NUw0NSA3NUw3NSA0NSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMiIGZpbGw9Im5vbmUiLz4KPHRleHQgeD0iNjAiIHk9IjkwIiBmb250LWZhbWlseT0iT3JiaXRyb24sIG1vbm9zcGFjZSIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNGRkZGRkYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkZVVFVSRTwvdGV4dD4KPC9zdmc+',
+                    description: 'Sustainable fashion meets futuristic design',
+                    founded: '2021',
+                    location: 'Berlin, Germany',
+                    style: 'Sustainable',
+                    story: 'Future Wear חלוץ באופנה בת-קיימא עם טוויסט עתידני. המותג מתמחה בחומרים ידידותיים לסביבה עם עיצובים חדשניים וטכנולוגיות מתקדמות.'
+                },
+                '4': {
+                    name: 'Neon Nights',
+                    logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAiIHkxPSIwIiB4Mj0iMTIwIiB5Mj0iMTIwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNGRjAwRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojRkY4MDAwO3N0b3Atb3BhY2l0eToxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxwYXRoIGQ9Ik0zMCA0MEw5MCA4MEwzMCA4MEw5MCA0MCIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMiIGZpbGw9Im5vbmUiLz4KPHRleHQgeD0iNjAiIHk9IjkwIiBmb250LWZhbWlseT0iT3JiaXRyb24sIG1vbm9zcGFjZSIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNGRkZGRkYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk5FT048L3RleHQ+Cjwvc3ZnPg==',
+                    description: 'Bold neon designs for the nightlife scene',
+                    founded: '2018',
+                    location: 'Los Angeles, USA',
+                    style: 'Neon',
+                    story: 'Neon Nights לוכד את האנרגיה של העיר אחרי החשיכה. המותג מתמחה בעיצובים ניאונים בולטים המותאמים לסצנת חיי הלילה התוססת.'
+                },
+                '5': {
+                    name: 'Cyber Street',
+                    logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAiIHkxPSIwIiB4Mj0iMTIwIiB5Mj0iMTIwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEZGRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojRkYwMEZGO3N0b3Atb3BhY2l0eToxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPHBhdGggZD0iTTIwIDQwTDUwIDYwTDIwIDgwTTEwMCA0MEw3MCA2MEwxMDAgODAiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzIiBmaWxsPSJub25lIi8+CjxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjE1IiBmaWxsPSIjRkZGRkZGIi8+Cjx0ZXh0IHg9IjYwIiB5PSI5MCIgZm9udC1mYW1pbHk9Ik9yYml0cm9uLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjRkZGRkZGIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DWVBFUjwvdGV4dD4KPC9zdmc+',
+                    description: 'Cyberpunk streetwear with Japanese influences',
+                    founded: '2022',
+                    location: 'Tokyo, Japan',
+                    style: 'Cyberpunk',
+                    story: 'Cyber Street משלב אסתטיקה יפנית מסורתית עם עיצוב עתידני. המותג מתמחה בסטריטוור סייברפונק עם השפעות יפניות ייחודיות.'
+                },
+                '6': {
+                    name: 'Urban Hologram',
+                    logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAiIHkxPSIwIiB4Mj0iMTIwIiB5Mj0iMTIwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEZGRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSI1MCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNGRkZGRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojRkYwMEZGO3N0b3Atb3BhY2l0eToxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPHBhdGggZD0iTTMwIDMwTDUwIDUwTDMwIDcwTTkwIDMwTDcwIDUwTDkwIDcwIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIvPgo8Y2lyY2xlIGN4PSI2MCIgY3k9IjYwIiByPSIyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIiLz4KPHRleHQgeD0iNjAiIHk9IjkwIiBmb250LWZhbWlseT0iT3JiaXRyb24sIG1vbm9zcGFjZSIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNGRkZGRkYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkhPTE88L3RleHQ+Cjwvc3ZnPg==',
+                    description: 'Holographic fashion for the future city',
+                    founded: '2023',
+                    location: 'London, UK',
+                    style: 'Holographic',
+                    story: 'Urban Hologram מביא את העתיד לאופנה העירונית. המותג מתמחה בעיצובים הולוגרפיים מתקדמים המותאמים לעיר העתיד.'
+                }
+            };
+            
+            const brand = brandData[brandId] || brandData['1'];
+            
+            // Update modal content
+            document.getElementById('brandModalTitle').textContent = brand.name;
+            document.getElementById('brandLogo').src = brand.logo;
+            document.getElementById('brandName').textContent = brand.name;
+            document.getElementById('brandDescription').textContent = brand.description;
+            document.getElementById('brandFounded').textContent = brand.founded;
+            document.getElementById('brandLocation').textContent = brand.location;
+            document.getElementById('brandStyle').textContent = brand.style;
+            document.getElementById('brandStory').textContent = brand.story;
+            
+            // Open brand detail modal with enhanced styling
+            const modal = document.getElementById('brandModal');
+            modal.style.display = 'flex';
+            
+            // Add enhanced styling to modal
+            modal.style.background = 'rgba(0, 0, 0, 0.9)';
+            modal.style.backdropFilter = 'blur(10px)';
+            
+            // Enhance modal content styling
+            const modalContent = modal.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.style.background = 'linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(10, 10, 10, 0.95))';
+                modalContent.style.border = '2px solid #00ffff';
+                modalContent.style.boxShadow = '0 20px 40px rgba(0, 255, 255, 0.3)';
+                modalContent.style.backdropFilter = 'blur(15px)';
+            }
         }
 
         function shopBrand(brandId) {
@@ -1668,6 +1946,11 @@
         function readStory(storyId) {
             console.log('Reading story:', storyId);
             // Open story detail page or modal
+        }
+
+        function closeBrandModal() {
+            const modal = document.getElementById('brandModal');
+            modal.style.display = 'none';
         }
     </script>
     
