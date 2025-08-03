@@ -4,6 +4,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!window.location.pathname.includes('product-detail')) {
         return;
     }
+    
+    // Wait a bit for global functions to be available
+    setTimeout(() => {
+        console.log('Product detail - Global functions check:', {
+            showAddToCartModal: typeof window.showAddToCartModal,
+            directOrder: typeof window.directOrder,
+            showNotification: typeof window.showNotification,
+            updateCartCountLocal: typeof window.updateCartCountLocal
+        });
+    }, 100);
 
     let currentProduct = null;
     let selectedSize = 'M';
@@ -74,6 +84,14 @@ document.addEventListener('DOMContentLoaded', function() {
         await loadProductData();
         setupEventListeners();
         setupTabs();
+        
+        // Debug: Check if global functions are available
+        console.log('Product detail init - checking global functions:', {
+            showAddToCartModal: typeof window.showAddToCartModal,
+            directOrder: typeof window.directOrder,
+            showNotification: typeof window.showNotification,
+            updateCartCountLocal: typeof window.updateCartCountLocal
+        });
     }
 
     // Load product data from URL
@@ -305,65 +323,132 @@ document.addEventListener('DOMContentLoaded', function() {
             image: currentProduct.images[0]
         };
 
-        // Get existing cart
-        let cart = JSON.parse(localStorage.getItem('zippyCart') || '[]');
-        
-        // Check if item already exists with same size
-        const existingIndex = cart.findIndex(item => 
-            item.id === cartItem.id && item.size === cartItem.size
-        );
-
-        if (existingIndex !== -1) {
-            cart[existingIndex].quantity += quantity;
+        // Show the modal instead of direct add
+        if (typeof window.showAddToCartModal === 'function') {
+            // Convert to the format expected by showAddToCartModal
+            const modalProduct = {
+                ...cartItem,
+                title: cartItem.name,
+                images: [cartItem.image]
+            };
+            window.showAddToCartModal(modalProduct);
         } else {
-            cart.push(cartItem);
-        }
+            // Fallback to direct add if modal function not available
+            const cart = JSON.parse(localStorage.getItem('zippyCart') || '[]');
+            
+            // Check if item already exists with same size
+            const existingIndex = cart.findIndex(item => 
+                item.id === cartItem.id && item.size === cartItem.size
+            );
 
-        // Save to localStorage
-        localStorage.setItem('zippyCart', JSON.stringify(cart));
-        
-        // Update cart count
-        updateCartCount();
-        
-        // Show success message
-        showNotification('Added to cart successfully!', 'success');
+            if (existingIndex !== -1) {
+                cart[existingIndex].quantity += quantity;
+            } else {
+                cart.push(cartItem);
+            }
+
+            // Save to localStorage
+            localStorage.setItem('zippyCart', JSON.stringify(cart));
+            
+            // Update cart count
+            updateCartCount();
+            
+            // Show success message
+            showNotification('Added to cart successfully!', 'success');
+        }
     }
 
     function buyNow() {
-        addToCart();
-        // Redirect to checkout
-        setTimeout(() => {
-            window.location.href = '/checkout';
-        }, 1000);
+        if (!currentProduct) return;
+
+        const cartItem = {
+            id: currentProduct.id,
+            name: currentProduct.name,
+            price: currentProduct.price,
+            size: selectedSize,
+            quantity: quantity,
+            image: currentProduct.images[0]
+        };
+
+        // Use the direct order function if available
+        if (typeof window.directOrder === 'function') {
+            // Convert to the format expected by directOrder
+            const modalProduct = {
+                ...cartItem,
+                title: cartItem.name,
+                images: [cartItem.image]
+            };
+            window.directOrder(modalProduct);
+        } else {
+            // Fallback to add to cart and redirect
+            addToCart();
+            setTimeout(() => {
+                window.location.href = '/cart';
+            }, 1000);
+        }
     }
 
     function updateCartCount() {
-        const cart = JSON.parse(localStorage.getItem('zippyCart') || '[]');
-        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        
-        const cartCount = document.getElementById('cartCount');
-        if (cartCount) {
-            cartCount.textContent = totalItems;
+        // Use the global function if available
+        if (typeof window.updateCartCountLocal === 'function') {
+            window.updateCartCountLocal();
+        } else {
+            // Fallback to local implementation
+            const cart = JSON.parse(localStorage.getItem('zippyCart') || '[]');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            const cartCount = document.getElementById('cartCount');
+            if (cartCount) {
+                cartCount.textContent = totalItems;
+            }
         }
     }
 
     function showNotification(message, type = 'info') {
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
-        
-        // Add to page
-        document.body.appendChild(notification);
-        
-        // Remove after 3 seconds
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
+        // Use the global function if available
+        if (typeof window.showNotification === 'function') {
+            window.showNotification(message, type);
+        } else {
+            // Fallback to local implementation
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'error' ? '#ff4444' : type === 'success' ? '#00ff00' : '#00ffff'};
+                color: #000;
+                padding: 1rem 2rem;
+                border-radius: 4px;
+                z-index: 10000;
+                font-weight: bold;
+                box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification && notification.parentNode) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
     }
 
     // Initialize the page
     init();
+    
+    // Additional check after a delay to ensure functions are available
+    setTimeout(() => {
+        console.log('Product detail - Final functions check:', {
+            showAddToCartModal: typeof window.showAddToCartModal,
+            directOrder: typeof window.directOrder,
+            showNotification: typeof window.showNotification,
+            updateCartCountLocal: typeof window.updateCartCountLocal,
+            addToCartAndClose: typeof window.addToCartAndClose
+        });
+    }, 500);
 });
 
 // Global functions for external use

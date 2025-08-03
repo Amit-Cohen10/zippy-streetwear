@@ -677,6 +677,9 @@ window.ZippyApp = {
         window.addToCart = addToCartLocal;
         window.updateCartCount = updateCartCountLocal;
         
+        // Make showNotification globally available
+        window.showNotification = showNotification;
+        
         // Debug: Log that functions are available
         console.log('Modal functions loaded:', {
             showAddToCartModal: typeof window.showAddToCartModal,
