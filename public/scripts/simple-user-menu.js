@@ -7,10 +7,56 @@
     // מונה לחיצות לבדיקה
     let clickCount = 0;
     
+    // עדכון מיידי של מצב הכפתור ללא עיכוב
+    function setInitialButtonState() {
+        console.log('⚡ Setting initial button state immediately...');
+        
+        // בדיקה מיידית של מצב ההתחברות (אותו מקום כמו initUserMenu)
+        const savedUser = localStorage.getItem('currentUser');
+        let isLoggedIn = false;
+        let username = '';
+        
+        if (savedUser) {
+            try {
+                const user = JSON.parse(savedUser);
+                isLoggedIn = true;
+                username = user.profile?.displayName || user.username || 'User';
+                console.log('⚡ Found user data immediately:', { isLoggedIn, username });
+            } catch (e) {
+                console.log('❌ Error parsing user data:', e);
+            }
+        }
+        
+        // עדכון מיידי של הכפתור אם הוא קיים
+        const authBtn = document.getElementById('authBtn');
+        const userMenu = document.getElementById('userMenu');
+        const usernameDisplay = document.getElementById('usernameDisplay');
+        
+        if (isLoggedIn && username) {
+            // משתמש מחובר - הצג את שם המשתמש מיד
+            if (authBtn) authBtn.style.display = 'none';
+            if (userMenu) userMenu.style.display = 'inline-block';
+            if (usernameDisplay) usernameDisplay.textContent = username;
+            console.log('⚡ Set button to username immediately:', username);
+        } else {
+            // משתמש לא מחובר - הצג LOGIN מיד
+            if (authBtn) authBtn.style.display = 'inline-block';
+            if (userMenu) userMenu.style.display = 'none';
+            console.log('⚡ Set button to LOGIN immediately');
+        }
+    }
+    
+    // קריאה מיידית לעדכון מצב הכפתור
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setInitialButtonState);
+    } else {
+        setInitialButtonState();
+    }
+    
     // חכה לטעינת הדף ולכל הסקריפטים האחרים
     document.addEventListener('DOMContentLoaded', function() {
-        // המתן קצת שכל הסקריפטים יסתיימו
-        setTimeout(initUserMenu, 500);
+        // ללא עיכוב - כל האתחול כבר קרה
+        initUserMenu();
     });
     
     function initUserMenu() {
