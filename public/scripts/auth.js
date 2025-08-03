@@ -8,6 +8,19 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Auth system initializing...');
     initAuth();
     updateAuthUI();
+
+    // --- LocalStorage watcher for login state ---
+    let lastUser = localStorage.getItem('currentUser');
+    setInterval(() => {
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser !== lastUser) {
+            lastUser = currentUser;
+            if (typeof window.updateAuthUI === 'function') {
+                window.updateAuthUI();
+            }
+        }
+    }, 500);
+    // --- End watcher ---
 });
 
 function initAuth() {
@@ -362,30 +375,37 @@ function updateAuthUI() {
         return;
     }
     
-    console.log('Updating auth UI...');
+    console.log('🔄 Updating auth UI...');
     const authBtn = document.getElementById('authBtn');
     const userMenu = document.getElementById('userMenu');
     
-    console.log('Found elements:', { authBtn: !!authBtn, userMenu: !!userMenu });
+    console.log('🔍 Found elements:', { 
+        authBtn: !!authBtn, 
+        userMenu: !!userMenu,
+        authBtnText: authBtn ? authBtn.textContent : 'N/A',
+        authBtnDisplay: authBtn ? authBtn.style.display : 'N/A',
+        userMenuDisplay: userMenu ? userMenu.style.display : 'N/A'
+    });
     
     if (!authBtn) {
-        console.log('Auth button not found, skipping UI update');
+        console.log('❌ Auth button not found, skipping UI update');
         return;
     }
     
     const savedUser = localStorage.getItem('currentUser');
-    console.log('Saved user:', savedUser ? 'exists' : 'none');
+    console.log('👤 Saved user:', savedUser ? 'exists' : 'none');
     
     if (savedUser) {
         try {
             const user = JSON.parse(savedUser);
-            console.log('Parsed user:', user);
+            console.log('✅ Parsed user:', user);
             
             const displayName = user.profile?.displayName || user.username || 'User';
-            console.log('Display name:', displayName);
+            console.log('📝 Display name:', displayName);
             
-            // Hide login button and show user menu
+            // If userMenu exists, use it. Otherwise, just update the auth button text
             if (authBtn && userMenu) {
+                console.log('🎯 Using userMenu approach');
                 authBtn.style.display = 'none';
                 userMenu.style.display = 'block';
                 
@@ -399,28 +419,59 @@ function updateAuthUI() {
                 window.isLoggedIn = true;
                 window.currentUser = user;
                 
-                console.log('User menu should be visible now');
+                console.log('✅ User menu should be visible now');
+            } else if (authBtn) {
+                console.log('🎯 Using auth button text approach');
+                // Just update the button text since userMenu doesn't exist
+                authBtn.textContent = displayName;
+                authBtn.onclick = function() {
+                    console.log('User menu clicked');
+                    // You can add user menu functionality here
+                    if (confirm('Do you want to logout?')) {
+                        handleLogout();
+                    }
+                };
+                
+                // Set global login status
+                window.isLoggedIn = true;
+                window.currentUser = user;
+                
+                console.log('✅ Auth button updated to show user name');
+            } else {
+                console.log('❌ Neither authBtn nor userMenu found');
             }
             
-            console.log('Updated auth UI for logged-in user');
+            console.log('✅ Updated auth UI for logged-in user');
             
         } catch (error) {
-            console.error('Error parsing saved user:', error);
+            console.error('❌ Error parsing saved user:', error);
             localStorage.removeItem('currentUser');
             
             // Show login button and hide user menu
             if (authBtn && userMenu) {
                 authBtn.style.display = 'inline-block';
                 userMenu.style.display = 'none';
+            } else if (authBtn) {
+                authBtn.textContent = 'Login';
+                authBtn.onclick = function() {
+                    openAuthModal();
+                };
             }
         }
     } else {
-        console.log('No saved user, showing login state');
+        console.log('👤 No saved user, showing login state');
         
         // Show login button and hide user menu
         if (authBtn && userMenu) {
             authBtn.style.display = 'inline-block';
             userMenu.style.display = 'none';
+        } else if (authBtn) {
+            authBtn.textContent = 'Login';
+            authBtn.onclick = function() {
+                openAuthModal();
+            };
+        } else {
+            console.log('❌ Neither authBtn nor userMenu found for logout state');
         }
         
         // Set global login status
@@ -428,10 +479,128 @@ function updateAuthUI() {
         window.currentUser = null;
     }
     
-    console.log('Auth UI update complete');
+    console.log('✅ Auth UI update complete');
 }
 
 // Make functions globally available
 window.updateAuthUI = updateAuthUI;
 window.openAuthModal = openAuthModal;
 window.closeAuthModal = closeAuthModal;
+
+// Add user menu functionality (copied and adapted from simple-user-menu.js)
+function positionDropdownBelowButton() {
+    const userMenuToggle = document.getElementById('userMenuToggle');
+    const userDropdown = document.getElementById('userDropdown');
+    if (userMenuToggle && userDropdown) {
+        const buttonRect = userMenuToggle.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+        const top = buttonRect.bottom + scrollTop + 5;
+        const left = buttonRect.right + scrollLeft - 220;
+        userDropdown.style.setProperty('position', 'absolute', 'important');
+        userDropdown.style.setProperty('top', top + 'px', 'important');
+        userDropdown.style.setProperty('left', left + 'px', 'important');
+        userDropdown.style.setProperty('right', 'auto', 'important');
+    }
+}
+
+function toggleDropdown() {
+    console.log('🔄 Auth.js toggleDropdown called');
+    const userDropdown = document.getElementById('userDropdown');
+    if (userDropdown) {
+        const computedDisplay = getComputedStyle(userDropdown).display;
+        const isVisible = computedDisplay === 'block';
+        if (isVisible) {
+            userDropdown.style.setProperty('display', 'none', 'important');
+            console.log('🔒 Auth.js dropdown closed');
+        } else {
+            positionDropdownBelowButton();
+            userDropdown.style.setProperty('display', 'block', 'important');
+            userDropdown.style.setProperty('visibility', 'visible', 'important');
+            userDropdown.style.setProperty('opacity', '1', 'important');
+            userDropdown.style.setProperty('z-index', '999999', 'important');
+            console.log('🔓 Auth.js dropdown opened');
+        }
+    } else {
+        console.log('❌ Auth.js dropdown element not found');
+    }
+}
+
+function initUserMenu() {
+    console.log('🚀 Initializing simple user menu...');
+    // Check if simple-user-menu.js is loaded and block this function
+    if (window.blockGlobalUserMenu) {
+        console.log('🚫 Auth.js initUserMenu blocked by simple-user-menu.js');
+        return;
+    }
+    // Remove all event listeners from the toggle to prevent conflicts
+    const existingToggle = document.getElementById('userMenuToggle');
+    if (existingToggle) {
+        const newToggle = existingToggle.cloneNode(true);
+        existingToggle.parentNode.replaceChild(newToggle, existingToggle);
+    }
+    const authBtn = document.getElementById('authBtn');
+    const userMenu = document.getElementById('userMenu');
+    const userMenuToggle = document.getElementById('userMenuToggle');
+    const userDropdown = document.getElementById('userDropdown');
+    const usernameDisplay = document.getElementById('usernameDisplay');
+    // Check login state
+    const savedUser = localStorage.getItem('currentUser');
+    let isLoggedIn = false;
+    let username = '';
+    if (savedUser) {
+        try {
+            const user = JSON.parse(savedUser);
+            isLoggedIn = true;
+            username = user.profile?.displayName || user.username || 'User';
+            console.log('✅ User is logged in:', username);
+        } catch (e) {
+            console.log('❌ Error parsing user data');
+            localStorage.removeItem('currentUser');
+        }
+    }
+    // Set display according to state
+    if (isLoggedIn) {
+        if (authBtn) authBtn.style.display = 'none';
+        if (userMenu) userMenu.style.display = 'block';
+        if (usernameDisplay) usernameDisplay.textContent = username;
+        if (userMenuToggle && userDropdown) {
+            userMenuToggle.addEventListener('click', function(e) {
+                console.log('🎯 Auth.js click handler triggered');
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                toggleDropdown();
+            }, true);
+        }
+        console.log('✅ User menu setup completed');
+    } else {
+        if (authBtn) authBtn.style.display = 'inline-block';
+        if (userMenu) userMenu.style.display = 'none';
+        console.log('✅ Login button setup completed');
+    }
+    // Close dropdown on outside click
+    document.addEventListener('click', function(e) {
+        if (userDropdown && !userMenu.contains(e.target)) {
+            userDropdown.style.display = 'none';
+        }
+    });
+    // Reposition on resize/scroll
+    window.addEventListener('resize', function() {
+        if (userDropdown && getComputedStyle(userDropdown).display === 'block') {
+            positionDropdownBelowButton();
+        }
+    });
+    window.addEventListener('scroll', function() {
+        if (userDropdown && getComputedStyle(userDropdown).display === 'block') {
+            positionDropdownBelowButton();
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    initUserMenu();
+});
+
+// Make handleLogout globally available
+window.handleLogout = handleLogout;

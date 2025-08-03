@@ -363,8 +363,12 @@ function initModals() {
     const searchBtn = document.getElementById('searchBtn');
     const searchModal = document.getElementById('searchModal');
     
+    console.log('🔍 Search button found:', !!searchBtn);
+    console.log('🔍 Search modal found:', !!searchModal);
+    
     if (searchBtn && searchModal) {
         searchBtn.onclick = () => {
+            console.log('🔍 Search button clicked');
             searchModal.style.display = 'flex';
             const searchInput = document.getElementById('searchInput');
             if (searchInput) {
@@ -377,6 +381,10 @@ function initModals() {
                 searchModal.style.display = 'none';
             }
         };
+        
+        console.log('✅ Search modal initialized');
+    } else {
+        console.log('❌ Search modal not found or not properly initialized');
     }
     
     // Cart modal
@@ -384,8 +392,13 @@ function initModals() {
     const cartModal = document.getElementById('cartModal');
     const closeCart = document.getElementById('closeCartModal');
     
+    console.log('🛒 Cart button found:', !!cartBtn);
+    console.log('🛒 Cart modal found:', !!cartModal);
+    console.log('🛒 Close cart button found:', !!closeCart);
+    
     if (cartBtn && cartModal) {
         cartBtn.onclick = () => {
+            console.log('🛒 Cart button clicked');
             cartModal.style.display = 'flex';
             loadCart();
             
@@ -400,6 +413,7 @@ function initModals() {
         
         if (closeCart) {
             closeCart.onclick = () => {
+                console.log('🛒 Close cart button clicked');
                 cartModal.style.display = 'none';
             };
         }
@@ -409,6 +423,10 @@ function initModals() {
                 cartModal.style.display = 'none';
             }
         };
+        
+        console.log('✅ Cart modal initialized');
+    } else {
+        console.log('❌ Cart modal not found or not properly initialized');
     }
     
     // Auth modal - handled by auth.js
@@ -579,6 +597,13 @@ window.ZippyApp = {
                     
                     // Show success notification
                     showNotification('Product added to cart successfully!', 'success');
+                    
+                    // Update auth UI to ensure login status is correct
+                    if (typeof window.updateAuthUI === 'function') {
+                        setTimeout(() => {
+                            window.updateAuthUI();
+                        }, 100);
+                    }
                 } catch (error) {
                     console.error('Failed to add product to cart:', error);
                     showNotification('Failed to add product to cart', 'error');
@@ -625,6 +650,13 @@ window.ZippyApp = {
             if (typeof updateCartDisplay === 'function') {
                 updateCartDisplay();
             }
+            
+            // Update auth UI to ensure login status is correct
+            if (typeof window.updateAuthUI === 'function') {
+                setTimeout(() => {
+                    window.updateAuthUI();
+                }, 100);
+            }
         }
 
         function updateCartCountLocal() {
@@ -639,9 +671,11 @@ window.ZippyApp = {
             const totalItems = window.cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
             cartCountElement.textContent = totalItems;
             
-            // Add animation if items were added
+            // Reset and re-apply animation for pulse effect
+            cartCountElement.style.animation = 'none';
+            // Force reflow
+            void cartCountElement.offsetWidth;
             if (totalItems > 0) {
-                cartCountElement.style.animation = 'none';
                 setTimeout(() => {
                     cartCountElement.style.animation = 'cart-count-pulse 0.6s ease-in-out';
                 }, 10);
@@ -680,6 +714,70 @@ window.ZippyApp = {
         
         // Make showNotification globally available
         window.showNotification = showNotification;
+        
+        // Make modal functions globally available
+        window.closeSearchModal = function() {
+            const modal = document.getElementById('searchModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        };
+        
+        // Add toggleTheme function
+        window.toggleTheme = function() {
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                if (themeIcon) {
+                    themeIcon.className = 'fas fa-moon';
+                }
+            } else {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+                if (themeIcon) {
+                    themeIcon.className = 'fas fa-sun';
+                }
+            }
+        };
+        
+        // Add clearCart function
+        window.clearCart = function() {
+            if (confirm('Are you sure you want to clear your cart?')) {
+                window.cartItems = [];
+                localStorage.setItem('zippyCart', JSON.stringify([]));
+                if (typeof window.updateCartCountLocal === 'function') {
+                    window.updateCartCountLocal();
+                }
+                if (typeof window.updateCartDisplay === 'function') {
+                    window.updateCartDisplay();
+                }
+                if (typeof window.showNotification === 'function') {
+                    window.showNotification('Cart cleared successfully!', 'success');
+                }
+                // Close cart modal
+                const cartModal = document.getElementById('cartModal');
+                if (cartModal) {
+                    cartModal.style.display = 'none';
+                }
+            }
+        };
+        
+        window.closeCartModal = function() {
+            const modal = document.getElementById('cartModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        };
+        
+        window.closeAuthModal = function() {
+            const modal = document.getElementById('authModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        };
         
         // Debug: Log that functions are available
         console.log('Modal functions loaded:', {

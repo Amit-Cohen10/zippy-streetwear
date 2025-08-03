@@ -355,6 +355,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Show success message
             showNotification('Added to cart successfully!', 'success');
+            
+            // Update auth UI to ensure login status is correct
+            if (typeof window.updateAuthUI === 'function') {
+                setTimeout(() => {
+                    window.updateAuthUI();
+                }, 100);
+            }
         }
     }
 
@@ -402,6 +409,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 cartCount.textContent = totalItems;
             }
         }
+        
+        // Update auth UI to ensure login status is correct
+        if (typeof window.updateAuthUI === 'function') {
+            setTimeout(() => {
+                window.updateAuthUI();
+            }, 100);
+        }
     }
 
     function showNotification(message, type = 'info') {
@@ -448,6 +462,11 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCartCountLocal: typeof window.updateCartCountLocal,
             addToCartAndClose: typeof window.addToCartAndClose
         });
+        
+        // Update auth UI to ensure login status is correct
+        if (typeof window.updateAuthUI === 'function') {
+            window.updateAuthUI();
+        }
     }, 500);
 });
 

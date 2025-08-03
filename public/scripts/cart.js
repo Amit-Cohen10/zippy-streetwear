@@ -500,6 +500,13 @@ window.openCartModal = function() {
         // Show modal
         cartModal.classList.add('active');
         
+        // Update auth UI to ensure login status is correct
+        if (typeof window.updateAuthUI === 'function') {
+            setTimeout(() => {
+                window.updateAuthUI();
+            }, 100);
+        }
+        
         // Scroll modal to top and ensure it's visible
         setTimeout(() => {
             // Scroll the modal content to top
@@ -525,6 +532,13 @@ window.closeCartModal = function() {
     const modal = document.getElementById('cartModal');
     if (modal) {
         modal.classList.remove('active');
+        
+        // Update auth UI to ensure login status is correct
+        if (typeof window.updateAuthUI === 'function') {
+            setTimeout(() => {
+                window.updateAuthUI();
+            }, 100);
+        }
     }
 }
 
@@ -533,6 +547,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeCartBtn = document.getElementById('closeCartModal');
     if (closeCartBtn) {
         closeCartBtn.addEventListener('click', closeCartModal);
+    }
+    
+    // Add event listener for cart button
+    const cartBtn = document.getElementById('cartBtn');
+    if (cartBtn) {
+        cartBtn.addEventListener('click', openCartModal);
+    }
+    
+    // Add event listener for cart count
+    const cartCount = document.getElementById('cartCount');
+    if (cartCount) {
+        cartCount.addEventListener('click', openCartModal);
     }
 });
 
