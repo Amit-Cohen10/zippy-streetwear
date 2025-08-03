@@ -21,11 +21,12 @@
                 <a href="/products" class="nav-link">Shop</a>
                 <a href="/exchange" class="nav-link">Exchange</a>
                 <a href="/community" class="nav-link">Community</a>
+                <a href="/style-guide" class="nav-link">Style Guide</a>
                 <a href="/brands" class="nav-link">Brands</a>
             </div>
             <div class="nav-actions">
-                <button class="search-btn" onclick="openSearchModal()">
-                    <i class="fas fa-search"></i>
+                <button class="search-btn" id="searchBtn">
+                    <span class="search-icon">🔍</span>
                 </button>
                 <button class="cart-btn" id="cartBtn">
                     <span class="cart-icon">🛒</span>
@@ -100,6 +101,9 @@
 
     <!-- User Dropdown Menu (Outside navbar to avoid clipping) -->
     <div class="user-dropdown" id="userDropdown" style="
+        position: fixed !important;
+        top: 70px !important; 
+        right: 20px !important;
         background: #1a1a1a !important;
         border: 2px solid #00ffff !important;
         border-radius: 8px !important;
@@ -118,12 +122,13 @@
         " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
             <i class="fas fa-tachometer-alt" style="margin-right: 10px; width: 16px;"></i> Dashboard
         </a>
-        <a href="/my-items.html" class="dropdown-item" style="
+                        <a href="/my-items.html" class="dropdown-item" style="
             display: block !important; padding: 12px 16px !important; 
             color: #00ffff !important; text-decoration: none !important;
             border-bottom: 1px solid rgba(0,255,255,0.3) !important;
             transition: all 0.3s ease !important; font-size: 14px !important;
-        " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+            background: rgba(0,255,255,0.1) !important;
+        " onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">
             <i class="fas fa-shopping-bag" style="margin-right: 10px; width: 16px;"></i> My Items
         </a>
         <a href="/wishlist.html" class="dropdown-item" style="
@@ -160,6 +165,44 @@
         " onmouseover="this.style.background='rgba(255,71,87,0.1)'" onmouseout="this.style.background='transparent'">
             <i class="fas fa-sign-out-alt" style="margin-right: 10px; width: 16px;"></i> Logout
         </button>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search products...">
+            <div class="search-suggestions" id="searchSuggestions"></div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h3 id="authTitle">Login</h3>
+                <button class="close-btn" id="closeAuth">×</button>
+            </div>
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Login</button>
+                <button class="auth-tab" data-tab="register">Register</button>
+            </div>
+            <form class="auth-form" id="loginForm">
+                <input type="text" placeholder="Username or Email" required>
+                <input type="password" placeholder="Password" required>
+                <label class="remember-me">
+                    <input type="checkbox">
+                    <span>Remember me</span>
+                </label>
+                <button type="submit">Login</button>
+            </form>
+            <form class="auth-form hidden" id="registerForm">
+                <input type="text" placeholder="Username" required>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <input type="password" placeholder="Confirm Password" required>
+                <button type="submit">Register</button>
+            </form>
+        </div>
     </div>
 
     <!-- Main Content -->
@@ -465,12 +508,30 @@
         </div>
     </div>
 
+    <!-- Add to Cart Modal -->
+    <div class="add-to-cart-modal" id="addToCartModal">
+        <div class="add-to-cart-container">
+            <div class="add-to-cart-header">
+                <h3>Add to Cart</h3>
+                <p>Product added successfully!</p>
+            </div>
+            <div class="add-to-cart-product" id="addToCartProduct">
+                <!-- Product details will be populated here -->
+            </div>
+            <div class="add-to-cart-actions">
+                <button class="add-to-cart-btn" onclick="addToCartAndClose()">Add to Cart</button>
+                <button class="add-to-cart-close-btn" onclick="closeAddToCartModal()">Continue Shopping</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="/scripts/global.js"></script>
     <script src="/scripts/main.js"></script>
     <script src="/scripts/auth.js"></script>
     <script src="/scripts/cart.js"></script>
     <script src="/scripts/simple-user-menu.js"></script>
+    <script src="/scripts/search.js"></script>
     <script src="/scripts/my-items.js"></script>
 </body>
 </html>
