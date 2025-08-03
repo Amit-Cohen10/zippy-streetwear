@@ -70,10 +70,13 @@ document.addEventListener('DOMContentLoaded', function() {
             productCard.dataset.productId = product.id;
             productCard.innerHTML = `
                 <div class="product-image-wrapper">
-                    <div class="product-placeholder">
-                        <div class="placeholder-icon">👕</div>
-                        <div class="placeholder-text">${product.name}</div>
-                    </div>
+                    ${product.image ? 
+                        `<img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">` :
+                        `<div class="product-placeholder">
+                            <div class="placeholder-icon">👕</div>
+                            <div class="placeholder-text">${product.name}</div>
+                        </div>`
+                    }
                     ${product.status === 'sold-out' ? '<span class="sold-out-badge">SOLD OUT</span>' : ''}
                 </div>
                 <div class="product-info">
