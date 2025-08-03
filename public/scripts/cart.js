@@ -272,6 +272,11 @@ window.removeFromCart = function(itemId) {
     window.cartItems = window.cartItems.filter(item => item.id !== itemId);
     saveCartToStorage();
     updateCartDisplay();
+    
+    // Show success notification if available
+    if (typeof showNotification === 'function') {
+        showNotification('Item removed from cart', 'success');
+    }
 }
 
 // Clear cart

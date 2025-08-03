@@ -286,19 +286,8 @@ function renderCart() {
     }
 }
 
-async function removeFromCart(itemId) {
-    try {
-        await apiCall(`/api/cart/remove/${itemId}`, {
-            method: 'DELETE'
-        });
-        
-        await loadCart();
-        showNotification('Item removed from cart', 'success');
-    } catch (error) {
-        console.error('Failed to remove item from cart:', error);
-        showNotification('Failed to remove item from cart', 'error');
-    }
-}
+// removeFromCart function moved to cart.js to avoid conflicts
+// The working implementation is in cart.js
 
 // Search functions
 let searchTimeout;
