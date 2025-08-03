@@ -40,7 +40,7 @@ async function handleSearchInput(e) {
     }
     
     try {
-        const response = await fetch(`/api/products/search/suggestions?q=${encodeURIComponent(query)}`);
+        const response = await fetch(`/api/products/search/suggestions?q=${encodeURIComponent(query)}&limit=10&page=1`);
         const data = await response.json();
         
         renderSearchSuggestions(data.suggestions);

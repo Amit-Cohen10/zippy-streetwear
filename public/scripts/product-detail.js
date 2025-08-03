@@ -22,10 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load product data from server
     async function loadProductFromServer(productId) {
         try {
-            const response = await fetch('/api/products');
+            const response = await fetch('/api/products?limit=50&page=1');
             if (response.ok) {
                 const data = await response.json();
-                const product = data.products.find(p => p.id === productId);
+                const product = (data.products || []).find(p => p.id === productId);
                 
                 if (product) {
                     return {

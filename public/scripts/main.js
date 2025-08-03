@@ -119,8 +119,11 @@ async function checkAuth() {
 // Product functions
 async function loadFeaturedProducts() {
     try {
-        const response = await apiCall('/api/products?limit=4');
-        featuredProducts = response.products;
+        const response = await apiCall('/api/products?limit=30&page=1');
+        // Take the first 4 products with real images (skip the ones with placeholder)
+        featuredProducts = (response.products || []).filter(product => 
+            !product.images[0].includes('placeholder')
+        ).slice(0, 4);
         renderFeaturedProducts();
     } catch (error) {
         console.error('Failed to load featured products:', error);
@@ -292,7 +295,7 @@ function initSearch() {
 
 async function searchProducts(query) {
     try {
-        const response = await apiCall(`/api/products/search/suggestions?q=${encodeURIComponent(query)}`);
+        const response = await apiCall(`/api/products/search/suggestions?q=${encodeURIComponent(query)}&limit=10&page=1`);
         renderSearchSuggestions(response.suggestions || []);
     } catch (error) {
         console.error('Search error:', error);

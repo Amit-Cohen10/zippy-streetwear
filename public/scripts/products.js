@@ -18,10 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load products from server
     async function loadProducts() {
         try {
-            const response = await fetch('/api/products');
+            const response = await fetch('/api/products?limit=50&page=1');
             if (response.ok) {
                 const data = await response.json();
-                products = data.products.map(product => ({
+                products = (data.products || []).map(product => ({
                     id: product.id,
                     name: product.title,
                     price: product.price,
