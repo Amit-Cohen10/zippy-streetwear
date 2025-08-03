@@ -5,8 +5,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function initMyItems() {
     try {
-        // Check if user is logged in
-        checkLoginStatus();
+        // Check if user is logged in (use global function)
+        if (window.checkLoginStatus && typeof window.checkLoginStatus === 'function') {
+            window.checkLoginStatus();
+        }
         
         // Load user's orders
         loadMyItems();
@@ -36,7 +38,8 @@ async function loadMyItems() {
             throw new Error('Failed to load orders');
         }
         
-        const orders = await response.json();
+        const data = await response.json();
+        const orders = data.orders || data; // Handle both formats
         displayMyItems(orders);
         
     } catch (error) {
@@ -65,7 +68,7 @@ function displayMyItems(orders) {
                 <div class="order-header">
                     <div class="order-info">
                         <h3>Order #${order.id}</h3>
-                        <span class="order-date">${formatDate(order.timestamp)}</span>
+                        <span class="order-date">${formatDate(order.createdAt || order.timestamp)}</span>
                     </div>
                     <div class="order-status">
                         <span class="status-badge ${getStatusClass(order.status)}">${order.status || 'Completed'}</span>
@@ -75,16 +78,16 @@ function displayMyItems(orders) {
                     ${order.items.map(item => `
                         <div class="order-item">
                             <div class="item-image">
-                                <img src="${item.product?.images?.[0] || '/images/placeholder.jpg'}" alt="${item.product?.title || 'Product'}" onerror="this.src='/images/placeholder.jpg'">
+                                <img src="${item.image || item.product?.images?.[0] || '/images/placeholder.jpg'}" alt="${item.title || item.product?.title || 'Product'}" onerror="this.src='/images/placeholder.jpg'">
                             </div>
                             <div class="item-details">
-                                <h4 class="item-name">${item.product?.title || 'Unknown Product'}</h4>
-                                <p class="item-brand">${item.product?.brand || 'Unknown Brand'}</p>
+                                <h4 class="item-name">${item.title || item.product?.title || 'Unknown Product'}</h4>
+                                <p class="item-brand">${item.brand || item.product?.brand || 'Unknown Brand'}</p>
                                 <div class="item-specs">
                                     ${item.size ? `<span class="spec">Size: ${item.size}</span>` : ''}
                                     ${item.color ? `<span class="spec">Color: ${item.color}</span>` : ''}
                                 </div>
-                                <div class="item-price">$${((item.product?.price || 0) * item.quantity).toFixed(2)}</div>
+                                <div class="item-price">$${((item.price || item.product?.price || 0) * item.quantity).toFixed(2)}</div>
                                 <div class="item-quantity">Qty: ${item.quantity}</div>
                             </div>
                             <div class="item-actions">
@@ -255,59 +258,15 @@ function showNotification(message, type = 'info') {
     alert(message);
 }
 
-function checkLoginStatus() {
-    if (window.checkLoginStatus) {
-        window.checkLoginStatus();
-    }
-}
+// checkLoginStatus is defined in auth.js
 
+// Update cart count 
 function updateCartCount() {
     if (window.updateCartCount) {
         window.updateCartCount();
+        return;
     }
-}
-                    <strong>Total: $${order.total.toFixed(2)}</strong>
-                </div>
-            </div>
-        `).join('');
-    }
-}
-
-// Group items by order
-function groupItemsByOrder(items) {
-    const orders = {};
     
-    items.forEach(item => {
-        if (!orders[item.orderId]) {
-            orders[item.orderId] = {
-                orderId: item.orderId,
-                purchaseDate: item.purchaseDate,
-                items: [],
-                total: 0
-            };
-        }
-        
-        orders[item.orderId].items.push(item);
-        orders[item.orderId].total += item.price * item.quantity;
-    });
-    
-    return Object.values(orders).sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate));
-}
-
-// Format date
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-}
-
-// Update cart count
-function updateCartCount() {
     const cartItems = JSON.parse(localStorage.getItem('zippyCart') || '[]');
     const cartCount = document.getElementById('cartCount');
     if (cartCount) {
@@ -316,72 +275,6 @@ function updateCartCount() {
     }
 }
 
-// Open search modal
-function openSearchModal() {
-    const modal = document.getElementById('searchModal');
-    if (modal) {
-        modal.classList.add('active');
-        
-        // Center modal on screen and scroll to top
-        setTimeout(() => {
-            // Scroll page to top first
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-            
-            // Then scroll modal to top
-            modal.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-    }
-}
-
-// Close search modal
-function closeSearchModal() {
-    const modal = document.getElementById('searchModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-}
-
-// Open auth modal
-function openAuthModal() {
-    const modal = document.getElementById('authModal');
-    if (modal) {
-        modal.classList.add('active');
-        
-        // Center modal on screen and scroll to top
-        setTimeout(() => {
-            // Scroll page to top first
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-            
-            // Then scroll modal to top
-            modal.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-    }
-}
-
-// Close auth modal
-function closeAuthModal() {
-    const modal = document.getElementById('authModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-}
-
-// Open cart modal
-function openCartModal() {
-    window.location.href = '/cart';
-}
-
-// Export functions
-window.MyItemsModule = {
-    openSearchModal,
-    closeSearchModal,
-    openAuthModal,
-    closeAuthModal,
-    openCartModal
-}; 
+// Use global functions for modals (no need to redefine here)
+// Functions openSearchModal, closeSearchModal, openAuthModal, closeAuthModal, openCartModal
+// are defined in global.js and available globally 

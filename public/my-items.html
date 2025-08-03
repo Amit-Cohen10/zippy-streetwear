@@ -42,64 +42,13 @@
                             <span id="usernameDisplay">User</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
-
                     </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- סקריפט מיידי לעדכון מצב הכפתור ללא עיכוב -->
-    <script>
-    (function() {
-        console.log("⚡ Immediate button state check...");
-        
-        // בדיקה מיידית של מצב ההתחברות
-        const savedUser = localStorage.getItem("currentUser");
-        let isLoggedIn = false;
-        let username = "";
-        
-        if (savedUser) {
-            try {
-                const user = JSON.parse(savedUser);
-                isLoggedIn = true;
-                username = user.profile?.displayName || user.username || "User";
-                console.log("⚡ Found user immediately:", username);
-            } catch (e) {
-                console.log("❌ Error parsing user data:", e);
-            }
-        }
-        
-        // עדכון מיידי כשהדף נטען
-        function updateButtonImmediate() {
-            const authBtn = document.getElementById("authBtn");
-            const userMenu = document.getElementById("userMenu");
-            const usernameDisplay = document.getElementById("usernameDisplay");
-            
-            if (isLoggedIn && username) {
-                // משתמש מחובר - הצג את שם המשתמש מיד
-                if (authBtn) authBtn.style.display = "none";
-                if (userMenu) userMenu.style.display = "inline-block";
-                if (usernameDisplay) usernameDisplay.textContent = username;
-                console.log("⚡ Button set to username immediately:", username);
-            } else {
-                // משתמש לא מחובר - הצג LOGIN מיד
-                if (authBtn) authBtn.style.display = "inline-block";
-                if (userMenu) userMenu.style.display = "none";
-                console.log("⚡ Button set to LOGIN immediately");
-            }
-        }
-        
-        // נסה עכשיו מיד, ואם לא עובד אז כשהדף יסיים לטעון
-        updateButtonImmediate();
-        
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", updateButtonImmediate);
-        }
-    })();
-    </script>
-
-    <!-- User Dropdown Menu (Outside navbar to avoid clipping) -->
+    <!-- User Dropdown Menu -->
     <div class="user-dropdown" id="userDropdown" style="
         position: fixed !important;
         top: 70px !important; 
@@ -167,102 +116,153 @@
     </div>
 
     <!-- Main Content -->
-    <main class="my-items-page">
-        <div class="container">
+    <main class="my-items-page" style="min-height: 80vh; padding: 100px 0 50px;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
             <!-- Page Header -->
-            <div class="page-header">
-                <h1 class="page-title">My Items</h1>
-                <p class="page-subtitle">View all your purchased items</p>
+            <div class="page-header" style="text-align: center; margin-bottom: 50px;">
+                <h1 class="page-title" style="font-size: 3rem; font-weight: 900; color: #00ffff; margin-bottom: 10px;">My Items</h1>
+                <p class="page-subtitle" style="font-size: 1.2rem; color: #888;">View all your purchased items</p>
             </div>
 
-            <!-- My Items Content -->
-            <div class="my-items-content">
-                <!-- Items Grid -->
-                <div class="items-grid" id="myItemsGrid">
-                    <!-- Items will be loaded here -->
+            <!-- Content Area -->
+            <div id="contentArea">
+                <!-- Loading State -->
+                <div id="loadingState" style="display: none; text-align: center; padding: 50px;">
+                    <div style="width: 50px; height: 50px; border: 3px solid #333; border-top: 3px solid #00ffff; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+                    <p style="color: #00ffff; font-size: 1.2rem;">Loading your orders...</p>
                 </div>
-                
+
+                <!-- Error State -->
+                <div id="errorState" style="display: none; text-align: center; padding: 50px;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #ff4757; margin-bottom: 20px;"></i>
+                    <h3 style="color: #ff4757; margin-bottom: 10px;">Something went wrong</h3>
+                    <p style="color: #888; margin-bottom: 20px;">We couldn't load your orders. Please try again.</p>
+                    <button onclick="loadOrders()" style="background: #00ffff; color: #000; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 600;">Try Again</button>
+                </div>
+
+                <!-- Not Logged In State -->
+                <div id="notLoggedInState" style="display: none; text-align: center; padding: 50px;">
+                    <i class="fas fa-user-lock" style="font-size: 4rem; color: #00ffff; margin-bottom: 20px;"></i>
+                    <h3 style="color: #00ffff; margin-bottom: 10px;">Please Log In</h3>
+                    <p style="color: #888; margin-bottom: 20px;">You need to be logged in to view your purchased items.</p>
+                    <button onclick="openAuthModal()" style="background: #00ffff; color: #000; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 600;">Login</button>
+                </div>
+
                 <!-- Empty State -->
-                <div class="empty-items" id="emptyItems" style="display: none;">
-                    <div class="empty-items-icon">📦</div>
-                    <h3>No items yet</h3>
-                    <p>You haven't purchased any items yet. Start shopping to see your items here!</p>
-                    <a href="/shop" class="btn-primary">Start Shopping</a>
+                <div id="emptyState" style="display: none; text-align: center; padding: 50px;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">📦</div>
+                    <h3 style="color: #00ffff; margin-bottom: 10px;">No items yet</h3>
+                    <p style="color: #888; margin-bottom: 20px;">You haven't purchased any items yet. Start shopping to see your items here!</p>
+                    <a href="/shop" style="background: #00ffff; color: #000; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; display: inline-block;">Start Shopping</a>
+                </div>
+
+                <!-- Orders Grid -->
+                <div id="ordersGrid" style="display: none; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px;">
+                    <!-- Orders will be loaded here -->
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Search Modal -->
-    <div class="search-modal" id="searchModal">
-        <div class="search-container">
-            <div class="search-header">
-                <h2>Search Products</h2>
-                <button class="close-btn" onclick="closeSearchModal()">×</button>
-            </div>
-            <div class="search-content">
-                <input type="text" class="search-input" id="searchInput" placeholder="Search for products...">
-                <div class="search-results" id="searchResults"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Auth Modal -->
-    <div class="modal" id="authModal">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h2>Login / Register</h2>
-                <button class="close-btn" onclick="closeAuthModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <form id="authForm" class="auth-form">
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" class="form-input" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" class="form-input" required>
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" class="btn-primary">Login</button>
-                        <button type="button" class="btn-secondary" onclick="switchToRegister()">Register</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner">
-            <div class="spinner-ring"></div>
-            <div class="spinner-text">Loading...</div>
-        </div>
-    </div>
-
-    <!-- Add to Cart Modal -->
-    <div class="add-to-cart-modal" id="addToCartModal">
-        <div class="add-to-cart-container">
-            <div class="add-to-cart-header">
-                <h3>Add to Cart</h3>
-                <p>Product added successfully!</p>
-            </div>
-            <div class="add-to-cart-product" id="addToCartProduct">
-                <!-- Product details will be populated here -->
-            </div>
-            <div class="add-to-cart-actions">
-                <button class="add-to-cart-btn" onclick="addToCartAndClose()">Add to Cart</button>
-                <button class="add-to-cart-close-btn" onclick="closeAddToCartModal()">Continue Shopping</button>
-            </div>
-        </div>
-    </div>
+    <!-- Add CSS for animation -->
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .order-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        
+        .order-number {
+            color: #00ffff;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .order-date {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-completed { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }
+        .status-processing { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+        .status-shipped { background: rgba(52, 152, 219, 0.2); color: #3498db; }
+        
+        .order-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+        }
+        
+        .item-image img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        
+        .item-details {
+            flex: 1;
+        }
+        
+        .item-name {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .item-brand {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .item-price {
+            color: #00ffff;
+            font-weight: 600;
+        }
+        
+        .order-total {
+            text-align: right;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+    </style>
 
     <!-- Scripts -->
     <script src="/scripts/global.js"></script>
-    <script src="/scripts/my-items.js"></script>
-    <script src="/scripts/search.js"></script>
-    <script src="/scripts/simple-user-menu.js"></script>
     <script src="/scripts/auth.js"></script>
+    <script src="/scripts/simple-user-menu.js"></script>
+    <script src="/scripts/my-items-new.js"></script>
 </body>
-</html> 
+</html>
