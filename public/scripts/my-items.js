@@ -1,280 +1,245 @@
-// My Items functionality
+// Simple My Items Page - Clean Implementation
+console.log('🚀 My Items page loading...');
+
+// Wait for page to load
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('📄 DOM loaded, initializing My Items...');
     initMyItems();
 });
 
+// Main initialization
 function initMyItems() {
-    try {
-        // Check if user is logged in (use global function)
-        if (window.checkLoginStatus && typeof window.checkLoginStatus === 'function') {
-            window.checkLoginStatus();
+    console.log('⚡ Initializing My Items page...');
+    
+    // Wait a bit for the immediate auth script to run first
+    setTimeout(() => {
+        // Check if user is logged in
+        const currentUser = checkUserLogin();
+        
+        if (!currentUser) {
+            console.log('❌ No user found, showing login state');
+            showNotLoggedIn();
+            return;
         }
         
-        // Load user's orders
-        loadMyItems();
-        updateCartCount();
+        console.log('✅ User is logged in:', currentUser.username || currentUser.email);
         
-        console.log('My Items page initialized successfully');
+        // Load orders
+        loadOrders();
+    }, 100); // Small delay to let the immediate auth script work
+}
+
+// Check if user is logged in (improved version)
+function checkUserLogin() {
+    try {
+        const userData = localStorage.getItem('currentUser');
+        if (!userData) {
+            console.log('❌ No user data found in localStorage');
+            return null;
+        }
+        
+        const user = JSON.parse(userData);
+        
+        // Check if user object has required fields
+        if (!user || (!user.username && !user.email)) {
+            console.log('❌ Invalid user data structure');
+            localStorage.removeItem('currentUser');
+            return null;
+        }
+        
+        console.log('👤 Found valid user:', user.username || user.email);
+        console.log('👤 User profile:', user.profile?.displayName || 'No display name');
+        
+        // Set global login status for other scripts to use
+        window.isLoggedIn = true;
+        window.currentUser = user;
+        
+        return user;
     } catch (error) {
-        console.error('Failed to initialize my items:', error);
-        showErrorState();
+        console.error('❌ Error checking login:', error);
+        localStorage.removeItem('currentUser');
+        return null;
     }
 }
 
-// Load my items from server
-async function loadMyItems() {
+// Show not logged in state
+function showNotLoggedIn() {
+    console.log('🔒 Showing not logged in state');
+    hideAllStates();
+    document.getElementById('notLoggedInState').style.display = 'block';
+}
+
+// Show loading state
+function showLoading() {
+    console.log('⏳ Showing loading state');
+    hideAllStates();
+    document.getElementById('loadingState').style.display = 'block';
+}
+
+// Show error state
+function showError() {
+    console.log('❌ Showing error state');
+    hideAllStates();
+    document.getElementById('errorState').style.display = 'block';
+}
+
+// Show empty state
+function showEmpty() {
+    console.log('📦 Showing empty state');
+    hideAllStates();
+    document.getElementById('emptyState').style.display = 'block';
+}
+
+// Show orders
+function showOrders() {
+    console.log('📋 Showing orders');
+    hideAllStates();
+    document.getElementById('ordersGrid').style.display = 'grid';
+}
+
+// Hide all states
+function hideAllStates() {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('errorState').style.display = 'none';
+    document.getElementById('notLoggedInState').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('ordersGrid').style.display = 'none';
+}
+
+// Load orders from API
+async function loadOrders() {
+    console.log('📡 Loading orders from API...');
+    showLoading();
+    
     try {
-        showLoadingState();
-        
         const response = await fetch('/api/payment/orders', {
-            credentials: 'include'
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
         
+        console.log('📡 API Response status:', response.status);
+        
+        if (response.status === 401) {
+            console.log('🔒 User not authorized, showing login');
+            showNotLoggedIn();
+            return;
+        }
+        
         if (!response.ok) {
-            if (response.status === 401) {
-                showNotLoggedInState();
-                return;
-            }
-            throw new Error('Failed to load orders');
+            console.error('❌ API Error:', response.status, response.statusText);
+            throw new Error(`API Error: ${response.status}`);
         }
         
         const data = await response.json();
-        const orders = data.orders || data; // Handle both formats
-        displayMyItems(orders);
+        console.log('📦 Received data:', data);
+        
+        // Handle different response formats
+        let orders = [];
+        if (data.orders && Array.isArray(data.orders)) {
+            orders = data.orders;
+        } else if (Array.isArray(data)) {
+            orders = data;
+        }
+        
+        console.log('📋 Processing orders:', orders.length);
+        
+        if (orders.length === 0) {
+            showEmpty();
+        } else {
+            displayOrders(orders);
+            showOrders();
+        }
         
     } catch (error) {
-        console.error('Failed to load my items:', error);
-        showErrorState();
+        console.error('❌ Failed to load orders:', error);
+        showError();
     }
 }
 
-function displayMyItems(orders) {
-    const itemsGrid = document.getElementById('myItemsGrid');
-    const emptyItems = document.getElementById('emptyItems');
+// Display orders in the grid
+function displayOrders(orders) {
+    console.log('🖥️ Displaying orders:', orders.length);
     
-    if (!itemsGrid || !emptyItems) return;
+    const ordersGrid = document.getElementById('ordersGrid');
     
-    hideLoadingState();
-    
-    if (!orders || orders.length === 0) {
-        itemsGrid.style.display = 'none';
-        emptyItems.style.display = 'block';
-    } else {
-        itemsGrid.style.display = 'grid';
-        emptyItems.style.display = 'none';
+    ordersGrid.innerHTML = orders.map(order => {
+        console.log('📦 Processing order:', order.id, order);
         
-        itemsGrid.innerHTML = orders.map(order => `
+        return `
             <div class="order-card">
                 <div class="order-header">
-                    <div class="order-info">
-                        <h3>Order #${order.id}</h3>
-                        <span class="order-date">${formatDate(order.createdAt || order.timestamp)}</span>
+                    <div>
+                        <div class="order-number">Order #${order.id}</div>
+                        <div class="order-date">${formatDate(order.createdAt || order.timestamp || new Date())}</div>
                     </div>
-                    <div class="order-status">
-                        <span class="status-badge ${getStatusClass(order.status)}">${order.status || 'Completed'}</span>
-                    </div>
+                    <div class="status-badge status-${(order.status || 'completed').toLowerCase()}">${order.status || 'Completed'}</div>
                 </div>
+                
                 <div class="order-items">
-                    ${order.items.map(item => `
+                    ${(order.items || []).map(item => `
                         <div class="order-item">
                             <div class="item-image">
-                                <img src="${item.image || item.product?.images?.[0] || '/images/placeholder.jpg'}" alt="${item.title || item.product?.title || 'Product'}" onerror="this.src='/images/placeholder.jpg'">
+                                <img src="${getItemImage(item)}" alt="${getItemTitle(item)}" onerror="this.src='/images/placeholder.jpg'">
                             </div>
                             <div class="item-details">
-                                <h4 class="item-name">${item.title || item.product?.title || 'Unknown Product'}</h4>
-                                <p class="item-brand">${item.brand || item.product?.brand || 'Unknown Brand'}</p>
-                                <div class="item-specs">
-                                    ${item.size ? `<span class="spec">Size: ${item.size}</span>` : ''}
-                                    ${item.color ? `<span class="spec">Color: ${item.color}</span>` : ''}
-                                </div>
-                                <div class="item-price">$${((item.price || item.product?.price || 0) * item.quantity).toFixed(2)}</div>
-                                <div class="item-quantity">Qty: ${item.quantity}</div>
-                            </div>
-                            <div class="item-actions">
-                                <button class="btn-secondary btn-sm" onclick="reviewProduct('${item.productId}')">
-                                    <i class="fas fa-star"></i> Review
-                                </button>
-                                <button class="btn-outline btn-sm" onclick="reorderItem('${item.productId}')">
-                                    <i class="fas fa-redo"></i> Buy Again
-                                </button>
+                                <div class="item-name">${getItemTitle(item)}</div>
+                                <div class="item-brand">${getItemBrand(item)}</div>
+                                <div class="item-price">$${getItemPrice(item)}</div>
+                                ${item.size ? `<div style="color: #888; font-size: 0.9rem;">Size: ${item.size}</div>` : ''}
+                                ${item.quantity ? `<div style="color: #888; font-size: 0.9rem;">Qty: ${item.quantity}</div>` : ''}
                             </div>
                         </div>
                     `).join('')}
                 </div>
-                <div class="order-summary">
-                    <div class="summary-row">
-                        <span>Total Amount:</span>
-                        <span class="total-amount">$${order.total?.toFixed(2) || '0.00'}</span>
-                    </div>
-                    <div class="order-actions">
-                        <button class="btn-outline btn-sm" onclick="viewOrderDetails('${order.id}')">
-                            <i class="fas fa-eye"></i> View Details
-                        </button>
-                        <button class="btn-outline btn-sm" onclick="trackOrder('${order.id}')">
-                            <i class="fas fa-truck"></i> Track Order
-                        </button>
-                        <button class="btn-outline btn-sm" onclick="downloadInvoice('${order.id}')">
-                            <i class="fas fa-download"></i> Invoice
-                        </button>
-                    </div>
+                
+                <div class="order-total">
+                    Total: $${(order.total || 0).toFixed(2)}
                 </div>
             </div>
-        `).join('');
-    }
-}
-
-function showLoadingState() {
-    const itemsGrid = document.getElementById('myItemsGrid');
-    if (itemsGrid) {
-        itemsGrid.innerHTML = `
-            <div class="loading-state">
-                <div class="loading-spinner"></div>
-                <p>Loading your orders...</p>
-            </div>
         `;
-    }
+    }).join('');
 }
 
-function hideLoadingState() {
-    // Loading state will be replaced by actual content
+// Helper functions to get item data safely
+function getItemImage(item) {
+    return item.image || (item.product && item.product.images && item.product.images[0]) || '/images/placeholder.jpg';
 }
 
-function showNotLoggedInState() {
-    const itemsGrid = document.getElementById('myItemsGrid');
-    const emptyItems = document.getElementById('emptyItems');
-    
-    if (itemsGrid) itemsGrid.style.display = 'none';
-    if (emptyItems) {
-        emptyItems.style.display = 'block';
-        emptyItems.innerHTML = `
-            <div class="not-logged-in">
-                <div class="empty-icon">
-                    <i class="fas fa-user-lock"></i>
-                </div>
-                <h3>Please Log In</h3>
-                <p>You need to be logged in to view your purchased items.</p>
-                <button class="btn-primary" onclick="openAuthModal()">Login</button>
-            </div>
-        `;
-    }
+function getItemTitle(item) {
+    return item.title || (item.product && item.product.title) || 'Unknown Product';
 }
 
-function showErrorState() {
-    const itemsGrid = document.getElementById('myItemsGrid');
-    const emptyItems = document.getElementById('emptyItems');
-    
-    if (itemsGrid) itemsGrid.style.display = 'none';
-    if (emptyItems) {
-        emptyItems.style.display = 'block';
-        emptyItems.innerHTML = `
-            <div class="error-state">
-                <div class="empty-icon">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <h3>Something went wrong</h3>
-                <p>We couldn't load your orders. Please try again.</p>
-                <button class="btn-primary" onclick="loadMyItems()">Try Again</button>
-            </div>
-        `;
-    }
+function getItemBrand(item) {
+    return item.brand || (item.product && item.product.brand) || 'Unknown Brand';
 }
 
-function getStatusClass(status) {
-    switch(status?.toLowerCase()) {
-        case 'pending': return 'status-pending';
-        case 'processing': return 'status-processing';
-        case 'shipped': return 'status-shipped';
-        case 'delivered': return 'status-delivered';
-        case 'completed': return 'status-completed';
-        default: return 'status-completed';
-    }
+function getItemPrice(item) {
+    const price = item.price || (item.product && item.product.price) || 0;
+    const quantity = item.quantity || 1;
+    return (price * quantity).toFixed(2);
 }
 
+// Format date nicely
 function formatDate(dateString) {
-    const date = new Date(dateString);
-    const options = { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
-    };
-    return date.toLocaleDateString('en-US', options);
-}
-
-// Action functions
-function reviewProduct(productId) {
-    // Navigate to review page or open review modal
-    window.location.href = `/reviews/create?productId=${productId}`;
-}
-
-async function reorderItem(productId) {
     try {
-        showNotification('Adding item to cart...', 'info');
-        
-        const response = await fetch('/api/cart/add', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-                productId: productId,
-                quantity: 1
-            })
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
         });
-        
-        if (!response.ok) {
-            throw new Error('Failed to add item to cart');
-        }
-        
-        showNotification('Item added to cart successfully!', 'success');
-        updateCartCount();
-        
     } catch (error) {
-        console.error('Failed to reorder item:', error);
-        showNotification('Failed to add item to cart', 'error');
+        return 'Unknown Date';
     }
 }
 
-function viewOrderDetails(orderId) {
-    window.location.href = `/order-details?orderId=${orderId}`;
-}
+// Export functions for global access
+window.MyItemsPage = {
+    loadOrders,
+    initMyItems
+};
 
-function trackOrder(orderId) {
-    window.location.href = `/track-order?orderId=${orderId}`;
-}
-
-function downloadInvoice(orderId) {
-    window.open(`/api/payment/invoice/${orderId}`, '_blank');
-}
-
-// Utility functions
-function showNotification(message, type = 'info') {
-    if (window.showNotification) {
-        window.showNotification(message, type);
-        return;
-    }
-    
-    console.log(`${type.toUpperCase()}: ${message}`);
-    alert(message);
-}
-
-// checkLoginStatus is defined in auth.js
-
-// Update cart count 
-function updateCartCount() {
-    if (window.updateCartCount) {
-        window.updateCartCount();
-        return;
-    }
-    
-    const cartItems = JSON.parse(localStorage.getItem('zippyCart') || '[]');
-    const cartCount = document.getElementById('cartCount');
-    if (cartCount) {
-        const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-        cartCount.textContent = totalItems;
-    }
-}
-
-// Use global functions for modals (no need to redefine here)
-// Functions openSearchModal, closeSearchModal, openAuthModal, closeAuthModal, openCartModal
-// are defined in global.js and available globally 
+console.log('✅ My Items script loaded successfully');
