@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Update product title and price
         document.getElementById('productTitle').textContent = product.name;
-        document.getElementById('productPrice').textContent = `${product.price} NIS`;
+        document.getElementById('productPrice').textContent = `$${product.price.toFixed(2)}`;
         document.getElementById('productDescription').textContent = product.description;
 
         // Update product status

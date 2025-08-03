@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">${product.name}</h3>
-                    <p class="product-price">${product.price} NIS</p>
+                    <p class="product-price">$${product.price.toFixed(2)}</p>
                     ${product.status === 'available' ? 
                         `<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                             <button class="add-to-cart-btn" onclick="event.stopPropagation(); window.location.href='/product-detail.html?id=${product.id}'">

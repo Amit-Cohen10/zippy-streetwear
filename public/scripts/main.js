@@ -148,7 +148,7 @@ function renderFeaturedProducts() {
                 }
             </div>
             <h3 class="product-title">${product.title}</h3>
-            <div class="product-price">${product.price} NIS</div>
+                                <div class="product-price">$${product.price.toFixed(2)}</div>
             <button class="add-to-cart-btn" data-product-idx="${idx}">
                 Add to Cart
             </button>
@@ -534,7 +534,9 @@ window.ZippyApp = {
             const productContainer = document.getElementById('addToCartProduct');
             
             if (!modal || !productContainer || !product) return;
-            
+            const quantity = product.quantity || 1;
+            const unitPrice = product.price || 0;
+            const totalPrice = unitPrice * quantity;
             // Populate product details
             productContainer.innerHTML = `
                 <div class="add-to-cart-product-image">
@@ -542,16 +544,15 @@ window.ZippyApp = {
                 </div>
                 <div class="add-to-cart-product-info">
                     <div class="add-to-cart-product-name">${product.title || 'Product'}</div>
-                    <div class="add-to-cart-product-price">$${(product.price || 0).toFixed(2)}</div>
+                    <div class="add-to-cart-product-price">Unit Price: $${unitPrice.toFixed(2)}</div>
+                    <div class="add-to-cart-product-quantity">Quantity: ${quantity}</div>
+                    <div class="add-to-cart-product-total">Total: <b>$${totalPrice.toFixed(2)}</b></div>
                 </div>
             `;
-            
             // Show modal with animation
             modal.classList.add('active');
-            
             // Store product for later use
             window.currentProduct = product;
-            
             // Auto-scroll to top to ensure modal is visible
             setTimeout(() => {
                 window.scrollTo({
