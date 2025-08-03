@@ -48,6 +48,56 @@
         </div>
     </nav>
 
+    <!-- סקריפט מיידי לעדכון מצב הכפתור ללא עיכוב -->
+    <script>
+    (function() {
+        console.log('⚡ Immediate button state check...');
+        
+        // בדיקה מיידית של מצב ההתחברות
+        const savedUser = localStorage.getItem('currentUser');
+        let isLoggedIn = false;
+        let username = '';
+        
+        if (savedUser) {
+            try {
+                const user = JSON.parse(savedUser);
+                isLoggedIn = true;
+                username = user.profile?.displayName || user.username || 'User';
+                console.log('⚡ Found user immediately:', username);
+            } catch (e) {
+                console.log('❌ Error parsing user data:', e);
+            }
+        }
+        
+        // עדכון מיידי כשהדף נטען
+        function updateButtonImmediate() {
+            const authBtn = document.getElementById('authBtn');
+            const userMenu = document.getElementById('userMenu');
+            const usernameDisplay = document.getElementById('usernameDisplay');
+            
+            if (isLoggedIn && username) {
+                // משתמש מחובר - הצג את שם המשתמש מיד
+                if (authBtn) authBtn.style.display = 'none';
+                if (userMenu) userMenu.style.display = 'inline-block';
+                if (usernameDisplay) usernameDisplay.textContent = username;
+                console.log('⚡ Button set to username immediately:', username);
+            } else {
+                // משתמש לא מחובר - הצג LOGIN מיד
+                if (authBtn) authBtn.style.display = 'inline-block';
+                if (userMenu) userMenu.style.display = 'none';
+                console.log('⚡ Button set to LOGIN immediately');
+            }
+        }
+        
+        // נסה עכשיו מיד, ואם לא עובד אז כשהדף יסיים לטעון
+        updateButtonImmediate();
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', updateButtonImmediate);
+        }
+    })();
+    </script>
+
     <!-- User Dropdown Menu -->
     <div class="user-dropdown" id="userDropdown" style="
         position: fixed !important;
@@ -256,6 +306,31 @@
             color: #00ffff;
             font-weight: 700;
             font-size: 1.1rem;
+        }
+        
+        /* Fix dropdown menu styling - remove any list bullets */
+        .user-dropdown {
+            list-style: none !important;
+        }
+        
+        .user-dropdown .dropdown-item {
+            list-style: none !important;
+            list-style-type: none !important;
+        }
+        
+        .user-dropdown .dropdown-item:before {
+            content: none !important;
+        }
+        
+        .user-dropdown ul {
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        
+        .user-dropdown li {
+            list-style: none !important;
+            list-style-type: none !important;
         }
     </style>
 

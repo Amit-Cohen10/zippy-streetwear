@@ -11,34 +11,53 @@ document.addEventListener('DOMContentLoaded', function() {
 function initMyItems() {
     console.log('⚡ Initializing My Items page...');
     
-    // Check if user is logged in
-    const currentUser = checkUserLogin();
-    
-    if (!currentUser) {
-        showNotLoggedIn();
-        return;
-    }
-    
-    console.log('✅ User is logged in:', currentUser.username);
-    
-    // Load orders
-    loadOrders();
+    // Wait a bit for the immediate auth script to run first
+    setTimeout(() => {
+        // Check if user is logged in
+        const currentUser = checkUserLogin();
+        
+        if (!currentUser) {
+            console.log('❌ No user found, showing login state');
+            showNotLoggedIn();
+            return;
+        }
+        
+        console.log('✅ User is logged in:', currentUser.username || currentUser.email);
+        
+        // Load orders
+        loadOrders();
+    }, 100); // Small delay to let the immediate auth script work
 }
 
-// Check if user is logged in
+// Check if user is logged in (improved version)
 function checkUserLogin() {
     try {
         const userData = localStorage.getItem('currentUser');
         if (!userData) {
-            console.log('❌ No user data found');
+            console.log('❌ No user data found in localStorage');
             return null;
         }
         
         const user = JSON.parse(userData);
-        console.log('👤 Found user:', user.username || user.email);
+        
+        // Check if user object has required fields
+        if (!user || (!user.username && !user.email)) {
+            console.log('❌ Invalid user data structure');
+            localStorage.removeItem('currentUser');
+            return null;
+        }
+        
+        console.log('👤 Found valid user:', user.username || user.email);
+        console.log('👤 User profile:', user.profile?.displayName || 'No display name');
+        
+        // Set global login status for other scripts to use
+        window.isLoggedIn = true;
+        window.currentUser = user;
+        
         return user;
     } catch (error) {
         console.error('❌ Error checking login:', error);
+        localStorage.removeItem('currentUser');
         return null;
     }
 }
