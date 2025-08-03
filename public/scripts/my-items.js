@@ -11,22 +11,33 @@ document.addEventListener('DOMContentLoaded', function() {
 function initMyItems() {
     console.log('⚡ Initializing My Items page...');
     
-    // Wait a bit for the immediate auth script to run first
-    setTimeout(() => {
-        // Check if user is logged in
+    // Multiple attempts to check user login with different delays
+    let attempts = 0;
+    const maxAttempts = 5;
+    
+    function tryCheckUser() {
+        attempts++;
+        console.log(`🔄 Login check attempt ${attempts}/${maxAttempts}`);
+        
         const currentUser = checkUserLogin();
         
-        if (!currentUser) {
-            console.log('❌ No user found, showing login state');
-            showNotLoggedIn();
+        if (currentUser) {
+            console.log('✅ User is logged in:', currentUser.username || currentUser.email);
+            loadOrders();
             return;
         }
         
-        console.log('✅ User is logged in:', currentUser.username || currentUser.email);
-        
-        // Load orders
-        loadOrders();
-    }, 100); // Small delay to let the immediate auth script work
+        if (attempts < maxAttempts) {
+            console.log(`⏳ No user found, trying again in ${attempts * 200}ms...`);
+            setTimeout(tryCheckUser, attempts * 200);
+        } else {
+            console.log('❌ Max attempts reached, showing login state');
+            showNotLoggedIn();
+        }
+    }
+    
+    // Start checking immediately
+    tryCheckUser();
 }
 
 // Check if user is logged in (improved version)
@@ -77,6 +88,13 @@ function showNotLoggedIn() {
     document.getElementById('notLoggedInState').style.display = 'block';
 }
 
+// Show session error state (user exists but server doesn't recognize session)
+function showSessionError() {
+    console.log('🔧 Showing session error state');
+    hideAllStates();
+    document.getElementById('sessionErrorState').style.display = 'block';
+}
+
 // Show loading state
 function showLoading() {
     console.log('⏳ Showing loading state');
@@ -110,6 +128,7 @@ function hideAllStates() {
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('errorState').style.display = 'none';
     document.getElementById('notLoggedInState').style.display = 'none';
+    document.getElementById('sessionErrorState').style.display = 'none';
     document.getElementById('emptyState').style.display = 'none';
     document.getElementById('ordersGrid').style.display = 'none';
 }
@@ -120,19 +139,36 @@ async function loadOrders() {
     showLoading();
     
     try {
+        // Get current user for potential token
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        
+        // Add any available tokens
+        if (currentUser.token) {
+            headers['Authorization'] = `Bearer ${currentUser.token}`;
+        }
+        if (currentUser.sessionId) {
+            headers['X-Session-ID'] = currentUser.sessionId;
+        }
+        
+        console.log('📡 Making API request with headers:', Object.keys(headers));
+        
         const response = await fetch('/api/payment/orders', {
             method: 'GET',
             credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            headers: headers
         });
         
         console.log('📡 API Response status:', response.status);
         
         if (response.status === 401) {
-            console.log('🔒 User not authorized, showing login');
-            showNotLoggedIn();
+            console.log('🔒 Server says unauthorized, but user exists in localStorage');
+            console.log('🔧 This might be a session/cookie issue');
+            
+            // Show a different message for session issues
+            showSessionError();
             return;
         }
         
@@ -244,10 +280,73 @@ function formatDate(dateString) {
     }
 }
 
+// Function to open auth modal (with fallback)
+function tryOpenAuth() {
+    console.log('🔑 Attempting to open auth modal...');
+    
+    // Try multiple ways to open auth modal
+    if (window.openAuthModal && typeof window.openAuthModal === 'function') {
+        console.log('✅ Using global openAuthModal function');
+        window.openAuthModal();
+    } else if (window.GlobalModule && window.GlobalModule.openAuthModal) {
+        console.log('✅ Using GlobalModule openAuthModal');
+        window.GlobalModule.openAuthModal();
+    } else {
+        console.log('❌ No auth modal function found, redirecting to login page');
+        // Fallback - redirect to a login page or show alert
+        window.location.href = '/login.html';
+    }
+}
+
+// Function to manually trigger auth check (for debugging)
+function forceAuthCheck() {
+    console.log('🔧 Force checking authentication...');
+    const currentUser = checkUserLogin();
+    if (currentUser) {
+        loadOrders();
+    } else {
+        showNotLoggedIn();
+    }
+}
+
+// Function to clear session and retry
+function clearSessionAndRetry() {
+    console.log('🧹 Clearing session data and retrying...');
+    
+    // Clear all auth-related localStorage
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('authToken');
+    
+    // Clear any auth cookies by making a logout request
+    fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+    }).catch(e => console.log('Logout request failed:', e));
+    
+    // Reset global state
+    window.isLoggedIn = false;
+    window.currentUser = null;
+    
+    // Restart the initialization process
+    setTimeout(() => {
+        initMyItems();
+    }, 500);
+}
+
 // Export functions for global access
 window.MyItemsPage = {
     loadOrders,
-    initMyItems
+    initMyItems,
+    tryOpenAuth,
+    forceAuthCheck
 };
+
+// Make functions globally available for onclick handlers
+window.tryOpenAuth = tryOpenAuth;
+window.loadOrders = loadOrders;
+window.forceAuthCheck = forceAuthCheck;
+window.clearSessionAndRetry = clearSessionAndRetry;
 
 console.log('✅ My Items script loaded successfully');

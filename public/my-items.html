@@ -18,7 +18,7 @@
             </div>
             <div class="nav-menu">
                 <a href="/" class="nav-link">Home</a>
-                <a href="/products" class="nav-link">Shop</a>
+                <a href="/shop" class="nav-link">Shop</a>
                 <a href="/exchange" class="nav-link">Exchange</a>
                 <a href="/community" class="nav-link">Community</a>
                 <a href="/brands" class="nav-link">Brands</a>
@@ -174,33 +174,131 @@
             <!-- Content Area -->
             <div id="contentArea">
                 <!-- Loading State -->
-                <div id="loadingState" style="display: none; text-align: center; padding: 50px;">
-                    <div style="width: 50px; height: 50px; border: 3px solid #333; border-top: 3px solid #00ffff; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
-                    <p style="color: #00ffff; font-size: 1.2rem;">Loading your orders...</p>
+                <div id="loadingState" style="display: none; text-align: center; padding: 80px;">
+                    <div style="background: rgba(0,255,255,0.05); border: 2px solid rgba(0,255,255,0.2); border-radius: 20px; padding: 40px; max-width: 400px; margin: 0 auto; backdrop-filter: blur(10px);">
+                        <div style="width: 60px; height: 60px; border: 4px solid rgba(0,255,255,0.2); border-top: 4px solid #00ffff; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 25px;"></div>
+                        <h3 style="color: #00ffff; margin-bottom: 10px; font-size: 1.5rem;">Loading Your Orders</h3>
+                        <p style="color: #888; font-size: 1rem;">Please wait while we fetch your purchase history...</p>
+                        <div style="margin-top: 20px;">
+                            <button onclick="forceAuthCheck()" style="background: rgba(0,255,255,0.1); color: #00ffff; border: 1px solid rgba(0,255,255,0.3); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+                                Force Refresh
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Error State -->
                 <div id="errorState" style="display: none; text-align: center; padding: 50px;">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #ff4757; margin-bottom: 20px;"></i>
-                    <h3 style="color: #ff4757; margin-bottom: 10px;">Something went wrong</h3>
-                    <p style="color: #888; margin-bottom: 20px;">We couldn't load your orders. Please try again.</p>
-                    <button onclick="loadOrders()" style="background: #00ffff; color: #000; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 600;">Try Again</button>
+                    <div style="background: rgba(255,71,87,0.1); border: 2px solid rgba(255,71,87,0.3); border-radius: 20px; padding: 40px; max-width: 500px; margin: 0 auto; backdrop-filter: blur(10px);">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #ff4757; margin-bottom: 20px; display: block;"></i>
+                        <h3 style="color: #ff4757; margin-bottom: 15px; font-size: 1.8rem; font-weight: 700;">Oops! Something went wrong</h3>
+                        <p style="color: #ccc; margin-bottom: 30px; font-size: 1.1rem; line-height: 1.5;">We couldn't load your orders right now. This might be a temporary issue.</p>
+                        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                            <button onclick="loadOrders()" style="
+                                background: linear-gradient(135deg, #ff4757, #ff3742); 
+                                color: #fff; 
+                                border: none; 
+                                padding: 12px 24px; 
+                                border-radius: 8px; 
+                                cursor: pointer; 
+                                font-weight: 600;
+                                transition: all 0.3s ease;
+                                box-shadow: 0 4px 15px rgba(255,71,87,0.3);
+                            " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                <i class="fas fa-redo" style="margin-right: 8px;"></i>
+                                Try Again
+                            </button>
+                            <button onclick="forceAuthCheck()" style="background: rgba(255,71,87,0.1); color: #ff4757; border: 1px solid rgba(255,71,87,0.3); padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                                <i class="fas fa-user-check" style="margin-right: 8px;"></i>
+                                Check Login
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Not Logged In State -->
                 <div id="notLoggedInState" style="display: none; text-align: center; padding: 50px;">
-                    <i class="fas fa-user-lock" style="font-size: 4rem; color: #00ffff; margin-bottom: 20px;"></i>
-                    <h3 style="color: #00ffff; margin-bottom: 10px;">Please Log In</h3>
-                    <p style="color: #888; margin-bottom: 20px;">You need to be logged in to view your purchased items.</p>
-                    <button onclick="openAuthModal()" style="background: #00ffff; color: #000; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 600;">Login</button>
+                    <div style="background: rgba(0,255,255,0.1); border: 2px solid rgba(0,255,255,0.3); border-radius: 20px; padding: 40px; max-width: 500px; margin: 0 auto; backdrop-filter: blur(10px);">
+                        <i class="fas fa-user-lock" style="font-size: 4rem; color: #00ffff; margin-bottom: 20px; display: block;"></i>
+                        <h3 style="color: #00ffff; margin-bottom: 15px; font-size: 1.8rem; font-weight: 700;">Please Log In</h3>
+                        <p style="color: #ccc; margin-bottom: 30px; font-size: 1.1rem; line-height: 1.5;">You need to be logged in to view your purchased items and order history.</p>
+                        <button onclick="tryOpenAuth()" style="
+                            background: linear-gradient(135deg, #00ffff, #00cccc); 
+                            color: #000; 
+                            border: none; 
+                            padding: 15px 30px; 
+                            border-radius: 10px; 
+                            cursor: pointer; 
+                            font-weight: 700; 
+                            font-size: 1.1rem;
+                            transition: all 0.3s ease;
+                            box-shadow: 0 4px 20px rgba(0,255,255,0.3);
+                        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 25px rgba(0,255,255,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0,255,255,0.3)'">
+                            <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>
+                            Login Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Session Error State -->
+                <div id="sessionErrorState" style="display: none; text-align: center; padding: 50px;">
+                    <div style="background: rgba(255,193,7,0.1); border: 2px solid rgba(255,193,7,0.3); border-radius: 20px; padding: 40px; max-width: 500px; margin: 0 auto; backdrop-filter: blur(10px);">
+                        <i class="fas fa-exclamation-circle" style="font-size: 4rem; color: #ffc107; margin-bottom: 20px; display: block;"></i>
+                        <h3 style="color: #ffc107; margin-bottom: 15px; font-size: 1.8rem; font-weight: 700;">Session Expired</h3>
+                        <p style="color: #ccc; margin-bottom: 15px; font-size: 1.1rem; line-height: 1.5;">You're logged in locally, but your server session has expired.</p>
+                        <p style="color: #888; margin-bottom: 30px; font-size: 1rem;">Please log in again to refresh your session.</p>
+                        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                            <button onclick="tryOpenAuth()" style="
+                                background: linear-gradient(135deg, #ffc107, #ffb300); 
+                                color: #000; 
+                                border: none; 
+                                padding: 15px 30px; 
+                                border-radius: 10px; 
+                                cursor: pointer; 
+                                font-weight: 700; 
+                                font-size: 1.1rem;
+                                transition: all 0.3s ease;
+                                box-shadow: 0 4px 20px rgba(255,193,7,0.3);
+                            " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 25px rgba(255,193,7,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(255,193,7,0.3)'">
+                                <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>
+                                Re-Login
+                            </button>
+                            <button onclick="clearSessionAndRetry()" style="background: rgba(255,193,7,0.1); color: #ffc107; border: 1px solid rgba(255,193,7,0.3); padding: 15px 30px; border-radius: 10px; cursor: pointer; font-weight: 600;">
+                                <i class="fas fa-refresh" style="margin-right: 8px;"></i>
+                                Clear & Retry
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Empty State -->
                 <div id="emptyState" style="display: none; text-align: center; padding: 50px;">
-                    <div style="font-size: 4rem; margin-bottom: 20px;">📦</div>
-                    <h3 style="color: #00ffff; margin-bottom: 10px;">No items yet</h3>
-                    <p style="color: #888; margin-bottom: 20px;">You haven't purchased any items yet. Start shopping to see your items here!</p>
-                    <a href="/shop" style="background: #00ffff; color: #000; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; display: inline-block;">Start Shopping</a>
+                    <div style="background: rgba(0,255,255,0.05); border: 2px solid rgba(0,255,255,0.2); border-radius: 20px; padding: 50px; max-width: 500px; margin: 0 auto; backdrop-filter: blur(10px);">
+                        <div style="font-size: 5rem; margin-bottom: 25px; opacity: 0.8;">🛍️</div>
+                        <h3 style="color: #00ffff; margin-bottom: 15px; font-size: 1.8rem; font-weight: 700;">No Orders Yet</h3>
+                        <p style="color: #ccc; margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6;">Your order history is empty. Start shopping to see your amazing finds here!</p>
+                        <a href="/shop" style="
+                            background: linear-gradient(135deg, #00ffff, #00cccc); 
+                            color: #000; 
+                            text-decoration: none; 
+                            padding: 15px 30px; 
+                            border-radius: 10px; 
+                            font-weight: 700; 
+                            font-size: 1.1rem;
+                            display: inline-block;
+                            transition: all 0.3s ease;
+                            box-shadow: 0 4px 20px rgba(0,255,255,0.3);
+                        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 25px rgba(0,255,255,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0,255,255,0.3)'">
+                            <i class="fas fa-shopping-bag" style="margin-right: 8px;"></i>
+                            Start Shopping
+                        </a>
+                        <div style="margin-top: 20px;">
+                            <button onclick="loadOrders()" style="background: rgba(0,255,255,0.1); color: #00ffff; border: 1px solid rgba(0,255,255,0.3); padding: 10px 20px; border-radius: 6px; cursor: pointer;">
+                                <i class="fas fa-refresh" style="margin-right: 5px;"></i>
+                                Refresh Orders
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Orders Grid -->
