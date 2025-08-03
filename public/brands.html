@@ -7,6 +7,993 @@
     <link rel="stylesheet" href="styles/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Enhanced Brands Page Styles */
+        .brands-page {
+            min-height: 100vh;
+            padding-top: 100px;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+            position: relative;
+            overflow-x: hidden;
+            /* Fix for glitches */
+            backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
+            will-change: auto;
+            /* Prevent layout shifts */
+            contain: layout style paint;
+        }
+
+        .brands-page::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 0, 0.05) 0%, transparent 50%);
+            animation: gradient-shift 20s ease-in-out infinite;
+            z-index: -1;
+            /* Fix for glitches */
+            backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
+            will-change: transform;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 80px 0 60px;
+            position: relative;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+            animation: hero-line 3s ease-in-out infinite;
+        }
+
+        @keyframes hero-line {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .cyber-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #00ff00);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: title-glow 3s ease-in-out infinite;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-title:hover {
+            transform: scale(1.05);
+            animation: title-hover 0.6s ease-in-out;
+        }
+
+        @keyframes title-hover {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1.05); }
+        }
+
+        @keyframes title-glow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #cccccc;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .hero-subtitle:hover {
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            transform: scale(1.02);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(26, 26, 26, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            /* Fix for glitches */
+            backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
+            will-change: transform, opacity;
+            /* Prevent layout shifts */
+            contain: layout style paint;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px) scale(1.05);
+            border-color: #00ffff;
+            box-shadow: 0 15px 30px rgba(0, 255, 255, 0.4);
+            animation: stat-pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes stat-pulse {
+            0%, 100% { transform: translateY(-5px) scale(1.05); }
+            50% { transform: translateY(-8px) scale(1.08); }
+        }
+
+        .stat-number {
+            display: block;
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #00ffff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover .stat-number {
+            transform: scale(1.1);
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+            animation: number-glow 1s ease-in-out infinite;
+        }
+
+        @keyframes number-glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(0, 255, 255, 0.8); }
+            50% { text-shadow: 0 0 30px rgba(0, 255, 255, 1); }
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #cccccc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover .stat-label {
+            color: #ffffff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        /* Featured Brands Section */
+        .featured-brands {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .section-title:hover {
+            transform: scale(1.02);
+            color: #00ffff;
+            text-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
+            animation: section-title-hover 0.5s ease-in-out;
+        }
+
+        @keyframes section-title-hover {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1.02); }
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            border-radius: 2px;
+        }
+
+        .brands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .brand-card {
+            background: rgba(26, 26, 26, 0.8);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            /* Fix for glitches */
+            backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
+            will-change: transform, opacity;
+            /* Prevent layout shifts */
+            contain: layout style paint;
+        }
+
+        .brand-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        .brand-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: #00ffff;
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.3);
+            animation: card-hover 0.6s ease-in-out;
+        }
+
+        @keyframes card-hover {
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            50% { transform: translate3d(0, -15px, 0) scale(1.05); }
+            100% { transform: translate3d(0, -10px, 0) scale(1.02); }
+        }
+
+        .brand-card:hover::before {
+            opacity: 1;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .brand-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #00ffff;
+            margin-right: 20px;
+            transition: all 0.3s ease;
+            /* Fix for glitches */
+            backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
+            will-change: transform, opacity;
+            /* Prevent image flickering */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            /* Prevent layout shifts */
+            contain: layout style paint;
+        }
+
+        .brand-card:hover .brand-logo {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            animation: logo-spin 0.6s ease-in-out;
+        }
+
+        @keyframes logo-spin {
+            0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+            50% { transform: translate3d(0, 0, 0) scale(1.2) rotate(10deg); }
+            100% { transform: translate3d(0, 0, 0) scale(1.1) rotate(5deg); }
+        }
+
+        .brand-info h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .brand-card:hover .brand-info h3 {
+            color: #00ffff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            animation: title-glow 2s ease-in-out infinite;
+        }
+
+        .brand-description {
+            color: #cccccc;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .brand-card:hover .brand-description {
+            color: #ffffff;
+            transform: scale(1.02);
+        }
+
+        .brand-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: #888888;
+        }
+
+        .brand-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .brand-meta i {
+            color: #00ffff;
+            transition: all 0.3s ease;
+        }
+
+        .brand-card:hover .brand-meta i {
+            transform: scale(1.2);
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+            animation: icon-glow 1s ease-in-out infinite;
+        }
+
+        @keyframes icon-glow {
+            0%, 100% { text-shadow: 0 0 10px rgba(0, 255, 255, 0.8); }
+            50% { text-shadow: 0 0 20px rgba(0, 255, 255, 1); }
+        }
+
+        .brand-collections {
+            margin: 20px 0;
+        }
+
+        .brand-collections h4 {
+            font-size: 1.1rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .collections-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .collection-tag {
+            background: linear-gradient(45deg, #00ffff, #0080ff);
+            color: #000000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .collection-tag:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
+            animation: tag-pulse 0.5s ease-in-out;
+        }
+
+        @keyframes tag-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1.1); }
+        }
+
+        .brand-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .cyber-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            /* Fix for glitches */
+            backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
+            will-change: transform, opacity;
+            /* Prevent layout shifts */
+            contain: layout style paint;
+        }
+
+        .cyber-btn.primary {
+            background: linear-gradient(45deg, #00ffff, #0080ff);
+            border-color: #00ffff;
+            color: #000000;
+        }
+
+        .cyber-btn.secondary {
+            background: transparent;
+            border-color: #ff00ff;
+            color: #ff00ff;
+        }
+
+        .cyber-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.3);
+            animation: button-hover 0.3s ease-in-out;
+        }
+
+        @keyframes button-hover {
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            50% { transform: translate3d(0, -4px, 0) scale(1.05); }
+            100% { transform: translate3d(0, -2px, 0) scale(1.02); }
+        }
+
+        .cyber-btn.primary:hover {
+            background: linear-gradient(45deg, #00ffff, #00ccff);
+        }
+
+        .cyber-btn.secondary:hover {
+            background: rgba(255, 0, 255, 0.1);
+            color: #ffffff;
+        }
+
+        /* Brand Categories */
+        .brand-categories {
+            padding: 60px 0;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .category-card {
+            background: rgba(26, 26, 26, 0.8);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            /* Fix for glitches */
+            backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
+            will-change: transform, opacity;
+            /* Prevent layout shifts */
+            contain: layout style paint;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            border-color: #00ffff;
+            box-shadow: 0 15px 30px rgba(0, 255, 255, 0.3);
+            animation: category-hover 0.5s ease-in-out;
+        }
+
+        @keyframes category-hover {
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            50% { transform: translate3d(0, -12px, 0) scale(1.05); }
+            100% { transform: translate3d(0, -8px, 0) scale(1.03); }
+        }
+
+        .category-card:hover::before {
+            opacity: 1;
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover .category-icon {
+            transform: scale(1.2) rotate(10deg);
+            animation: icon-bounce 0.6s ease-in-out;
+        }
+
+        @keyframes icon-bounce {
+            0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+            50% { transform: translate3d(0, 0, 0) scale(1.3) rotate(15deg); }
+            100% { transform: translate3d(0, 0, 0) scale(1.2) rotate(10deg); }
+        }
+
+        .category-card h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover h3 {
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        .category-card p {
+            color: #cccccc;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover p {
+            color: #ffffff;
+            transform: scale(1.02);
+        }
+
+        .brand-count {
+            background: linear-gradient(45deg, #00ffff, #0080ff);
+            color: #000000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover .brand-count {
+            transform: scale(1.1);
+            background: linear-gradient(45deg, #00ffff, #ffffff);
+            color: #000000;
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
+            animation: count-pulse 0.5s ease-in-out;
+        }
+
+        @keyframes count-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1.1); }
+        }
+
+        /* Brand Stories */
+        .brand-stories {
+            padding: 60px 0;
+        }
+
+        .stories-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .story-card {
+            background: rgba(26, 26, 26, 0.8);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+            /* Fix for glitches */
+            backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
+            will-change: transform, opacity;
+            /* Prevent layout shifts */
+            contain: layout style paint;
+        }
+
+        .story-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: #ff00ff;
+            box-shadow: 0 15px 30px rgba(255, 0, 255, 0.3);
+            animation: story-hover 0.5s ease-in-out;
+        }
+
+        @keyframes story-hover {
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            50% { transform: translate3d(0, -12px, 0) scale(1.04); }
+            100% { transform: translate3d(0, -8px, 0) scale(1.02); }
+        }
+
+        .story-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+            /* Fix for glitches */
+            backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
+            will-change: transform, opacity;
+            /* Prevent image flickering */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            /* Prevent layout shifts */
+            contain: layout style paint;
+        }
+
+        .story-card:hover .story-image img {
+            transform: scale(1.1) rotate(2deg);
+            animation: story-image-hover 0.6s ease-in-out;
+        }
+
+        @keyframes story-image-hover {
+            0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+            50% { transform: translate3d(0, 0, 0) scale(1.2) rotate(5deg); }
+            100% { transform: translate3d(0, 0, 0) scale(1.1) rotate(2deg); }
+        }
+
+        .story-content {
+            padding: 25px;
+        }
+
+        .story-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+            line-height: 1.3;
+            transition: all 0.3s ease;
+        }
+
+        .story-card:hover .story-title {
+            color: #ff00ff;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+            transform: scale(1.02);
+        }
+
+        .story-excerpt {
+            color: #cccccc;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .story-card:hover .story-excerpt {
+            color: #ffffff;
+            transform: scale(1.02);
+        }
+
+        .story-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 0.8rem;
+            color: #888888;
+        }
+
+        /* Authentication Guide */
+        .auth-guide {
+            padding: 60px 0;
+            background: rgba(0, 0, 0, 0.3);
+            margin: 40px 0;
+            border-radius: 20px;
+        }
+
+        .guide-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .guide-item {
+            background: rgba(26, 26, 26, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+        }
+
+        .guide-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+        }
+
+        .guide-item h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .guide-item:hover h3 {
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            transform: scale(1.02);
+        }
+
+        .guide-item ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .guide-item li {
+            color: #cccccc;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .guide-item:hover li {
+            color: #ffffff;
+            transform: translateX(5px);
+        }
+
+        .guide-item:hover li::before {
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+        }
+
+        .guide-item li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .cyber-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .brands-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .brand-card {
+                padding: 20px;
+            }
+
+            .brand-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .brand-logo {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .brand-actions {
+                flex-direction: column;
+            }
+
+            .categories-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+
+            .stories-container {
+                grid-template-columns: 1fr;
+            }
+
+            .guide-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cyber-title {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .brand-card {
+                padding: 15px;
+            }
+
+            .category-card {
+                padding: 20px;
+            }
+        }
+
+        /* Floating Animation - Optimized */
+        .brand-card {
+            animation: float 6s ease-in-out infinite;
+            /* Fix for glitches */
+            backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
+            will-change: transform;
+            /* Prevent layout shifts */
+            contain: layout style paint;
+        }
+
+        .brand-card:nth-child(2) {
+            animation-delay: 1s;
+        }
+
+        .brand-card:nth-child(3) {
+            animation-delay: 2s;
+        }
+
+        .brand-card:nth-child(4) {
+            animation-delay: 3s;
+        }
+
+        .brand-card:nth-child(5) {
+            animation-delay: 4s;
+        }
+
+        .brand-card:nth-child(6) {
+            animation-delay: 5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(0, -10px, 0); }
+        }
+
+        /* Prevent image flickering globally */
+        img {
+            backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
+            will-change: transform, opacity;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            contain: layout style paint;
+            /* Prevent layout shifts */
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Specific fixes for brand logos */
+        .brand-logo {
+            width: 80px !important;
+            height: 80px !important;
+            object-fit: cover !important;
+            border-radius: 50% !important;
+        }
+
+        /* Specific fixes for story images */
+        .story-image img {
+            width: 100% !important;
+            height: 200px !important;
+            object-fit: cover !important;
+        }
+
+        /* Fix double scrollbar issue */
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-neon-cyan) var(--secondary-dark);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            scroll-padding-top: 100px;
+        }
+
+        body {
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-neon-cyan) var(--secondary-dark);
+        }
+
+        .brands-page {
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-neon-cyan) var(--secondary-dark);
+        }
+
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-neon-cyan);
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-neon-pink);
+        }
+
+        /* Global fixes to prevent flickering */
+        * {
+            box-sizing: border-box;
+            backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
+        }
+
+        /* Prevent any horizontal overflow */
+        .container {
+            overflow-x: hidden;
+        }
+
+        /* Ensure smooth scrolling */
+        .brands-page {
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+
+    </style>
 </head>
 <body>
     <div class="cyberpunk-background">
@@ -177,8 +1164,22 @@
             <!-- Hero Section -->
             <section class="hero-section">
                 <div class="hero-content">
-                    <h1 class="cyber-title">Featured Brands</h1>
-                    <p class="hero-subtitle">Discover the stories behind the most innovative streetwear brands in the cyberpunk scene.</p>
+                    <h1 class="cyber-title">🌟 BRANDS COLLECTION 🌟</h1>
+                    <p class="hero-subtitle">Discover the leading brands in the streetwear world - innovative designers who combine cutting-edge technology with urban fashion</p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">50+</span>
+                            <span class="stat-label">Brands</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">1000+</span>
+                            <span class="stat-label">Items</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-label">Support</span>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -435,10 +1436,10 @@
                         logo: '/images/brands/zippy-logo.jpg',
                         description: 'Futuristic streetwear with neon accents and cyberpunk aesthetics',
                         founded: '2020',
-                        location: 'Neo Tokyo, Japan',
+                        location: 'Tel Aviv, Israel',
                         style: 'Cyberpunk',
                         collections: ['Neon Dreams', 'Digital Distortion', 'Holographic Future'],
-                        story: 'Born from the digital revolution, Zippy Originals combines cutting-edge technology with streetwear culture...'
+                        story: 'נולד מהמהפכה הדיגיטלית, Zippy Originals משלב טכנולוגיה מתקדמת עם תרבות הסטריטוור...'
                     },
                     {
                         id: 2,
@@ -446,10 +1447,10 @@
                         logo: '/images/brands/street-tech-logo.jpg',
                         description: 'Urban techwear for the modern digital nomad',
                         founded: '2019',
-                        location: 'Silicon Valley, USA',
+                        location: 'New York, USA',
                         style: 'Techwear',
                         collections: ['Urban Nomad', 'Digital Nomad', 'Tech Essentials'],
-                        story: 'Street Tech emerged from the intersection of technology and street culture...'
+                        story: 'Street Tech נולד מהצטלבות הטכנולוגיה עם תרבות הרחוב...'
                     },
                     {
                         id: 3,
@@ -460,7 +1461,7 @@
                         location: 'Berlin, Germany',
                         style: 'Sustainable',
                         collections: ['Eco Future', 'Green Tech', 'Sustainable Style'],
-                        story: 'Future Wear pioneers sustainable fashion with a futuristic twist...'
+                        story: 'Future Wear חלוץ באופנה בת-קיימא עם טוויסט עתידני...'
                     },
                     {
                         id: 4,
@@ -471,7 +1472,29 @@
                         location: 'Los Angeles, USA',
                         style: 'Neon',
                         collections: ['Neon Nights', 'Glow Up', 'Electric Dreams'],
-                        story: 'Neon Nights captures the energy of the city after dark...'
+                        story: 'Neon Nights לוכד את האנרגיה של העיר אחרי החשיכה...'
+                    },
+                    {
+                        id: 5,
+                        name: 'Cyber Street',
+                        logo: '/images/brands/cyber-street-logo.jpg',
+                        description: 'Cyberpunk streetwear with Japanese influences',
+                        founded: '2022',
+                        location: 'Tokyo, Japan',
+                        style: 'Cyberpunk',
+                        collections: ['Tokyo Nights', 'Cyber Samurai', 'Digital Zen'],
+                        story: 'Cyber Street משלב אסתטיקה יפנית מסורתית עם עיצוב עתידני...'
+                    },
+                    {
+                        id: 6,
+                        name: 'Urban Hologram',
+                        logo: '/images/brands/urban-hologram-logo.jpg',
+                        description: 'Holographic fashion for the future city',
+                        founded: '2023',
+                        location: 'London, UK',
+                        style: 'Holographic',
+                        collections: ['Holo Dreams', 'Urban Glow', 'Future City'],
+                        story: 'Urban Hologram מביא את העתיד לאופנה העירונית...'
                     }
                 ];
 
@@ -492,18 +1515,19 @@
                 card.className = 'brand-card cyber-card';
                 card.innerHTML = `
                     <div class="brand-header">
-                        <img src="${brand.logo}" alt="${brand.name}" class="brand-logo" onerror="this.src='/images/placeholder.jpg'">
+                        <img src="${brand.logo}" alt="${brand.name}" class="brand-logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjMDBGRkZGIiBmaWxsLW9wYWNpdHk9IjAuMSIvPgo8Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIzMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBGRkZGIiBzdHJva2Utd2lkdGg9IjIiLz4KPHN2ZyB4PSIzMCIgeT0iMzAiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDBGRkZGIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDkuNzRMMTIgMTZMMTAuOTEgOS43NEw0IDlMMTAuOTEgOC4yNkwxMiAyWiIvPgo8L3N2Zz4KPC9zdmc+'">
                         <div class="brand-info">
                             <h3 class="brand-name">${brand.name}</h3>
                             <p class="brand-description">${brand.description}</p>
                             <div class="brand-meta">
-                                <span class="brand-founded">Founded ${brand.founded}</span>
-                                <span class="brand-location">${brand.location}</span>
+                                <span class="brand-founded"><i class="fas fa-calendar"></i> Founded ${brand.founded}</span>
+                                <span class="brand-location"><i class="fas fa-map-marker-alt"></i> ${brand.location}</span>
+                                <span class="brand-style"><i class="fas fa-tag"></i> ${brand.style}</span>
                             </div>
                         </div>
                     </div>
                     <div class="brand-collections">
-                        <h4>Collections:</h4>
+                        <h4><i class="fas fa-layer-group"></i> Collections:</h4>
                         <div class="collections-list">
                             ${brand.collections.map(collection => `
                                 <span class="collection-tag">${collection}</span>
@@ -511,8 +1535,12 @@
                         </div>
                     </div>
                     <div class="brand-actions">
-                        <button class="cyber-btn secondary" onclick="viewBrand('${brand.id}')">View Brand</button>
-                        <button class="cyber-btn primary" onclick="shopBrand('${brand.id}')">Shop Now</button>
+                        <button class="cyber-btn secondary" onclick="viewBrand('${brand.id}')">
+                            <i class="fas fa-eye"></i> View Brand
+                        </button>
+                        <button class="cyber-btn primary" onclick="shopBrand('${brand.id}')">
+                            <i class="fas fa-shopping-cart"></i> Shop Now
+                        </button>
                     </div>
                 `;
                 return card;
@@ -563,7 +1591,7 @@
                 card.className = 'story-card cyber-card';
                 card.innerHTML = `
                     <div class="story-image">
-                        <img src="${story.image}" alt="${story.title}" onerror="this.src='/images/placeholder.jpg'">
+                        <img src="${story.image}" alt="${story.title}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjMDBGRkZGIiBmaWxsLW9wYWNpdHk9IjAuMSIvPgo8Y2lyY2xlIGN4PSIxNTAiIGN5PSIxMDAiIHI9IjUwIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMEZGRkYiIHN0cm9rZS13aWR0aD0iMiIvPgo8c3ZnIHg9IjEyNSIgeT0iNzUiIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMDBGRkZGIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDkuNzRMMTIgMTZMMTAuOTEgOS43NEw0IDlMMTAuOTEgOC4yNkwxMiAyWiIvPgo8L3N2Zz4KPC9zdmc+'>
                     </div>
                     <div class="story-content">
                         <h3 class="story-title">${story.title}</h3>
