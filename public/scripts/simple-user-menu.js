@@ -88,8 +88,54 @@
                 userDropdown.style.display = 'none';
             }
         });
+        
+        // עדכון מיקום תפריט בשינוי גודל חלון
+        window.addEventListener('resize', function() {
+            const userDropdown = document.getElementById('userDropdown');
+            if (userDropdown && getComputedStyle(userDropdown).display === 'block') {
+                positionDropdownBelowButton();
+                console.log('📱 Repositioned dropdown on window resize');
+            }
+        });
+        
+        // עדכון מיקום תפריט בגלילה
+        window.addEventListener('scroll', function() {
+            const userDropdown = document.getElementById('userDropdown');
+            if (userDropdown && getComputedStyle(userDropdown).display === 'block') {
+                positionDropdownBelowButton();
+            }
+        });
     }
     
+    function positionDropdownBelowButton() {
+        const userMenuToggle = document.getElementById('userMenuToggle');
+        const userDropdown = document.getElementById('userDropdown');
+        
+        if (userMenuToggle && userDropdown) {
+            const buttonRect = userMenuToggle.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+            
+            // חישוב מיקום מתחת לכפתור
+            const top = buttonRect.bottom + scrollTop + 5; // 5px מרווח
+            const left = buttonRect.right + scrollLeft - 220; // יישור לצד ימין של הכפתור
+            
+            console.log('📍 Positioning dropdown:', {
+                buttonRect: buttonRect,
+                calculatedTop: top,
+                calculatedLeft: left,
+                scrollTop: scrollTop,
+                scrollLeft: scrollLeft
+            });
+            
+            // עדכון מיקום התפריט
+            userDropdown.style.setProperty('position', 'absolute', 'important');
+            userDropdown.style.setProperty('top', top + 'px', 'important');
+            userDropdown.style.setProperty('left', left + 'px', 'important');
+            userDropdown.style.setProperty('right', 'auto', 'important');
+        }
+    }
+
     function toggleDropdown() {
         const userDropdown = document.getElementById('userDropdown');
         
@@ -116,12 +162,15 @@
                 userDropdown.style.setProperty('display', 'none', 'important');
                 console.log('🔒 Dropdown closed - set display: none !important');
             } else {
+                // מקם את התפריט מתחת לכפתור
+                positionDropdownBelowButton();
+                
+                // פתח את התפריט
                 userDropdown.style.setProperty('display', 'block', 'important');
                 userDropdown.style.setProperty('visibility', 'visible', 'important');
                 userDropdown.style.setProperty('opacity', '1', 'important');
                 userDropdown.style.setProperty('z-index', '999999', 'important');
-                userDropdown.style.setProperty('position', 'fixed', 'important');
-                console.log('🔓 Dropdown opened - set all properties with !important');
+                console.log('🔓 Dropdown opened and positioned below button');
             }
             
             // בדיקה אחרי השינוי
@@ -130,7 +179,10 @@
                     display: userDropdown.style.display,
                     visibility: getComputedStyle(userDropdown).visibility,
                     opacity: getComputedStyle(userDropdown).opacity,
-                    computedDisplay: getComputedStyle(userDropdown).display
+                    computedDisplay: getComputedStyle(userDropdown).display,
+                    position: userDropdown.style.position,
+                    top: userDropdown.style.top,
+                    left: userDropdown.style.left
                 });
             }, 10);
         } else {
