@@ -643,8 +643,22 @@ function showOrderDetails(orderId) {
     // Show modal
     modal.style.display = 'flex';
     
-    // Scroll to top of modal content smoothly
+    // Ensure modal is centered in viewport and scroll to top
     setTimeout(() => {
+        // Scroll page to top first
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+        
+        // Then scroll modal to top
+        modal.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+        });
+        
+        // Also scroll modal content to top
         const modalContainer = document.querySelector('.order-details-container');
         if (modalContainer) {
             modalContainer.scrollTo({
