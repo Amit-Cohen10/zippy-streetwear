@@ -17,6 +17,24 @@ const requireAdmin = async (req, res, next) => {
   }
 };
 
+// Check admin access
+router.get('/check', requireAdmin, async (req, res) => {
+  try {
+    res.json({ 
+      message: 'Admin access verified',
+      user: {
+        id: req.user.id,
+        username: req.user.username,
+        email: req.user.email,
+        role: req.user.role
+      }
+    });
+  } catch (error) {
+    console.error('Admin check error:', error);
+    res.status(500).json({ error: 'Failed to verify admin access' });
+  }
+});
+
 // Get activity logs
 router.get('/activity', requireAdmin, async (req, res) => {
   try {
@@ -107,6 +125,12 @@ router.get('/users', requireAdmin, async (req, res) => {
     
     let users = await persist.readData(persist.usersFile);
     
+    // Ensure users is an array
+    if (!Array.isArray(users)) {
+      console.error('Users data is not an array:', users);
+      users = [];
+    }
+    
     // Filter by role
     if (role) {
       users = users.filter(user => user.role === role);
@@ -162,6 +186,43 @@ router.get('/users', requireAdmin, async (req, res) => {
   } catch (error) {
     console.error('Users fetch error:', error);
     res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
+// Get admin statistics
+router.get('/stats', requireAdmin, async (req, res) => {
+  try {
+    const users = await persist.readData(persist.usersFile);
+    const activities = await persist.readData(persist.activityFile);
+    const orders = await persist.readData(persist.ordersFile);
+    
+    // Calculate statistics
+    const totalUsers = Array.isArray(users) ? users.length : 0;
+    const totalActivities = Array.isArray(activities) ? activities.length : 0;
+    
+    // Calculate total orders and revenue
+    let totalOrders = 0;
+    let totalRevenue = 0;
+    
+    if (Array.isArray(activities)) {
+      const orderActivities = activities.filter(activity => activity.action === 'order_placed');
+      totalOrders = orderActivities.length;
+      totalRevenue = orderActivities.reduce((sum, order) => {
+        const amount = order.details?.total || 0;
+        return sum + amount;
+      }, 0);
+    }
+    
+    res.json({
+      totalUsers,
+      totalActivities,
+      totalOrders,
+      totalRevenue: totalRevenue.toFixed(2)
+    });
+    
+  } catch (error) {
+    console.error('Stats fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch statistics' });
   }
 });
 
