@@ -8795,3 +8795,60 @@ body.theme-light .auth-container {
     height: 50px;
   }
 }
+
+/* My Items Exchange Card Styles */
+.exchange-order {
+  border: 2px solid var(--accent-neon-cyan);
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.05), rgba(0, 255, 255, 0.02));
+}
+
+.exchange-order .exchange-badge {
+  color: var(--accent-neon-cyan);
+  font-size: 1.2em;
+  margin-left: 8px;
+}
+
+.exchange-item {
+  border-left: 3px solid var(--accent-neon-cyan);
+  padding-left: 12px;
+}
+
+.exchange-type {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.exchange-type.offered {
+  background: rgba(0, 255, 0, 0.2);
+  color: var(--accent-neon-green);
+  border: 1px solid var(--accent-neon-green);
+}
+
+.exchange-type.wanted {
+  background: rgba(0, 255, 255, 0.2);
+  color: var(--accent-neon-cyan);
+  border: 1px solid var(--accent-neon-cyan);
+}
+
+/* Exchange item details in modal */
+.exchange-item-detail {
+  border-left: 4px solid var(--accent-neon-cyan);
+  padding-left: 16px;
+  margin-bottom: 20px;
+}
+
+.exchange-item-detail .item-image-large {
+  border: 2px solid var(--accent-neon-cyan);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.exchange-item-detail .exchange-type {
+  margin-top: 8px;
+  display: inline-block;
+}
