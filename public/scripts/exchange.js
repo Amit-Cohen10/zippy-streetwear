@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Fallback to sample products if fetch fails
             products = [
                 {
-                    id: "prod-001",
+                    id: "Circuit Board Hoodie",
                     title: "Circuit Board Hoodie",
                     images: ["/images/products/Circuit Board Hoodie/Circuit Board Hoodie.png"],
                     category: "hoodies",
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     brand: "Zippy Originals"
                 },
                 {
-                    id: "prod-002", 
+                    id: "404 Not Found Tee", 
                     title: "404 Not Found Tee",
                     images: ["/images/products/404 Not Found Tee/404 Not Found Tee.png"],
                     category: "t-shirts",
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     brand: "Street Tech"
                 },
                 {
-                    id: "prod-003",
+                    id: "Neon Cargo Pants",
                     title: "Neon Cargo Pants", 
                     images: ["/images/products/Neon Cargo Pants/Neon Cargo Pants.png"],
                     category: "pants",
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     brand: "Future Wear"
                 },
                 {
-                    id: "prod-004",
+                    id: "Circuit Pattern Hoodie",
                     title: "Circuit Pattern Hoodie",
                     images: ["/images/products/Circuit Pattern Hoodie/Circuit Pattern Hoodie.png"],
                     category: "hoodies",
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     brand: "Zippy Originals"
                 },
                 {
-                    id: "prod-005",
+                    id: "Circuit Breaker Pants",
                     title: "Circuit Breaker Pants",
                     images: ["/images/products/Circuit Breaker Pants/Circuit Breaker Pants.png"],
                     category: "pants",
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     brand: "Street Tech"
                 },
                 {
-                    id: "prod-006",
+                    id: "Neural Network Hoodie",
                     title: "Neural Network Hoodie",
                     images: ["/images/products/Neural Network Hoodie/Neural Network Hoodie.png"],
                     category: "hoodies",
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     brand: "Zippy Originals"
                 },
                 {
-                    id: "prod-007",
+                    id: "Cyber Samurai Hoodie",
                     title: "Cyber Samurai Hoodie",
                     images: ["/images/products/Cyber Samurai Hoodie/Cyber Samurai Hoodie.png"],
                     category: "hoodies",
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     brand: "Zippy Originals"
                 },
                 {
-                    id: "prod-008",
+                    id: "Crypto Punk Tee",
                     title: "Crypto Punk Tee",
                     images: ["/images/products/Crypto Punk Tee/Crypto Punk Tee.png"],
                     category: "t-shirts",
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     brand: "Street Tech"
                 },
                 {
-                    id: "prod-009",
+                    id: "SYSTEM OVERRIDE Tee",
                     title: "SYSTEM OVERRIDE Tee",
                     images: ["/images/products/SYSTEM OVERRIDE Tee/SYSTEM OVERRIDE Tee.png"],
                     category: "t-shirts",
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     brand: "Street Tech"
                 },
                 {
-                    id: "prod-010",
+                    id: "Quantum Circuit Hoodie",
                     title: "Quantum Circuit Hoodie",
                     images: ["/images/products/Quantum Circuit Hoodie/Quantum Circuit Hoodie.png"],
                     category: "hoodies",
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     brand: "Zippy Originals"
                 },
                 {
-                    id: "prod-011",
+                    id: "Code Cargo Pants",
                     title: "Code Cargo Pants",
                     images: ["/images/products/Code Cargo Pants/Code Cargo Pants.png"],
                     category: "pants",
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     brand: "Future Wear"
                 },
                 {
-                    id: "prod-012",
+                    id: "Digital Glitch Tee",
                     title: "Digital Glitch Tee",
                     images: ["/images/products/Digital Glitch Tee/Digital Glitch Tee.png"],
                     category: "t-shirts",
@@ -129,15 +129,144 @@ document.addEventListener('DOMContentLoaded', function() {
                     brand: "Future Wear"
                 },
                 {
-                    id: "prod-013",
+                    id: "Code Warrior Tee",
                     title: "Code Warrior Tee",
                     images: ["/images/products/Code Warrior Tee/Code Warrior Tee.png"],
                     category: "t-shirts",
                     sizes: ["S", "M", "L", "XL", "XXL"],
                     brand: "Street Tech"
+                },
+                {
+                    id: "Vapor Dream Tee",
+                    title: "Vapor Dream Tee",
+                    images: ["/images/products/Vapor Dream Tee/Vapor Dream Tee.png"],
+                    category: "t-shirts",
+                    sizes: ["S", "M", "L", "XL", "XXL"],
+                    brand: "Future Wear"
+                },
+                {
+                    id: "Neon Pulse Tee",
+                    title: "Neon Pulse Tee",
+                    images: ["/images/products/Neon Pulse Tee/Neon Pulse Tee.png"],
+                    category: "t-shirts",
+                    sizes: ["S", "M", "L", "XL", "XXL"],
+                    brand: "Street Tech"
+                },
+                {
+                    id: "Electric Night Tee",
+                    title: "Electric Night Tee",
+                    images: ["/images/products/Electric Night Tee/Electric Night Tee.png"],
+                    category: "t-shirts",
+                    sizes: ["S", "M", "L", "XL", "XXL"],
+                    brand: "Future Wear"
+                },
+                {
+                    id: "Cyber Rose Tee",
+                    title: "Cyber Rose Tee",
+                    images: ["/images/products/Cyber Rose Tee/Cyber Rose Tee.png"],
+                    category: "t-shirts",
+                    sizes: ["S", "M", "L", "XL", "XXL"],
+                    brand: "Street Tech"
+                },
+                {
+                    id: "Augmented Tee",
+                    title: "Augmented Tee",
+                    images: ["/images/products/Augmented Tee/Augmented Tee.png"],
+                    category: "t-shirts",
+                    sizes: ["S", "M", "L", "XL", "XXL"],
+                    brand: "Future Wear"
+                },
+                {
+                    id: "Pixel Art Tee",
+                    title: "Pixel Art Tee",
+                    images: ["/images/products/Pixel Art Tee/Pixel Art Tee.png"],
+                    category: "t-shirts",
+                    sizes: ["S", "M", "L", "XL", "XXL"],
+                    brand: "Street Tech"
+                },
+                {
+                    id: "Glitch Reality Hoodie",
+                    title: "Glitch Reality Hoodie",
+                    images: ["/images/products/Glitch Reality Hoodie/Glitch Reality Hoodie.png"],
+                    category: "hoodies",
+                    sizes: ["S", "M", "L", "XL", "XXL"],
+                    brand: "Zippy Originals"
+                },
+                {
+                    id: "Neon Cyber Grid Hoodie",
+                    title: "Neon Cyber Grid Hoodie",
+                    images: ["/images/products/Neon Cyber Grid Hoodie/Neon Cyber Grid Hoodie.png"],
+                    category: "hoodies",
+                    sizes: ["S", "M", "L", "XL", "XXL"],
+                    brand: "Zippy Originals"
+                },
+                {
+                    id: "Quantum Hoodie",
+                    title: "Quantum Hoodie",
+                    images: ["/images/products/Quantum Hoodie/Quantum Hoodie.png"],
+                    category: "hoodies",
+                    sizes: ["S", "M", "L", "XL", "XXL"],
+                    brand: "Zippy Originals"
+                },
+                {
+                    id: "Urban Operator Pants",
+                    title: "Urban Operator Pants",
+                    images: ["/images/products/Urban Operator Pants/Urban Operator Pants.png"],
+                    category: "pants",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Future Wear"
+                },
+                {
+                    id: "Shadow Tech Pants",
+                    title: "Shadow Tech Pants",
+                    images: ["/images/products/Shadow Tech Pants/Shadow Tech Pants.png"],
+                    category: "pants",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Street Tech"
+                },
+                {
+                    id: "Neon Racer Pants",
+                    title: "Neon Racer Pants",
+                    images: ["/images/products/Neon Racer Pants/Neon Racer Pants.png"],
+                    category: "pants",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Future Wear"
+                },
+                {
+                    id: "Holo Flex Pants",
+                    title: "Holo Flex Pants",
+                    images: ["/images/products/Holo Flex Pants/Holo Flex Pants.png"],
+                    category: "pants",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Street Tech"
+                },
+                {
+                    id: "Grid Walker Pants",
+                    title: "Grid Walker Pants",
+                    images: ["/images/products/Grid Walker Pants/Grid Walker Pants.png"],
+                    category: "pants",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Future Wear"
+                },
+                {
+                    id: "Cyber Ninja Pants",
+                    title: "Cyber Ninja Pants",
+                    images: ["/images/products/Cyber Ninja Pants/Cyber Ninja Pants.png"],
+                    category: "pants",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Street Tech"
+                },
+                {
+                    id: "Data Runner Pants",
+                    title: "Data Runner Pants",
+                    images: ["/images/products/Data Runner Pants/Data Runner Pants.png"],
+                    category: "pants",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Future Wear"
                 }
             ];
             console.log('✅ Using fallback products:', products.length);
+            console.log('✅ Fallback products have real image paths');
         }
     }
 
@@ -147,9 +276,9 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 1,
             title: "Circuit Board Hoodie for Neural Network Hoodie",
             description: "Looking to trade my Circuit Board Hoodie (M) for any Neural Network Hoodie in size M. Both are from the Zippy Originals collection and in excellent condition.",
-            offeredProductId: "prod-001",
+            offeredProductId: "Circuit Board Hoodie",
             offeredSize: "M",
-            wantedProductId: "prod-006", 
+            wantedProductId: "Neural Network Hoodie", 
             wantedSize: "M",
             status: "active",
             userId: 1,
@@ -164,9 +293,9 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 2,
             title: "Cyber Samurai Hoodie for Quantum Circuit Hoodie",
             description: "Trading my Cyber Samurai Hoodie (L) for Quantum Circuit Hoodie in size L. Both are limited edition pieces from Zippy Originals.",
-            offeredProductId: "prod-007",
+            offeredProductId: "Cyber Samurai Hoodie",
             offeredSize: "L",
-            wantedProductId: "prod-010",
+            wantedProductId: "Quantum Circuit Hoodie",
             wantedSize: "L", 
             status: "pending",
             userId: 2,
@@ -180,9 +309,9 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 3,
             title: "404 Not Found Tee for SYSTEM OVERRIDE Tee",
             description: "Looking to exchange my 404 Not Found Tee (XL) for SYSTEM OVERRIDE Tee in XL. Both are from Street Tech collection.",
-            offeredProductId: "prod-002",
+            offeredProductId: "404 Not Found Tee",
             offeredSize: "XL",
-            wantedProductId: "prod-009",
+            wantedProductId: "SYSTEM OVERRIDE Tee",
             wantedSize: "XL",
             status: "completed",
             userId: 3,
@@ -197,9 +326,9 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 4,
             title: "Circuit Pattern Hoodie for Circuit Board Hoodie",
             description: "Trading my Circuit Pattern Hoodie (S) for Circuit Board Hoodie in size S. Both are from the latest Zippy Originals collection.",
-            offeredProductId: "prod-004",
+            offeredProductId: "Circuit Pattern Hoodie",
             offeredSize: "S",
-            wantedProductId: "prod-001",
+            wantedProductId: "Circuit Board Hoodie",
             wantedSize: "S",
             status: "active",
             userId: 1,
@@ -211,9 +340,9 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 5,
             title: "Crypto Punk Tee for Code Warrior Tee",
             description: "Looking to trade Crypto Punk Tee (M) for Code Warrior Tee in M. Both are from Street Tech collection.",
-            offeredProductId: "prod-008",
+            offeredProductId: "Crypto Punk Tee",
             offeredSize: "M",
-            wantedProductId: "prod-013",
+            wantedProductId: "Code Warrior Tee",
             wantedSize: "M",
             status: "active",
             userId: 2,
@@ -227,9 +356,9 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 6,
             title: "Neon Cargo Pants for Code Cargo Pants",
             description: "Trading Neon Cargo Pants (32) for Code Cargo Pants in 32. Both are tactical style from Future Wear.",
-            offeredProductId: "prod-003",
+            offeredProductId: "Neon Cargo Pants",
             offeredSize: "32",
-            wantedProductId: "prod-011",
+            wantedProductId: "Code Cargo Pants",
             wantedSize: "32",
             status: "pending",
             userId: 3,
@@ -243,9 +372,9 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 7,
             title: "Circuit Breaker Pants for Digital Glitch Tee",
             description: "Trading Circuit Breaker Pants (L) for Digital Glitch Tee in L. Looking for something more casual.",
-            offeredProductId: "prod-005",
+            offeredProductId: "Circuit Breaker Pants",
             offeredSize: "L",
-            wantedProductId: "prod-012",
+            wantedProductId: "Digital Glitch Tee",
             wantedSize: "L",
             status: "active",
             userId: 1,
@@ -257,9 +386,9 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 8,
             title: "Quantum Circuit Hoodie for Cyber Samurai Hoodie",
             description: "Looking to trade Quantum Circuit Hoodie (XL) for Cyber Samurai Hoodie in XL. Both are premium Zippy Originals pieces.",
-            offeredProductId: "prod-010",
+            offeredProductId: "Quantum Circuit Hoodie",
             offeredSize: "XL",
-            wantedProductId: "prod-007",
+            wantedProductId: "Cyber Samurai Hoodie",
             wantedSize: "XL",
             status: "active",
             userId: 2,
@@ -273,9 +402,9 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 9,
             title: "Code Cargo Pants for Circuit Breaker Pants",
             description: "Trading Code Cargo Pants (M) for Circuit Breaker Pants in M. Both are from Street Tech collection.",
-            offeredProductId: "prod-011",
+            offeredProductId: "Code Cargo Pants",
             offeredSize: "M",
-            wantedProductId: "prod-005",
+            wantedProductId: "Circuit Breaker Pants",
             wantedSize: "M",
             status: "active",
             userId: 3,
@@ -287,9 +416,9 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 10,
             title: "Digital Glitch Tee for Crypto Punk Tee",
             description: "Looking to exchange Digital Glitch Tee (S) for Crypto Punk Tee in S. Both are from Future Wear collection.",
-            offeredProductId: "prod-012",
+            offeredProductId: "Digital Glitch Tee",
             offeredSize: "S",
-            wantedProductId: "prod-008",
+            wantedProductId: "Crypto Punk Tee",
             wantedSize: "S",
             status: "active",
             userId: 1,
@@ -298,6 +427,82 @@ document.addEventListener('DOMContentLoaded', function() {
                 { id: 9, userId: 2, text: "I have Crypto Punk Tee in S! Let's trade", date: "2024-01-17" }
             ],
             createdAt: "2024-01-16"
+        },
+        {
+            id: 11,
+            title: "Vapor Dream Tee for Neon Pulse Tee",
+            description: "Trading Vapor Dream Tee (M) for Neon Pulse Tee in M. Both are from the latest collection.",
+            offeredProductId: "Vapor Dream Tee",
+            offeredSize: "M",
+            wantedProductId: "Neon Pulse Tee",
+            wantedSize: "M",
+            status: "active",
+            userId: 2,
+            likes: 8,
+            comments: [],
+            createdAt: "2024-01-19"
+        },
+        {
+            id: 12,
+            title: "Electric Night Tee for Cyber Rose Tee",
+            description: "Looking to trade Electric Night Tee (L) for Cyber Rose Tee in L. Both are premium Street Tech pieces.",
+            offeredProductId: "Electric Night Tee",
+            offeredSize: "L",
+            wantedProductId: "Cyber Rose Tee",
+            wantedSize: "L",
+            status: "active",
+            userId: 3,
+            likes: 12,
+            comments: [
+                { id: 10, userId: 1, text: "I have Cyber Rose Tee in L! Perfect match", date: "2024-01-18" }
+            ],
+            createdAt: "2024-01-17"
+        },
+        {
+            id: 13,
+            title: "Glitch Reality Hoodie for Neon Cyber Grid Hoodie",
+            description: "Trading Glitch Reality Hoodie (XL) for Neon Cyber Grid Hoodie in XL. Both are from Zippy Originals.",
+            offeredProductId: "Glitch Reality Hoodie",
+            offeredSize: "XL",
+            wantedProductId: "Neon Cyber Grid Hoodie",
+            wantedSize: "XL",
+            status: "active",
+            userId: 1,
+            likes: 15,
+            comments: [
+                { id: 11, userId: 2, text: "I have Neon Cyber Grid Hoodie in XL!", date: "2024-01-18" }
+            ],
+            createdAt: "2024-01-16"
+        },
+        {
+            id: 14,
+            title: "Urban Operator Pants for Shadow Tech Pants",
+            description: "Looking to exchange Urban Operator Pants (32) for Shadow Tech Pants in 32. Both are tactical style.",
+            offeredProductId: "Urban Operator Pants",
+            offeredSize: "32",
+            wantedProductId: "Shadow Tech Pants",
+            wantedSize: "32",
+            status: "active",
+            userId: 2,
+            likes: 9,
+            comments: [],
+            createdAt: "2024-01-19"
+        },
+        {
+            id: 15,
+            title: "Neon Racer Pants for Holo Flex Pants",
+            description: "Trading Neon Racer Pants (M) for Holo Flex Pants in M. Both are from Future Wear collection.",
+            offeredProductId: "Neon Racer Pants",
+            offeredSize: "M",
+            wantedProductId: "Holo Flex Pants",
+            wantedSize: "M",
+            status: "active",
+            userId: 3,
+            likes: 11,
+            comments: [
+                { id: 12, userId: 1, text: "I have Holo Flex Pants in M! Let's trade", date: "2024-01-19" }
+            ],
+            createdAt: "2024-01-18"
         }
     ];
 
@@ -307,15 +512,15 @@ document.addEventListener('DOMContentLoaded', function() {
     let lastRenderTime = 0;
     const RENDER_THROTTLE = 100;
 
-    // Helper function to get product by ID
-    function getProductById(productId) {
+    // Helper function to get product by name
+    function getProductById(productName) {
         if (!products || !Array.isArray(products)) {
             console.warn('Products not loaded yet or invalid:', products);
             return null;
         }
-        const product = products.find(p => p.id === productId);
+        const product = products.find(p => p.title === productName);
         if (!product) {
-            console.warn('Product not found:', productId);
+            console.warn('Product not found:', productName);
             return null;
         }
         return product;
@@ -341,19 +546,69 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Add products to both selects
                 products.forEach(product => {
                     const option = document.createElement('option');
-                    option.value = product.id;
+                    option.value = product.title; // Use title as value since we're using titles as IDs
                     option.textContent = `${product.title} - ${product.brand}`;
                     option.dataset.category = product.category;
+                    option.dataset.image = product.images?.[0] || '/images/placeholder.svg';
                     
                     // Clone for both selects
                     offeredProductSelect.appendChild(option.cloneNode(true));
                     wantedProductSelect.appendChild(option);
                 });
                 
+                // Add event listeners for product preview
+                offeredProductSelect.addEventListener('change', updateProductPreview);
+                wantedProductSelect.addEventListener('change', updateProductPreview);
+                
                 console.log('✅ Products loaded into select elements');
             }
         } catch (error) {
             console.error('❌ Error loading products into selects:', error);
+        }
+    }
+
+    // Update product preview when selection changes
+    function updateProductPreview() {
+        const offeredProductSelect = document.getElementById('offeredProduct');
+        const wantedProductSelect = document.getElementById('wantedProduct');
+        
+        if (offeredProductSelect && wantedProductSelect) {
+            const offeredProductId = offeredProductSelect.value;
+            const wantedProductId = wantedProductSelect.value;
+            
+            // Update offered product preview
+            if (offeredProductId) {
+                const offeredProduct = getProductById(offeredProductId);
+                const offeredPreview = document.getElementById('offeredProductPreview');
+                if (offeredPreview && offeredProduct) {
+                    offeredPreview.innerHTML = `
+                        <div class="product-preview">
+                            <img src="${offeredProduct.images?.[0] || '/images/placeholder.svg'}" alt="${offeredProduct.title}" onerror="this.src='/images/placeholder.svg'">
+                            <div class="preview-info">
+                                <h5>${offeredProduct.title}</h5>
+                                <p>${offeredProduct.brand}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Update wanted product preview
+            if (wantedProductId) {
+                const wantedProduct = getProductById(wantedProductId);
+                const wantedPreview = document.getElementById('wantedProductPreview');
+                if (wantedPreview && wantedProduct) {
+                    wantedPreview.innerHTML = `
+                        <div class="product-preview">
+                            <img src="${wantedProduct.images?.[0] || '/images/placeholder.svg'}" alt="${wantedProduct.title}" onerror="this.src='/images/placeholder.svg'">
+                            <div class="preview-info">
+                                <h5>${wantedProduct.title}</h5>
+                                <p>${wantedProduct.brand}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
         }
     }
 
@@ -496,11 +751,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const offeredImage = offeredProduct?.images?.[0] || '/images/placeholder.svg';
         const wantedImage = wantedProduct?.images?.[0] || '/images/placeholder.svg';
         
-        // Fallback product info if product not found
-        const offeredTitle = offeredProduct?.title || `Product ${exchange.offeredProductId}`;
-        const offeredBrand = offeredProduct?.brand || 'Unknown Brand';
-        const wantedTitle = wantedProduct?.title || `Product ${exchange.wantedProductId}`;
-        const wantedBrand = wantedProduct?.brand || 'Unknown Brand';
+        // Use real product data or meaningful fallback
+        const offeredTitle = offeredProduct?.title || 'Product Not Found';
+        const offeredBrand = offeredProduct?.brand || 'Brand Unknown';
+        const wantedTitle = wantedProduct?.title || 'Product Not Found';
+        const wantedBrand = wantedProduct?.brand || 'Brand Unknown';
         
         card.innerHTML = `
             <div class="card-header">
@@ -515,10 +770,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p class="card-description">${exchange.description}</p>
                 <div class="exchange-items">
                     <div class="offering-section">
-                        <h4>Offering</h4>
+                        <h4>OFFERING</h4>
                         <div class="item-display">
                             <div class="product-image">
-                                <img src="${offeredImage}" alt="${offeredProduct?.title || 'Product'}" onerror="this.src='/images/placeholder.svg'">
+                                <img src="${offeredImage}" alt="${offeredTitle}" onerror="this.src='/images/placeholder.svg'" onload="console.log('✅ Offered image loaded:', this.src)">
                             </div>
                             <div class="product-info">
                                 <h5>${offeredTitle}</h5>
@@ -529,10 +784,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="exchange-arrow">⇄</div>
                     <div class="wanted-section">
-                        <h4>Wanting</h4>
+                        <h4>WANTING</h4>
                         <div class="item-display">
                             <div class="product-image">
-                                <img src="${wantedImage}" alt="${wantedProduct?.title || 'Product'}" onerror="this.src='/images/placeholder.svg'">
+                                <img src="${wantedImage}" alt="${wantedTitle}" onerror="this.src='/images/placeholder.svg'" onload="console.log('✅ Wanted image loaded:', this.src)">
                             </div>
                             <div class="product-info">
                                 <h5>${wantedTitle}</h5>
@@ -770,6 +1025,12 @@ document.addEventListener('DOMContentLoaded', function() {
             // Validate that products are selected
             if (!formData.offeredProductId || !formData.wantedProductId) {
                 showNotification('Please select both products for exchange', 'error');
+                return;
+            }
+
+            // Validate that different products are selected
+            if (formData.offeredProductId === formData.wantedProductId) {
+                showNotification('Please select different products for exchange', 'error');
                 return;
             }
 
