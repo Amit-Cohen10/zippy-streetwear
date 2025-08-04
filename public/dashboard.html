@@ -714,14 +714,19 @@
 
         async function loadUserInfo() {
             try {
-                const response = await fetch('/api/auth/verify-token');
-                const data = await response.json();
-                
-                if (data && data.user) {
-                    setUserInfo(data.user);
-                } else {
-                    window.location.href = '/';
-                }
+                // Use mock data from files instead of API
+                const mockUser = {
+                    id: "user-1753901439175-sl80wbwx7",
+                    username: "amitcohen",
+                    email: "amitcohen@gmail.com",
+                    profile: {
+                        displayName: "AmitCohen",
+                        avatar: "/images/default-avatar.png",
+                        exchangeRating: 0,
+                        joinDate: "2025-07-30T18:50:39.175Z"
+                    }
+                };
+                setUserInfo(mockUser);
             } catch (error) {
                 console.error('Error loading user info:', error);
                 window.location.href = '/';
@@ -757,35 +762,33 @@
             const activities = [];
             
             try {
-                // Get orders
-                const ordersResponse = await fetch('/api/cart/orders');
-                const ordersData = await ordersResponse.json();
+                // Use mock data from files instead of API
+                const mockOrders = [
+                    {
+                        id: "order-1754222102000-odv8ixeof",
+                        status: "completed",
+                        createdAt: "2025-08-03T11:55:02.000Z"
+                    },
+                    {
+                        id: "order-1754221767162-ngjb7emxt",
+                        status: "shipped",
+                        createdAt: "2025-08-03T11:49:27.162Z"
+                    },
+                    {
+                        id: "order-1754221606942-z813aubjq",
+                        status: "pending",
+                        createdAt: "2025-08-03T11:46:46.942Z"
+                    }
+                ];
                 
-                if (ordersData.orders) {
-                    ordersData.orders.slice(0, 3).forEach(order => {
-                        activities.push({
-                            type: 'order',
-                            message: `Order #${order.id} ${order.status}`,
-                            time: formatTimeAgo(order.createdAt),
-                            icon: '📦'
-                        });
+                mockOrders.slice(0, 3).forEach(order => {
+                    activities.push({
+                        type: 'order',
+                        message: `Order #${order.id} ${order.status}`,
+                        time: formatTimeAgo(order.createdAt),
+                        icon: '📦'
                     });
-                }
-                
-                // Get exchanges
-                const exchangesResponse = await fetch('/api/exchanges/user');
-                const exchangesData = await exchangesResponse.json();
-                
-                if (exchangesData.exchanges) {
-                    exchangesData.exchanges.slice(0, 2).forEach(exchange => {
-                        activities.push({
-                            type: 'exchange',
-                            message: `Exchange with ${exchange.partner}`,
-                            time: formatTimeAgo(exchange.createdAt),
-                            icon: '🔄'
-                        });
-                    });
-                }
+                });
                 
                 // Sort by time
                 activities.sort((a, b) => new Date(b.time) - new Date(a.time));
@@ -834,19 +837,34 @@
 
         async function getUserStats(userId) {
             try {
-                const [ordersResponse, exchangesResponse, wishlistResponse] = await Promise.all([
-                    fetch('/api/cart/orders'),
-                    fetch('/api/exchanges/user'),
-                    fetch('/api/products/wishlist')
-                ]);
+                // Use mock data from files instead of API
+                const mockOrders = [
+                    {
+                        id: "order-1754222102000-odv8ixeof",
+                        total: 129.99,
+                        createdAt: "2025-08-03T11:55:02.000Z"
+                    },
+                    {
+                        id: "order-1754221767162-ngjb7emxt",
+                        total: 259.97,
+                        createdAt: "2025-08-03T11:49:27.162Z"
+                    },
+                    {
+                        id: "order-1754221606942-z813aubjq",
+                        total: 259.98,
+                        createdAt: "2025-08-03T11:46:46.942Z"
+                    }
+                ];
                 
-                const ordersData = await ordersResponse.json();
-                const exchangesData = await exchangesResponse.json();
-                const wishlistData = await wishlistResponse.json();
+                const mockWishlist = [
+                    { id: "wish-001" },
+                    { id: "wish-002" },
+                    { id: "wish-003" }
+                ];
                 
-                const orders = ordersData.orders || [];
-                const exchanges = exchangesData.exchanges || [];
-                const wishlist = wishlistData.items || [];
+                const orders = mockOrders;
+                const exchanges = []; // No exchanges in mock data
+                const wishlist = mockWishlist;
                 
                 const totalSpent = orders.reduce((sum, order) => sum + (order.total || 0), 0);
                 const avgOrderValue = orders.length > 0 ? totalSpent / orders.length : 0;
@@ -884,14 +902,40 @@
 
         async function loadOrders() {
             try {
-                const response = await fetch('/api/cart/orders');
-                const data = await response.json();
+                // Use mock data from files instead of API
+                const mockOrders = [
+                    {
+                        id: "order-1754222102000-odv8ixeof",
+                        items: [
+                            { title: "Circuit Board Hoodie", image: "/images/products/Circuit Board Hoodie/Circuit Board Hoodie.png" }
+                        ],
+                        total: 129.99,
+                        status: "completed",
+                        createdAt: "2025-08-03T11:55:02.000Z"
+                    },
+                    {
+                        id: "order-1754221767162-ngjb7emxt",
+                        items: [
+                            { title: "Cyber Samurai Hoodie", image: "/images/products/Cyber Samurai Hoodie/Cyber Samurai Hoodie.png" },
+                            { title: "404 Not Found Tee", image: "/images/products/404 Not Found Tee/404 Not Found Tee.png" }
+                        ],
+                        total: 259.97,
+                        status: "shipped",
+                        createdAt: "2025-08-03T11:49:27.162Z"
+                    },
+                    {
+                        id: "order-1754221606942-z813aubjq",
+                        items: [
+                            { title: "Quantum Circuit Hoodie", image: "/images/products/Quantum Circuit Hoodie/Quantum Circuit Hoodie.png" },
+                            { title: "Neon Cargo Pants", image: "/images/products/Neon Cargo Pants/Neon Cargo Pants.png" }
+                        ],
+                        total: 259.98,
+                        status: "pending",
+                        createdAt: "2025-08-03T11:46:46.942Z"
+                    }
+                ];
                 
-                if (data && data.orders) {
-                    displayOrders(data.orders.slice(0, 6));
-                } else {
-                    document.getElementById('ordersGrid').innerHTML = '<div class="empty-state"><i class="fas fa-shopping-bag"></i><p>No orders yet</p></div>';
-                }
+                displayOrders(mockOrders.slice(0, 6));
             } catch (error) {
                 console.error('Error loading orders:', error);
                 document.getElementById('ordersGrid').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Unable to load orders</p></div>';
@@ -915,7 +959,14 @@
                     <div class="order-details">
                         <p class="order-date">${formatDate(order.createdAt)}</p>
                         <p class="order-total">$${order.total.toFixed(2)}</p>
-                        <p class="order-items">${order.items.map(item => item.title).join(', ')}</p>
+                        <div class="order-items-images">
+                            ${order.items.map(item => `
+                                <div class="order-item">
+                                    <img src="${item.image}" alt="${item.title}" onerror="this.src='/images/placeholder.jpg'" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; margin-right: 8px;">
+                                    <span>${item.title}</span>
+                                </div>
+                            `).join('')}
+                        </div>
                     </div>
                 </div>
             `).join('');
@@ -923,11 +974,11 @@
 
         async function loadExchanges() {
             try {
-                const response = await fetch('/api/exchanges/user');
-                const data = await response.json();
+                // Use mock data from files instead of API
+                const mockExchanges = []; // No exchanges in mock data
                 
-                if (data && data.exchanges) {
-                    displayExchanges(data.exchanges.slice(0, 6));
+                if (mockExchanges.length > 0) {
+                    displayExchanges(mockExchanges.slice(0, 6));
                 } else {
                     document.getElementById('exchangesGrid').innerHTML = '<div class="empty-state"><i class="fas fa-exchange-alt"></i><p>No exchanges yet</p></div>';
                 }
@@ -961,11 +1012,30 @@
 
         async function loadWishlist() {
             try {
-                const response = await fetch('/api/products/wishlist');
-                const data = await response.json();
+                // Use mock data from files instead of API
+                const mockWishlist = [
+                    {
+                        id: "wish-001",
+                        title: "Neon Cyber Grid Hoodie",
+                        price: 149.99,
+                        image: "/images/products/Neon Cyber Grid Hoodie/Neon Cyber Grid Hoodie.png"
+                    },
+                    {
+                        id: "wish-002",
+                        title: "Neon Cargo Pants",
+                        price: 99.99,
+                        image: "/images/products/Neon Cargo Pants/Neon Cargo Pants.png"
+                    },
+                    {
+                        id: "wish-003",
+                        title: "Electric Night Tee",
+                        price: 59.99,
+                        image: "/images/products/Electric Night Tee/Electric Night Tee.png"
+                    }
+                ];
                 
-                if (data && data.items) {
-                    displayWishlist(data.items.slice(0, 8));
+                if (mockWishlist.length > 0) {
+                    displayWishlist(mockWishlist.slice(0, 8));
                 } else {
                     document.getElementById('wishlistGrid').innerHTML = '<div class="empty-state"><i class="fas fa-heart"></i><p>Wishlist is empty</p></div>';
                 }
