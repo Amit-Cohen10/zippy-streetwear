@@ -1175,8 +1175,8 @@
 
 
     <script src="/scripts/auth.js"></script>
-    <script src="scripts/cart.js"></script>
     <script src="scripts/main.js"></script>
+    <script src="scripts/cart.js"></script>
     <script src="scripts/global.js"></script>
     <script src="/scripts/simple-user-menu.js"></script>
     <script src="/scripts/search.js"></script>
@@ -1190,16 +1190,47 @@
             const categoryCards = document.querySelectorAll('.category-card');
 
             // Initialize cart and auth functionality
-            if (typeof initCart === 'function') {
+            if (typeof window.initCart === 'function') {
+                console.log('🛒 Calling window.initCart()');
+                window.initCart();
+            } else if (typeof initCart === 'function') {
+                console.log('🛒 Calling initCart()');
                 initCart();
             }
-            if (typeof updateCartCount === 'function') {
+            if (typeof window.updateCartCount === 'function') {
+                console.log('🛒 Calling window.updateCartCount()');
+                window.updateCartCount();
+            } else if (typeof updateCartCount === 'function') {
+                console.log('🛒 Calling updateCartCount()');
                 updateCartCount();
             }
+            
+            // Load cart data on page load
+            setTimeout(() => {
+                console.log('🛒 Loading cart data on page load...');
+                if (typeof window.loadCart === 'function') {
+                    console.log('🛒 Calling window.loadCart() on page load');
+                    window.loadCart();
+                } else if (typeof loadCart === 'function') {
+                    console.log('🛒 Calling loadCart() on page load');
+                    loadCart();
+                }
+                
+                // Also update cart count
+                if (typeof window.updateCartCount === 'function') {
+                    console.log('🛒 Calling window.updateCartCount() on page load');
+                    window.updateCartCount();
+                } else if (typeof updateCartCount === 'function') {
+                    console.log('🛒 Calling updateCartCount() on page load');
+                    updateCartCount();
+                }
+            }, 500);
             if (typeof updateAuthUI === 'function') {
+                console.log('🔑 Calling updateAuthUI()');
                 updateAuthUI();
             }
             if (typeof initializeUserMenu === 'function') {
+                console.log('👤 Calling initializeUserMenu()');
                 initializeUserMenu();
             }
 
@@ -1211,11 +1242,12 @@
             if (cartBtn && cartModal) {
                 cartBtn.onclick = () => {
                     cartModal.style.display = 'flex';
-                    if (typeof loadCart === 'function') {
-                        loadCart();
-                    }
-                    
-                    // Auto-scroll to top when opening cart
+                    setTimeout(() => {
+                        if (typeof window.loadCart === 'function') {
+                            console.log('🛒 Calling window.loadCart() on cart open');
+                            window.loadCart();
+                        }
+                    }, 100);
                     setTimeout(() => {
                         window.scrollTo({
                             top: 0,
