@@ -11,7 +11,7 @@ function initAdmin() {
         // Check if user is admin
         checkAdminAccess();
         
-        // Load all data
+        // Load all data automatically
         loadAllData();
         
         console.log('Admin panel initialized successfully');
@@ -290,6 +290,7 @@ function showSuccess(message) {
 window.loadActivityData = loadActivityData;
 window.loadUserData = loadUserData;
 window.loadStatistics = loadStatistics;
+window.loadAllData = loadAllData;
 
 // Initialize when DOM is loaded
 if (document.readyState === 'loading') {
