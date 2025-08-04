@@ -229,7 +229,7 @@ function displayOrders(orders) {
         console.log('📦 Processing order:', order.id, order);
         
         return `
-            <div class="order-card">
+            <div class="order-card" onclick="showOrderDetails('${order.id}')" style="cursor: pointer;">
                 <div class="order-header">
                     <div>
                         <div class="order-number">Order #${order.id}</div>
@@ -266,6 +266,172 @@ function displayOrders(orders) {
             </div>
         `;
     }).join('');
+    
+    // Store orders globally for modal access
+    window.currentOrders = orders;
+}
+
+// Show order details modal
+function showOrderDetails(orderId) {
+    console.log('📋 Showing order details for:', orderId);
+    
+    const order = window.currentOrders.find(o => o.id === orderId);
+    if (!order) {
+        console.error('Order not found:', orderId);
+        return;
+    }
+    
+    const modal = document.getElementById('orderDetailsModal');
+    const modalTitle = document.getElementById('modalOrderTitle');
+    const modalContent = document.getElementById('orderDetailsContent');
+    
+    // Set modal title
+    modalTitle.textContent = `Order #${order.id}`;
+    
+    // Generate modal content
+    modalContent.innerHTML = generateOrderDetailsHTML(order);
+    
+    // Show modal
+    modal.style.display = 'flex';
+    
+    // Add event listeners
+    const closeBtn = document.getElementById('closeOrderModal');
+    closeBtn.onclick = closeOrderModal;
+    
+    // Close on background click
+    modal.onclick = function(e) {
+        if (e.target === modal) {
+            closeOrderModal();
+        }
+    };
+    
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeOrderModal();
+        }
+    });
+}
+
+// Close order modal
+function closeOrderModal() {
+    const modal = document.getElementById('orderDetailsModal');
+    modal.style.display = 'none';
+}
+
+// Generate order details HTML
+function generateOrderDetailsHTML(order) {
+    const formatAddress = (address) => {
+        if (!address) return 'N/A';
+        return `${address.firstName} ${address.lastName}<br>
+                ${address.address}<br>
+                ${address.city}, ${address.zipCode || ''}<br>
+                ${address.phone ? `Phone: ${address.phone}` : ''}`;
+    };
+    
+    return `
+        <div class="order-info-section">
+            <div class="section-title">
+                <i class="fas fa-info-circle"></i>
+                Order Information
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Order ID</div>
+                    <div class="info-value">${order.id}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Order Date</div>
+                    <div class="info-value">${formatDate(order.createdAt || order.timestamp)}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Status</div>
+                    <div class="info-value" style="color: ${getStatusColor(order.status)};">${order.status || 'Completed'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Payment Method</div>
+                    <div class="info-value">${order.paymentMethod || 'Credit Card'}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="order-info-section">
+            <div class="section-title">
+                <i class="fas fa-shipping-fast"></i>
+                Shipping Address
+            </div>
+            <div class="info-item">
+                <div class="info-value">${formatAddress(order.shippingAddress)}</div>
+            </div>
+        </div>
+        
+        <div class="order-info-section">
+            <div class="section-title">
+                <i class="fas fa-credit-card"></i>
+                Billing Address
+            </div>
+            <div class="info-item">
+                <div class="info-value">${formatAddress(order.billingAddress)}</div>
+            </div>
+        </div>
+        
+        <div class="order-info-section">
+            <div class="section-title">
+                <i class="fas fa-box"></i>
+                Order Items
+            </div>
+            <div class="order-items-details">
+                ${(order.items || []).map(item => `
+                    <div class="order-item-detail">
+                        <div class="item-image-large">
+                            <img src="${getItemImage(item)}" alt="${getItemTitle(item)}" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 24px; color: #888;\'>🛍️</div>'">
+                        </div>
+                        <div class="item-details-large">
+                            <div>
+                                <div class="item-name-large">${getItemTitle(item)}</div>
+                                <div class="item-brand-large">${getItemBrand(item)}</div>
+                            </div>
+                            <div class="item-meta-large">
+                                <div class="item-specs">
+                                    ${item.size ? `Size: ${item.size}` : ''}${item.size && item.quantity ? ' • ' : ''}${item.quantity ? `Quantity: ${item.quantity}` : ''}
+                                </div>
+                                <div class="item-price-large">$${getItemPrice(item)}</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <div class="order-total-large">
+                <div class="total-label">Total Amount</div>
+                <div class="total-amount">$${(order.total || 0).toFixed(2)}</div>
+            </div>
+        </div>
+        
+        ${order.trackingNumber ? `
+        <div class="tracking-info">
+            <div class="section-title">
+                <i class="fas fa-truck"></i>
+                Tracking Information
+            </div>
+            <div class="info-item">
+                <div class="info-label">Tracking Number</div>
+                <div class="tracking-number">${order.trackingNumber}</div>
+            </div>
+        </div>
+        ` : ''}
+    `;
+}
+
+// Get status color
+function getStatusColor(status) {
+    switch(status?.toLowerCase()) {
+        case 'completed': return '#2ecc71';
+        case 'shipped': return '#3498db';
+        case 'processing': return '#ffc107';
+        case 'cancelled': return '#e74c3c';
+        default: return '#00ffff';
+    }
 }
 
 // Helper functions to get item data safely
@@ -413,5 +579,7 @@ window.loadOrders = loadOrders;
 window.forceAuthCheck = forceAuthCheck;
 window.clearSessionAndRetry = clearSessionAndRetry;
 window.safeOpenCart = safeOpenCart;
+window.showOrderDetails = showOrderDetails;
+window.closeOrderModal = closeOrderModal;
 
 console.log('✅ My Items script loaded successfully');
