@@ -81,13 +81,15 @@
         const savedUser = localStorage.getItem('currentUser');
         let isLoggedIn = false;
         let username = '';
+        let isAdmin = false;
         
         if (savedUser) {
             try {
                 const user = JSON.parse(savedUser);
                 isLoggedIn = true;
                 username = user.profile?.displayName || user.username || 'User';
-                console.log('✅ User is logged in:', username);
+                isAdmin = user.role === 'admin';
+                console.log('✅ User is logged in:', username, 'Admin:', isAdmin);
             } catch (e) {
                 console.log('❌ Error parsing user data');
                 localStorage.removeItem('currentUser');
@@ -100,6 +102,18 @@
             authBtn.style.display = 'none';
             userMenu.style.display = 'block';
             usernameDisplay.textContent = username;
+            
+            // הצג/הסתר קישור פעילות admin בהתאם לתפקיד המשתמש
+            const adminActivityLink = document.getElementById('adminActivityLink');
+            if (adminActivityLink) {
+                if (isAdmin) {
+                    adminActivityLink.style.display = 'block !important';
+                    console.log('✅ Admin activity link shown');
+                } else {
+                    adminActivityLink.style.display = 'none !important';
+                    console.log('✅ Admin activity link hidden');
+                }
+            }
             
             // הוסף לחיצה לכפתור המשתמש עם עדיפות גבוהה
             userMenuToggle.addEventListener('click', function(e) {

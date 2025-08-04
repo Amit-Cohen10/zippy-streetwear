@@ -217,6 +217,12 @@ async function logout() {
             userMenu.style.display = 'none';
         }
         
+        // Hide admin activity link
+        const adminActivityLink = document.getElementById('adminActivityLink');
+        if (adminActivityLink) {
+            adminActivityLink.style.display = 'none !important';
+        }
+        
         // Set global login status
         window.isLoggedIn = false;
         window.currentUser = null;
@@ -313,7 +319,7 @@ function updateUserMenu(username) {
 }
 
 // Show/hide user menu based on login status
-function toggleUserMenuVisibility(isLoggedIn, username = null) {
+function toggleUserMenuVisibility(isLoggedIn, username = null, isAdmin = false) {
     const authBtn = document.getElementById('authBtn');
     const userMenu = document.getElementById('userMenu');
     
@@ -323,6 +329,18 @@ function toggleUserMenuVisibility(isLoggedIn, username = null) {
             userMenu.style.display = 'block';
             if (username) {
                 updateUserMenu(username);
+            }
+            
+            // Show/hide admin activity link based on user role
+            const adminActivityLink = document.getElementById('adminActivityLink');
+            if (adminActivityLink) {
+                if (isAdmin) {
+                    adminActivityLink.style.display = 'block !important';
+                    console.log('✅ Admin activity link shown');
+                } else {
+                    adminActivityLink.style.display = 'none !important';
+                    console.log('✅ Admin activity link hidden');
+                }
             }
         } else {
             authBtn.style.display = 'inline-block';

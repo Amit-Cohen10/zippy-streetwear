@@ -296,6 +296,19 @@ async function handleLogin(e) {
             // Update UI
             updateAuthUI();
             
+            // Check if user is admin and show/hide admin activity link
+            const isAdmin = data.user.role === 'admin';
+            const adminActivityLink = document.getElementById('adminActivityLink');
+            if (adminActivityLink) {
+                if (isAdmin) {
+                    adminActivityLink.style.display = 'block !important';
+                    console.log('✅ Admin activity link shown after login');
+                } else {
+                    adminActivityLink.style.display = 'none !important';
+                    console.log('✅ Admin activity link hidden after login');
+                }
+            }
+            
             // Close modal
             closeAuthModal();
             
@@ -364,6 +377,19 @@ async function handleRegister(e) {
             closeAuthModal();
             updateAuthUI();
             
+            // Check if user is admin and show/hide admin activity link
+            const isAdmin = data.user.role === 'admin';
+            const adminActivityLink = document.getElementById('adminActivityLink');
+            if (adminActivityLink) {
+                if (isAdmin) {
+                    adminActivityLink.style.display = 'block !important';
+                    console.log('✅ Admin activity link shown after registration');
+                } else {
+                    adminActivityLink.style.display = 'none !important';
+                    console.log('✅ Admin activity link hidden after registration');
+                }
+            }
+            
             // Show success message
             showNotification('Registration successful!', 'success');
             
@@ -395,6 +421,13 @@ async function handleLogout() {
         localStorage.removeItem('currentUser');
         localStorage.removeItem('userData');
         localStorage.removeItem('userToken');
+        
+        // Hide admin activity link
+        const adminActivityLink = document.getElementById('adminActivityLink');
+        if (adminActivityLink) {
+            adminActivityLink.style.display = 'none !important';
+            console.log('✅ Admin activity link hidden after logout');
+        }
         
         alert('Logged out successfully');
         updateAuthUI();
@@ -452,6 +485,19 @@ function updateAuthUI() {
                     usernameDisplay.textContent = displayName;
                 }
                 
+                // Check if user is admin and show/hide admin activity link
+                const isAdmin = user.role === 'admin';
+                const adminActivityLink = document.getElementById('adminActivityLink');
+                if (adminActivityLink) {
+                    if (isAdmin) {
+                        adminActivityLink.style.display = 'block !important';
+                        console.log('✅ Admin activity link shown in updateAuthUI');
+                    } else {
+                        adminActivityLink.style.display = 'none !important';
+                        console.log('✅ Admin activity link hidden in updateAuthUI');
+                    }
+                }
+                
                 // Set global login status
                 window.isLoggedIn = true;
                 window.currentUser = user;
@@ -494,6 +540,13 @@ function updateAuthUI() {
                     openAuthModal();
                 };
             }
+            
+            // Hide admin activity link
+            const adminActivityLink = document.getElementById('adminActivityLink');
+            if (adminActivityLink) {
+                adminActivityLink.style.display = 'none !important';
+                console.log('✅ Admin activity link hidden in updateAuthUI error state');
+            }
         }
     } else {
         console.log('👤 No saved user, showing login state');
@@ -509,6 +562,20 @@ function updateAuthUI() {
             };
         } else {
             console.log('❌ Neither authBtn nor userMenu found for logout state');
+        }
+        
+        // Hide admin activity link
+        const adminActivityLink = document.getElementById('adminActivityLink');
+        if (adminActivityLink) {
+            adminActivityLink.style.display = 'none !important';
+            console.log('✅ Admin activity link hidden in updateAuthUI else state');
+        }
+        
+        // Hide admin activity link (logout state)
+        const adminActivityLinkLogout = document.getElementById('adminActivityLink');
+        if (adminActivityLinkLogout) {
+            adminActivityLinkLogout.style.display = 'none !important';
+            console.log('✅ Admin activity link hidden in updateAuthUI logout state');
         }
         
         // Set global login status
@@ -585,12 +652,14 @@ function initUserMenu() {
     const savedUser = localStorage.getItem('currentUser');
     let isLoggedIn = false;
     let username = '';
+    let isAdmin = false;
     if (savedUser) {
         try {
             const user = JSON.parse(savedUser);
             isLoggedIn = true;
             username = user.profile?.displayName || user.username || 'User';
-            console.log('✅ User is logged in:', username);
+            isAdmin = user.role === 'admin';
+            console.log('✅ User is logged in:', username, 'Admin:', isAdmin);
         } catch (e) {
             console.log('❌ Error parsing user data');
             localStorage.removeItem('currentUser');
@@ -601,6 +670,19 @@ function initUserMenu() {
         if (authBtn) authBtn.style.display = 'none';
         if (userMenu) userMenu.style.display = 'block';
         if (usernameDisplay) usernameDisplay.textContent = username;
+        
+        // Show/hide admin activity link based on user role
+        const adminActivityLink = document.getElementById('adminActivityLink');
+        if (adminActivityLink) {
+            if (isAdmin) {
+                adminActivityLink.style.display = 'block !important';
+                console.log('✅ Admin activity link shown');
+            } else {
+                adminActivityLink.style.display = 'none !important';
+                console.log('✅ Admin activity link hidden');
+            }
+        }
+        
         if (userMenuToggle && userDropdown) {
             userMenuToggle.addEventListener('click', function(e) {
                 console.log('🎯 Auth.js click handler triggered');
