@@ -885,6 +885,21 @@ function tryOpenAuth() {
     }
 }
 
+// Check if user is logged in
+function checkUserLogin() {
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+        try {
+            const user = JSON.parse(savedUser);
+            return user;
+        } catch (e) {
+            console.log('❌ Error parsing user data');
+            return null;
+        }
+    }
+    return null;
+}
+
 // Make functions globally available
 window.tryOpenAuth = tryOpenAuth;
 window.closeAuthModal = closeAuthModal;

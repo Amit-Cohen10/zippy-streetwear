@@ -124,7 +124,7 @@ async function loadDashboardData() {
         
         if (activityResponse.ok) {
             const recentActivity = await activityResponse.json();
-            displayRecentActivity(recentActivity);
+            displayRecentActivity(recentActivity.activities || recentActivity);
         }
         
     } catch (error) {
@@ -171,7 +171,8 @@ async function loadActivityData() {
             throw new Error('Failed to load activity data');
         }
         
-        activityData = await response.json();
+        const data = await response.json();
+        activityData = data.activities || data;
         displayActivityTable(activityData);
         
     } catch (error) {
@@ -271,6 +272,28 @@ function filterActivityData() {
     });
     
     displayActivityTable(filteredData);
+}
+
+function filterUserData() {
+    const searchTerm = document.getElementById('userSearch')?.value.toLowerCase() || '';
+    const roleFilter = document.getElementById('userRoleFilter')?.value || '';
+    
+    let filteredData = userData.filter(user => {
+        // Filter by search term
+        if (searchTerm && !user.username?.toLowerCase().includes(searchTerm) && 
+            !user.email?.toLowerCase().includes(searchTerm)) {
+            return false;
+        }
+        
+        // Filter by role
+        if (roleFilter && user.role !== roleFilter) {
+            return false;
+        }
+        
+        return true;
+    });
+    
+    displayUserTable(filteredData);
 }
 
 async function loadUserData() {
@@ -425,8 +448,33 @@ function showLoadingState(elementId) {
 
 function showError(message) {
     console.error(message);
-    // Could show a toast notification here
-    alert(message);
+    
+    // Create a toast notification instead of alert
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(220, 53, 69, 0.9);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        border: 2px solid #dc3545;
+        z-index: 999999;
+        font-weight: 600;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        max-width: 400px;
+        word-wrap: break-word;
+    `;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    // Remove toast after 5 seconds
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 5000);
 }
 
 // Product management functions
