@@ -8705,3 +8705,73 @@ body.theme-light .auth-container {
   margin: 0 0.5rem;
   flex-shrink: 0;
 }
+
+/* --- Improved Exchange Card Product Display (Override) --- */
+.exchange-card .item-display {
+  width: 160px;
+  min-width: 140px;
+  max-width: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 6px;
+}
+
+.exchange-card .product-info h5,
+.exchange-card .product-info p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.exchange-card .product-info h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.exchange-card .product-info p {
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 1px;
+}
+
+/* Improve product image display */
+.exchange-card .product-image {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 6px;
+}
+
+/* Ensure text stays on one line */
+.exchange-card .product-info {
+  width: 100%;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .exchange-card .item-display {
+    width: 140px;
+    min-width: 120px;
+    max-width: 160px;
+  }
+  
+  .exchange-card .product-info h5 {
+    font-size: 0.9rem;
+  }
+  
+  .exchange-card .product-info p {
+    font-size: 0.75rem;
+  }
+  
+  .exchange-card .product-image {
+    width: 50px;
+    height: 50px;
+  }
+}
