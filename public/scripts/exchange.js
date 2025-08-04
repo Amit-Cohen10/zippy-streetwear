@@ -25,9 +25,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to load products
     async function loadProducts() {
         try {
-            const response = await fetch('/data/products/products.json');
-            products = await response.json();
-            console.log('Products loaded:', products.length);
+            // Try to load from API first
+            const apiResponse = await fetch('/api/products?limit=50&page=1');
+            if (apiResponse.ok) {
+                const data = await apiResponse.json();
+                products = (data.products || []).map(product => ({
+                    id: product.id,
+                    title: product.title,
+                    name: product.title, // Add name for compatibility
+                    price: product.price,
+                    category: product.category,
+                    image: product.images && product.images.length > 0 ? product.images[0] : '/images/placeholder.svg',
+                    brand: product.brand,
+                    sizes: product.sizes
+                }));
+                console.log('Products loaded from API:', products.length);
+            } else {
+                // Fallback to local JSON
+                const response = await fetch('/data/products/products.json');
+                if (response.ok) {
+                    products = await response.json();
+                    console.log('Products loaded from local JSON:', products.length);
+                } else {
+                    throw new Error('Failed to load products from server');
+                }
+            }
         } catch (error) {
             console.error('Error loading products:', error);
             // Fallback to sample products if fetch fails
@@ -518,7 +540,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.warn('Products not loaded yet or invalid:', products);
             return null;
         }
-        const product = products.find(p => p.title === productName);
+        const product = products.find(p => p.title === productName || p.name === productName || p.id === productName);
         if (!product) {
             console.warn('Product not found:', productName);
             return null;
@@ -583,9 +605,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (offeredPreview && offeredProduct) {
                     offeredPreview.innerHTML = `
                         <div class="product-preview">
-                            <img src="${offeredProduct.images?.[0] || '/images/placeholder.svg'}" alt="${offeredProduct.title}" onerror="this.src='/images/placeholder.svg'">
+                            <img src="${offeredProduct.image || offeredProduct.images?.[0] || '/images/placeholder.svg'}" alt="${offeredProduct.title || offeredProduct.name}" onerror="this.src='/images/placeholder.svg'">
                             <div class="preview-info">
-                                <h5>${offeredProduct.title}</h5>
+                                <h5>${offeredProduct.title || offeredProduct.name}</h5>
                                 <p>${offeredProduct.brand}</p>
                             </div>
                         </div>
@@ -600,9 +622,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (wantedPreview && wantedProduct) {
                     wantedPreview.innerHTML = `
                         <div class="product-preview">
-                            <img src="${wantedProduct.images?.[0] || '/images/placeholder.svg'}" alt="${wantedProduct.title}" onerror="this.src='/images/placeholder.svg'">
+                            <img src="${wantedProduct.image || wantedProduct.images?.[0] || '/images/placeholder.svg'}" alt="${wantedProduct.title || wantedProduct.name}" onerror="this.src='/images/placeholder.svg'">
                             <div class="preview-info">
-                                <h5>${wantedProduct.title}</h5>
+                                <h5>${wantedProduct.title || wantedProduct.name}</h5>
                                 <p>${wantedProduct.brand}</p>
                             </div>
                         </div>
@@ -747,14 +769,20 @@ document.addEventListener('DOMContentLoaded', function() {
         card.className = 'exchange-card';
         card.dataset.exchangeId = exchange.id;
         
-        // Get product images or fallback
-        const offeredImage = offeredProduct?.images?.[0] || '/images/placeholder.svg';
-        const wantedImage = wantedProduct?.images?.[0] || '/images/placeholder.svg';
+        // Get product images or fallback with proper URL encoding
+        const offeredImage = offeredProduct?.image || offeredProduct?.images?.[0] || '/images/placeholder.svg';
+        const wantedImage = wantedProduct?.image || wantedProduct?.images?.[0] || '/images/placeholder.svg';
+        
+        // Debug logging
+        console.log('Offered product:', offeredProduct);
+        console.log('Wanted product:', wantedProduct);
+        console.log('Offered image path:', offeredImage);
+        console.log('Wanted image path:', wantedImage);
         
         // Use real product data or meaningful fallback
-        const offeredTitle = offeredProduct?.title || 'Product Not Found';
+        const offeredTitle = offeredProduct?.title || offeredProduct?.name || 'Product Not Found';
         const offeredBrand = offeredProduct?.brand || 'Brand Unknown';
-        const wantedTitle = wantedProduct?.title || 'Product Not Found';
+        const wantedTitle = wantedProduct?.title || wantedProduct?.name || 'Product Not Found';
         const wantedBrand = wantedProduct?.brand || 'Brand Unknown';
         
         card.innerHTML = `
@@ -767,18 +795,21 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="card-body">
                 <h3 class="card-title">${exchange.title}</h3>
-                <p class="card-description">${exchange.description}</p>
+                <p class="card-description">${exchange.description.length > 80 ? exchange.description.substring(0, 80) + '...' : exchange.description}</p>
                 <div class="exchange-items">
                     <div class="offering-section">
                         <h4>OFFERING</h4>
                         <div class="item-display">
                             <div class="product-image">
-                                <img src="${offeredImage}" alt="${offeredTitle}" onerror="this.src='/images/placeholder.svg'" onload="console.log('✅ Offered image loaded:', this.src)">
+                                <img src="${offeredImage}" alt="${offeredTitle}" 
+                                     onerror="this.src='/images/placeholder.svg'; console.log('❌ Failed to load offered image:', this.src);" 
+                                     onload="console.log('✅ Offered image loaded:', this.src)"
+                                     style="object-fit: cover; width: 100%; height: 100%; border-radius: 8px;">
                             </div>
                             <div class="product-info">
-                                <h5>${offeredTitle}</h5>
-                                <p>${offeredBrand}</p>
-                                <p>Size: ${exchange.offeredSize}</p>
+                                <h5 style="color: #00ffff; margin-bottom: 4px; font-size: 14px; font-weight: 600;">${offeredTitle}</h5>
+                                <p style="color: #00ff00; margin-bottom: 4px; font-size: 12px; font-weight: 500;">${offeredBrand}</p>
+                                <p style="color: #cccccc; font-size: 11px;">Size: ${exchange.offeredSize}</p>
                             </div>
                         </div>
                     </div>
@@ -787,12 +818,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         <h4>WANTING</h4>
                         <div class="item-display">
                             <div class="product-image">
-                                <img src="${wantedImage}" alt="${wantedTitle}" onerror="this.src='/images/placeholder.svg'" onload="console.log('✅ Wanted image loaded:', this.src)">
+                                <img src="${wantedImage}" alt="${wantedTitle}" 
+                                     onerror="this.src='/images/placeholder.svg'; console.log('❌ Failed to load wanted image:', this.src);" 
+                                     onload="console.log('✅ Wanted image loaded:', this.src)"
+                                     style="object-fit: cover; width: 100%; height: 100%; border-radius: 8px;">
                             </div>
                             <div class="product-info">
-                                <h5>${wantedTitle}</h5>
-                                <p>${wantedBrand}</p>
-                                <p>Size: ${exchange.wantedSize}</p>
+                                <h5 style="color: #00ffff; margin-bottom: 4px; font-size: 14px; font-weight: 600;">${wantedTitle}</h5>
+                                <p style="color: #00ff00; margin-bottom: 4px; font-size: 12px; font-weight: 500;">${wantedBrand}</p>
+                                <p style="color: #cccccc; font-size: 11px;">Size: ${exchange.wantedSize}</p>
                             </div>
                         </div>
                     </div>
@@ -1081,11 +1115,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const wantedDisplay = document.getElementById('wantedDisplay');
         
         if (offeringDisplay) {
-            const offeredTitle = offeredProduct?.title || `Product ${exchange.offeredProductId}`;
+            const offeredTitle = offeredProduct?.title || offeredProduct?.name || `Product ${exchange.offeredProductId}`;
             const offeredBrand = offeredProduct?.brand || 'Unknown Brand';
             offeringDisplay.innerHTML = `
                 <div class="product-detail">
-                    <img src="${offeredProduct?.images?.[0] || '/images/placeholder.svg'}" alt="${offeredTitle}" onerror="this.src='/images/placeholder.svg'">
+                    <img src="${offeredProduct?.image || offeredProduct?.images?.[0] || '/images/placeholder.svg'}" alt="${offeredTitle}" onerror="this.src='/images/placeholder.svg'">
                     <div class="product-info">
                         <h4>${offeredTitle}</h4>
                         <p>${offeredBrand}</p>
@@ -1096,11 +1130,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (wantedDisplay) {
-            const wantedTitle = wantedProduct?.title || `Product ${exchange.wantedProductId}`;
+            const wantedTitle = wantedProduct?.title || wantedProduct?.name || `Product ${exchange.wantedProductId}`;
             const wantedBrand = wantedProduct?.brand || 'Unknown Brand';
             wantedDisplay.innerHTML = `
                 <div class="product-detail">
-                    <img src="${wantedProduct?.images?.[0] || '/images/placeholder.svg'}" alt="${wantedTitle}" onerror="this.src='/images/placeholder.svg'">
+                    <img src="${wantedProduct?.image || wantedProduct?.images?.[0] || '/images/placeholder.svg'}" alt="${wantedTitle}" onerror="this.src='/images/placeholder.svg'">
                     <div class="product-info">
                         <h4>${wantedTitle}</h4>
                         <p>${wantedBrand}</p>
@@ -1740,7 +1774,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const approvalComment = {
             id: exchange.comments.length + 1,
             userId: 1, // Current user
-            text: `✅ Exchange approved and completed! ${offeredProduct?.title || `Product ${exchange.offeredProductId}`} for ${wantedProduct?.title || `Product ${exchange.wantedProductId}`}. Contact: ${formData.phone} | ${formData.email}`,
+            text: `✅ Exchange approved and completed! ${offeredProduct?.title || offeredProduct?.name || `Product ${exchange.offeredProductId}`} for ${wantedProduct?.title || wantedProduct?.name || `Product ${exchange.wantedProductId}`}. Contact: ${formData.phone} | ${formData.email}`,
             date: new Date().toISOString().split('T')[0],
             isApproval: true
         };
@@ -1782,13 +1816,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const exchangeItems = [
                 {
                     id: `exchange-${exchange.id}-offered`,
-                    name: offeredProduct?.title || `Product ${exchange.offeredProductId}`,
+                    name: offeredProduct?.title || offeredProduct?.name || `Product ${exchange.offeredProductId}`,
                     brand: offeredProduct?.brand || 'Exchange Item',
                     price: 0,
                     quantity: 1,
                     size: exchange.offeredSize,
                     category: offeredProduct?.category || 'unknown',
-                    image: offeredProduct?.images?.[0] || null,
+                    image: offeredProduct?.image || offeredProduct?.images?.[0] || null,
                     type: 'exchange',
                     exchangeId: exchange.id,
                     isOffered: true,
@@ -1797,13 +1831,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 {
                     id: `exchange-${exchange.id}-wanted`,
-                    name: wantedProduct?.title || `Product ${exchange.wantedProductId}`,
+                    name: wantedProduct?.title || wantedProduct?.name || `Product ${exchange.wantedProductId}`,
                     brand: wantedProduct?.brand || 'Exchange Item',
                     price: 0,
                     quantity: 1,
                     size: exchange.wantedSize,
                     category: wantedProduct?.category || 'unknown',
-                    image: wantedProduct?.images?.[0] || null,
+                    image: wantedProduct?.image || wantedProduct?.images?.[0] || null,
                     type: 'exchange',
                     exchangeId: exchange.id,
                     isWanted: true,
@@ -1849,7 +1883,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const approvalComment = {
                             id: existingExchange.comments.length + 1,
                             userId: 1,
-                            text: `✅ Exchange approved and completed! ${offeredProduct?.title || `Product ${existingExchange.offeredProductId}`} for ${wantedProduct?.title || `Product ${existingExchange.wantedProductId}`}. Contact: ${approvedExchange.approvalData.phone} | ${approvedExchange.approvalData.email}`,
+                            text: `✅ Exchange approved and completed! ${offeredProduct?.title || offeredProduct?.name || `Product ${existingExchange.offeredProductId}`} for ${wantedProduct?.title || wantedProduct?.name || `Product ${existingExchange.wantedProductId}`}. Contact: ${approvedExchange.approvalData.phone} | ${approvedExchange.approvalData.email}`,
                             date: new Date(approvedExchange.approvalData.approvedAt).toISOString().split('T')[0],
                             isApproval: true
                         };
