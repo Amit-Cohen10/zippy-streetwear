@@ -61,6 +61,18 @@
         // ללא עיכוב - כל האתחול כבר קרה
         initUserMenu();
         
+        // קריאה לפונקציות auth אחרי שהדף נטען
+        setTimeout(() => {
+            if (typeof forceUpdateAuthButton === 'function') {
+                console.log('🔧 Calling forceUpdateAuthButton from simple-user-menu.js...');
+                forceUpdateAuthButton();
+            }
+            if (typeof checkSessionStatus === 'function') {
+                console.log('🔍 Calling checkSessionStatus from simple-user-menu.js...');
+                checkSessionStatus();
+            }
+        }, 1000);
+        
         // Listen for session timeout events
         window.addEventListener('sessionTimeout', function() {
             console.log('🔄 Session timeout detected, updating UI...');

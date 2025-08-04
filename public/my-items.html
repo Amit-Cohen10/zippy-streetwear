@@ -56,17 +56,31 @@
         
         // בדיקה מיידית של מצב ההתחברות
         const savedUser = localStorage.getItem('currentUser');
+        const lastLoginTime = localStorage.getItem('lastLoginTime');
         let isLoggedIn = false;
         let username = '';
         
-        if (savedUser) {
+        if (savedUser && lastLoginTime) {
             try {
                 const user = JSON.parse(savedUser);
-                isLoggedIn = true;
-                username = user.profile?.displayName || user.username || 'User';
-                console.log('⚡ Found user immediately:', username);
+                const loginTime = parseInt(lastLoginTime);
+                const currentTime = Date.now();
+                const sessionTimeout = user.rememberMe ? 12 * 24 * 60 * 60 * 1000 : 30 * 60 * 1000; // 12 hours or 30 minutes
+                
+                // בדוק אם הסשן עדיין תקף
+                if (currentTime - loginTime < sessionTimeout) {
+                    isLoggedIn = true;
+                    username = user.profile?.displayName || user.username || 'User';
+                    console.log('⚡ Found valid user session immediately:', username);
+                } else {
+                    console.log('⏰ Session expired, clearing data...');
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('lastLoginTime');
+                }
             } catch (e) {
                 console.log('❌ Error parsing user data:', e);
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('lastLoginTime');
             }
         }
         
@@ -95,6 +109,64 @@
         
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', updateButtonImmediate);
+        }
+        
+        // פונקציה נוספת עם השהייה לבדיקה חוזרת
+        function updateButtonWithDelay() {
+            console.log('🔄 Delayed button state check...');
+            
+            const savedUser = localStorage.getItem('currentUser');
+            const lastLoginTime = localStorage.getItem('lastLoginTime');
+            let isLoggedIn = false;
+            let username = '';
+            
+            if (savedUser && lastLoginTime) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    const loginTime = parseInt(lastLoginTime);
+                    const currentTime = Date.now();
+                    const sessionTimeout = user.rememberMe ? 12 * 24 * 60 * 60 * 1000 : 30 * 60 * 1000;
+                    
+                    if (currentTime - loginTime < sessionTimeout) {
+                        isLoggedIn = true;
+                        username = user.profile?.displayName || user.username || 'User';
+                        console.log('🔄 Found valid user session with delay:', username);
+                    } else {
+                        console.log('⏰ Session expired in delayed check, clearing data...');
+                        localStorage.removeItem('currentUser');
+                        localStorage.removeItem('lastLoginTime');
+                    }
+                } catch (e) {
+                    console.log('❌ Error parsing user data in delayed check:', e);
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('lastLoginTime');
+                }
+            }
+            
+            const authBtn = document.getElementById('authBtn');
+            const userMenu = document.getElementById('userMenu');
+            const usernameDisplay = document.getElementById('usernameDisplay');
+            
+            if (isLoggedIn && username) {
+                if (authBtn) authBtn.style.display = 'none';
+                if (userMenu) userMenu.style.display = 'inline-block';
+                if (usernameDisplay) usernameDisplay.textContent = username;
+                console.log('🔄 Button updated to username with delay:', username);
+            } else {
+                if (authBtn) authBtn.style.display = 'inline-block';
+                if (userMenu) userMenu.style.display = 'none';
+                console.log('🔄 Button updated to LOGIN with delay');
+            }
+        }
+        
+        // Wait a bit before checking to avoid false negatives
+        setTimeout(updateButtonWithDelay, 300);
+        
+        // Also check when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(updateButtonWithDelay, 500);
+            });
         }
         
         // קריאה לפונקציות auth אחרי שהדף נטען
@@ -1257,6 +1329,93 @@
         
         console.log('✅ Global session timeout system loaded for my-items');
     })();
+    </script>
+    
+    <!-- Handle login redirect -->
+    <script>
+        // Check if user was redirected here for login
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const loginRequired = urlParams.get('login');
+            
+            if (loginRequired === 'required') {
+                console.log('🔐 Login required - checking if user is already logged in');
+                
+                // Check if user is already logged in
+                const savedUser = localStorage.getItem('currentUser');
+                if (savedUser) {
+                    try {
+                        const user = JSON.parse(savedUser);
+                        console.log('✅ User already logged in:', user.username || 'User');
+                        // Remove the login=required parameter from URL
+                        const newUrl = window.location.pathname;
+                        window.history.replaceState({}, document.title, newUrl);
+                        return;
+                    } catch (e) {
+                        console.log('❌ Error parsing user data, removing invalid data');
+                        localStorage.removeItem('currentUser');
+                    }
+                }
+                
+                console.log('🔐 No user found, opening auth modal');
+                
+                // Function to try opening the modal
+                function tryOpenModal() {
+                    if (typeof openAuthModal === 'function') {
+                        console.log('✅ openAuthModal function found, opening modal');
+                        openAuthModal();
+                        return true;
+                    } else {
+                        console.log('❌ openAuthModal function not available yet');
+                        return false;
+                    }
+                }
+                
+                // Function to check if auth system is ready
+                function isAuthSystemReady() {
+                    return typeof openAuthModal === 'function' && 
+                           typeof updateAuthUI === 'function' &&
+                           typeof forceUpdateAuthButton === 'function';
+                }
+                
+                // Try immediately
+                if (!tryOpenModal()) {
+                    // If not available, try again after a short delay
+                    setTimeout(() => {
+                        if (!tryOpenModal()) {
+                            // If still not available, try again after longer delay
+                            setTimeout(() => {
+                                if (!tryOpenModal()) {
+                                    console.log('❌ Failed to open auth modal after multiple attempts');
+                                    // Force update UI and try one more time
+                                    if (typeof forceUpdateAuthButton === 'function') {
+                                        forceUpdateAuthButton();
+                                    }
+                                    setTimeout(() => {
+                                        if (!tryOpenModal()) {
+                                            // Final fallback: show a simple alert
+                                            alert('Please click the LOGIN button to sign in.');
+                                        }
+                                    }, 1000);
+                                }
+                            }, 2000);
+                        }
+                    }, 500);
+                }
+            }
+            
+            // Check session status on page load
+            setTimeout(() => {
+                if (typeof checkSessionStatus === 'function') {
+                    checkSessionStatus();
+                }
+                
+                // Setup admin access checks
+                if (typeof setupAdminAccessChecks === 'function') {
+                    setupAdminAccessChecks();
+                }
+            }, 1000);
+        });
     </script>
 </body>
 </html>
