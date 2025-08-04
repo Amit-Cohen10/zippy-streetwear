@@ -268,82 +268,124 @@
         <div class="container">
             <!-- Page Header -->
             <div class="page-header">
-                <h1 class="page-title">
-                    <i class="fas fa-heart"></i>
-                    My Wishlist
-                </h1>
-                <p class="page-subtitle">Save your favorite items for later</p>
+                <div class="header-content">
+                    <div class="header-icon">
+                        <i class="fas fa-heart"></i>
+                        <div class="icon-glow"></div>
+                    </div>
+                    <div class="header-text">
+                        <h1 class="page-title">My Wishlist</h1>
+                        <p class="page-subtitle">Your curated collection of favorite items</p>
+                    </div>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="wishlistCount">0</span>
+                        <span class="stat-label">Items</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="wishlistValue">$0.00</span>
+                        <span class="stat-label">Total Value</span>
+                    </div>
+                </div>
             </div>
 
             <!-- Wishlist Actions -->
             <div class="wishlist-actions">
                 <div class="actions-left">
-                    <button class="filter-btn" onclick="toggleFilters()">
-                        <i class="fas fa-filter"></i> Filters
+                    <button class="cyber-btn secondary filter-btn" onclick="toggleFilters()">
+                        <i class="fas fa-filter"></i>
+                        <span>Filters</span>
                     </button>
-                    <select id="sortSelect" onchange="sortWishlist()">
-                        <option value="date-desc">Newest First</option>
-                        <option value="date-asc">Oldest First</option>
-                        <option value="price-asc">Price: Low to High</option>
-                        <option value="price-desc">Price: High to Low</option>
-                        <option value="name-asc">Name: A to Z</option>
-                    </select>
+                    <div class="sort-container">
+                        <label for="sortSelect" class="sort-label">Sort by:</label>
+                        <select id="sortSelect" class="cyber-select" onchange="sortWishlist()">
+                            <option value="date-desc">Newest First</option>
+                            <option value="date-asc">Oldest First</option>
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="price-desc">Price: High to Low</option>
+                            <option value="name-asc">Name: A to Z</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="actions-right">
-                    <button class="btn-secondary" onclick="shareWishlist()">
-                        <i class="fas fa-share"></i> Share Wishlist
-                    </button>
-                    <button class="btn-outline" onclick="clearWishlist()">
-                        <i class="fas fa-trash"></i> Clear All
+                    <button class="cyber-btn danger" onclick="clearWishlist()">
+                        <i class="fas fa-trash"></i>
+                        <span>Clear All</span>
                     </button>
                 </div>
             </div>
 
             <!-- Filters Panel -->
-            <div class="filters-panel" id="filtersPanel" style="display: none;">
-                <div class="filter-group">
-                    <label>Category</label>
-                    <select id="categoryFilter">
-                        <option value="">All Categories</option>
-                        <option value="hoodies">Hoodies</option>
-                        <option value="t-shirts">T-Shirts</option>
-                        <option value="jeans">Jeans</option>
-                        <option value="sneakers">Sneakers</option>
-                        <option value="accessories">Accessories</option>
-                    </select>
+            <div class="filters-panel cyber-panel" id="filtersPanel" style="display: none;">
+                <div class="filters-header">
+                    <h3><i class="fas fa-filter"></i> Filters</h3>
+                    <button class="close-filters" onclick="toggleFilters()">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-                <div class="filter-group">
-                    <label>Brand</label>
-                    <select id="brandFilter">
-                        <option value="">All Brands</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Price Range</label>
-                    <div class="price-range">
-                        <input type="range" id="priceMin" min="0" max="500" value="0">
-                        <input type="range" id="priceMax" min="0" max="500" value="500">
-                        <div class="price-values">
-                            <span id="priceMinValue">$0</span> - <span id="priceMaxValue">$500</span>
+                <div class="filters-content">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label">Category</label>
+                            <select id="categoryFilter" class="cyber-select">
+                                <option value="">All Categories</option>
+                                <option value="hoodies">Hoodies</option>
+                                <option value="t-shirts">T-Shirts</option>
+                                <option value="jeans">Jeans</option>
+                                <option value="sneakers">Sneakers</option>
+                                <option value="accessories">Accessories</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Brand</label>
+                            <select id="brandFilter" class="cyber-select">
+                                <option value="">All Brands</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label">Price Range</label>
+                            <div class="price-range">
+                                <div class="range-inputs">
+                                    <input type="range" id="priceMin" class="cyber-range" min="0" max="500" value="0">
+                                    <input type="range" id="priceMax" class="cyber-range" min="0" max="500" value="500">
+                                </div>
+                                <div class="price-values">
+                                    <span id="priceMinValue">$0</span> - <span id="priceMaxValue">$500</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label">Availability</label>
+                            <div class="checkbox-group">
+                                <label class="cyber-checkbox">
+                                    <input type="checkbox" id="inStockFilter" checked>
+                                    <span class="checkmark"></span>
+                                    <span class="checkbox-text">In Stock Only</span>
+                                </label>
+                                <label class="cyber-checkbox">
+                                    <input type="checkbox" id="onSaleFilter">
+                                    <span class="checkmark"></span>
+                                    <span class="checkbox-text">On Sale</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="filter-group">
-                    <label>Availability</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="inStockFilter" checked>
-                            <span class="checkmark"></span>
-                            In Stock Only
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="onSaleFilter">
-                            <span class="checkmark"></span>
-                            On Sale
-                        </label>
-                    </div>
+                <div class="filters-actions">
+                    <button class="cyber-btn primary" onclick="applyFilters()">
+                        <i class="fas fa-check"></i>
+                        <span>Apply Filters</span>
+                    </button>
+                    <button class="cyber-btn secondary" onclick="resetFilters()">
+                        <i class="fas fa-undo"></i>
+                        <span>Reset</span>
+                    </button>
                 </div>
-                <button class="btn-primary" onclick="applyFilters()">Apply Filters</button>
             </div>
 
             <!-- Wishlist Content -->
@@ -354,89 +396,93 @@
                 </div>
 
                 <!-- Empty State -->
-                <div class="empty-wishlist" id="emptyWishlist" style="display: none;">
-                    <div class="empty-icon">
-                        <i class="fas fa-heart-broken"></i>
+                <div class="empty-wishlist cyber-empty" id="emptyWishlist" style="display: none;">
+                    <div class="empty-content">
+                        <div class="empty-icon">
+                            <i class="fas fa-heart-broken"></i>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h3>Your wishlist is empty</h3>
+                        <p>Start adding items you love to your wishlist!</p>
+                        <div class="empty-actions">
+                            <a href="/products" class="cyber-btn primary">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>Browse Products</span>
+                            </a>
+                            <a href="/exchange" class="cyber-btn secondary">
+                                <i class="fas fa-exchange-alt"></i>
+                                <span>Explore Exchange</span>
+                            </a>
+                        </div>
                     </div>
-                    <h3>Your wishlist is empty</h3>
-                    <p>Start adding items you love to your wishlist!</p>
-                    <a href="/products" class="btn-primary">
-                        <i class="fas fa-shopping-bag"></i>
-                        Browse Products
-                    </a>
                 </div>
 
                 <!-- Loading State -->
-                <div class="loading-state" id="loadingState">
-                    <div class="loading-spinner"></div>
-                    <p>Loading your wishlist...</p>
+                <div class="loading-state cyber-loading" id="loadingState">
+                    <div class="loading-content">
+                        <div class="loading-spinner">
+                            <div class="spinner-ring"></div>
+                            <div class="spinner-text">ZIPPY</div>
+                        </div>
+                        <p>Loading your wishlist...</p>
+                        <div class="loading-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Wishlist Stats -->
-            <div class="wishlist-stats" id="wishlistStats" style="display: none;">
-                <div class="stats-card">
-                    <div class="stat-item">
-                        <span class="stat-label">Total Items</span>
-                        <span class="stat-value" id="totalItems">0</span>
+            <div class="wishlist-stats cyber-stats" id="wishlistStats" style="display: none;">
+                <div class="stats-header">
+                    <h3><i class="fas fa-chart-bar"></i> Wishlist Summary</h3>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="totalItems">0</span>
+                            <span class="stat-label">Total Items</span>
+                        </div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Total Value</span>
-                        <span class="stat-value" id="totalValue">$0.00</span>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="totalValue">$0.00</span>
+                            <span class="stat-label">Total Value</span>
+                        </div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Average Price</span>
-                        <span class="stat-value" id="averagePrice">$0.00</span>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value" id="averagePrice">$0.00</span>
+                            <span class="stat-label">Average Price</span>
+                        </div>
                     </div>
                 </div>
                 <div class="bulk-actions">
-                    <button class="btn-primary" onclick="addAllToCart()">
+                    <button class="cyber-btn primary" onclick="addAllToCart()">
                         <i class="fas fa-shopping-cart"></i>
-                        Add All to Cart
+                        <span>Add All to Cart</span>
                     </button>
-                    <button class="btn-secondary" onclick="moveToComparison()">
+                    <button class="cyber-btn secondary" onclick="moveToComparison()">
                         <i class="fas fa-balance-scale"></i>
-                        Compare Selected
+                        <span>Compare Selected</span>
                     </button>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Share Modal -->
-    <div class="modal" id="shareModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Share Your Wishlist</h3>
-                <button class="close-btn" onclick="closeShareModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <p>Share your wishlist with friends and family!</p>
-                <div class="share-options">
-                    <button class="share-btn email" onclick="shareViaEmail()">
-                        <i class="fas fa-envelope"></i>
-                        Email
-                    </button>
-                    <button class="share-btn social" onclick="shareOnSocial('facebook')">
-                        <i class="fab fa-facebook"></i>
-                        Facebook
-                    </button>
-                    <button class="share-btn social" onclick="shareOnSocial('twitter')">
-                        <i class="fab fa-twitter"></i>
-                        Twitter
-                    </button>
-                    <button class="share-btn copy" onclick="copyWishlistLink()">
-                        <i class="fas fa-copy"></i>
-                        Copy Link
-                    </button>
-                </div>
-                <div class="share-link">
-                    <input type="text" id="shareLink" readonly>
-                    <button onclick="copyWishlistLink()">Copy</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Scripts -->
     <script src="/scripts/global.js"></script>

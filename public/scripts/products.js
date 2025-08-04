@@ -1,19 +1,19 @@
 // Products Page JavaScript
 
+let products = [];
+let filteredProducts = [];
+let isInitialized = false;
+let currentView = 'grid';
+let lastRenderTime = 0;
+const RENDER_THROTTLE = 100; // Prevent excessive re-renders
+let lastCount = -1;
+let lastFilterState = '';
+
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on products page
     if (!window.location.pathname.includes('products')) {
         return;
     }
-
-    let products = [];
-    let filteredProducts = [];
-    let isInitialized = false;
-    let currentView = 'grid';
-    let lastRenderTime = 0;
-    const RENDER_THROTTLE = 100; // Prevent excessive re-renders
-    let lastCount = -1;
-    let lastFilterState = '';
 
     // Load products from server
     async function loadProducts() {
@@ -78,6 +78,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>`
                     }
                     ${product.status === 'sold-out' ? '<span class="sold-out-badge">SOLD OUT</span>' : ''}
+                    ${product.status === 'available' ? 
+                        `<button class="wishlist-btn" onclick="event.stopPropagation(); toggleWishlist('${product.id}')" data-product-id="${product.id}">
+                            <i class="fas fa-heart"></i>
+                        </button>` : ''
+                    }
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">${product.name}</h3>
@@ -314,6 +319,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     renderProducts();
                     setupEventListeners();
                     updateResultsCount();
+                    initializeWishlistButtons(); // Initialize wishlist buttons
                     isInitialized = true;
                     const loadingOverlay = document.getElementById('loadingOverlay');
                     if (loadingOverlay) {
@@ -325,6 +331,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             renderProducts();
                             setupEventListeners();
                             updateResultsCount();
+                            initializeWishlistButtons(); // Initialize wishlist buttons
                             isInitialized = true;
                         } catch (fallbackError) {}
                     }, 500);
@@ -344,4 +351,178 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('beforeunload', function() {
         cleanup();
     });
-}); 
+});
+
+// Wishlist functionality
+function toggleWishlist(productId) {
+    try {
+        // Check if user is logged in
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            // Show login modal if user is not logged in
+            if (typeof openAuthModal === 'function') {
+                openAuthModal();
+            } else {
+                alert('Please log in to add items to your wishlist');
+            }
+            return;
+        }
+
+        // Get current wishlist
+        let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+        
+        // Check if product is already in wishlist
+        const isInWishlist = wishlist.some(item => item.id === productId);
+        
+        if (isInWishlist) {
+            // Remove from wishlist
+            wishlist = wishlist.filter(item => item.id !== productId);
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            
+            // Update button appearance
+            const wishlistBtn = document.querySelector(`[data-product-id="${productId}"]`);
+            if (wishlistBtn) {
+                wishlistBtn.classList.remove('active');
+            }
+            
+            // Show notification
+            showNotification('Product removed from wishlist', 'info');
+        } else {
+            // Add to wishlist - find product from the global products array
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                wishlist.push({
+                    id: productId,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    category: product.category,
+                    brand: product.brand,
+                    addedAt: new Date().toISOString()
+                });
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                
+                // Update button appearance
+                const wishlistBtn = document.querySelector(`[data-product-id="${productId}"]`);
+                if (wishlistBtn) {
+                    wishlistBtn.classList.add('active');
+                }
+                
+                // Show notification and redirect to wishlist page
+                showNotification('Product added to wishlist! Redirecting to wishlist page...', 'success');
+                
+                // Redirect to wishlist page after a short delay
+                setTimeout(() => {
+                    window.location.href = '/wishlist.html';
+                }, 1500);
+            } else {
+                console.error('Product not found:', productId);
+                showNotification('Product not found', 'error');
+            }
+        }
+        
+        // Update wishlist count in navbar if it exists
+        updateWishlistCount();
+        
+    } catch (error) {
+        console.error('Error toggling wishlist:', error);
+        showNotification('Error updating wishlist', 'error');
+    }
+}
+
+function updateWishlistCount() {
+    try {
+        const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+        const wishlistCount = wishlist.length;
+        
+        // Update wishlist count in navbar if it exists
+        const wishlistCountElement = document.getElementById('wishlistCount');
+        if (wishlistCountElement) {
+            wishlistCountElement.textContent = wishlistCount;
+        }
+    } catch (error) {
+        console.error('Error updating wishlist count:', error);
+    }
+}
+
+function showNotification(message, type = 'info') {
+    try {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 500;
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out;
+            max-width: 300px;
+        `;
+        
+        // Set background color based on type
+        switch (type) {
+            case 'success':
+                notification.style.background = 'linear-gradient(135deg, #00ff88, #00cc6a)';
+                break;
+            case 'error':
+                notification.style.background = 'linear-gradient(135deg, #ff4757, #ff6b7a)';
+                break;
+            case 'info':
+            default:
+                notification.style.background = 'linear-gradient(135deg, #00ffff, #0080ff)';
+                break;
+        }
+        
+        notification.textContent = message;
+        
+        // Add to page
+        document.body.appendChild(notification);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease-in';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+        
+    } catch (error) {
+        console.error('Error showing notification:', error);
+    }
+}
+
+
+
+function updateWishlistButtonStates() {
+    try {
+        const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+        const wishlistIds = wishlist.map(item => item.id);
+        
+        // Update all wishlist buttons
+        document.querySelectorAll('.wishlist-btn').forEach(btn => {
+            const productId = btn.getAttribute('data-product-id');
+            if (wishlistIds.includes(productId)) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    } catch (error) {
+        console.error('Error updating wishlist button states:', error);
+    }
+}
+
+// Initialize wishlist buttons when products are loaded
+function initializeWishlistButtons() {
+    // Wait a bit for products to be loaded
+    setTimeout(() => {
+        updateWishlistButtonStates();
+        updateWishlistCount();
+    }, 500);
+} 
