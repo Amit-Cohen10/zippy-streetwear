@@ -596,10 +596,58 @@ async function loadExchangeItemsWithProductData() {
         const purchasedItems = JSON.parse(localStorage.getItem('purchasedItems') || '[]');
         const exchangeItems = purchasedItems.filter(item => item.type === 'exchange');
         
-        // Load products from server to get full product details (like in exchange.js)
+        // Add sample exchange data for testing if none exists
+        if (exchangeItems.length === 0) {
+            console.log('📝 No exchange items found, adding sample data for testing...');
+            const sampleExchangeItems = [
+                {
+                    id: 'exchange-test-1-offered',
+                    name: 'Circuit Board Hoodie',
+                    title: 'Circuit Board Hoodie',
+                    brand: 'Zippy Originals',
+                    price: 0,
+                    quantity: 1,
+                    size: 'M',
+                    category: 'hoodies',
+                    image: '/images/products/Circuit Board Hoodie/Circuit Board Hoodie.png',
+                    type: 'exchange',
+                    exchangeId: 'test-1',
+                    isOffered: true,
+                    purchaseDate: new Date().toISOString(),
+                    status: 'completed'
+                },
+                {
+                    id: 'exchange-test-1-wanted',
+                    name: '404 Not Found Tee',
+                    title: '404 Not Found Tee',
+                    brand: 'Street Tech',
+                    price: 0,
+                    quantity: 1,
+                    size: 'L',
+                    category: 't-shirts',
+                    image: '/images/products/404 Not Found Tee/404 Not Found Tee.png',
+                    type: 'exchange',
+                    exchangeId: 'test-1',
+                    isWanted: true,
+                    purchaseDate: new Date().toISOString(),
+                    status: 'completed'
+                }
+            ];
+            
+            // Add to localStorage for testing
+            purchasedItems.push(...sampleExchangeItems);
+            localStorage.setItem('purchasedItems', JSON.stringify(purchasedItems));
+            
+            console.log('✅ Added sample exchange data for testing');
+            exchangeItems.push(...sampleExchangeItems);
+        }
+        
+        console.log('🔄 Found exchange items:', exchangeItems);
+        
+        // Load products from server to get full product details (like in products.js)
         let products = [];
         try {
-            // Try to load from API first (like in exchange.js)
+            // Try to load from API first (like in products.js)
             const apiResponse = await fetch('/api/products?limit=50&page=1');
             if (apiResponse.ok) {
                 const data = await apiResponse.json();
@@ -609,16 +657,26 @@ async function loadExchangeItemsWithProductData() {
                     name: product.title, // Add name for compatibility
                     price: product.price,
                     category: product.category,
-                    image: product.images && product.images.length > 0 ? product.images[0] : '/images/placeholder.svg',
+                    image: product.images && product.images.length > 0 ? product.images[0] : '/images/placeholder.jpg',
                     brand: product.brand,
                     sizes: product.sizes
                 }));
                 console.log('📦 Products loaded from API:', products.length);
             } else {
-                // Fallback to local JSON
+                // Fallback to local JSON (like in products.js)
                 const response = await fetch('/data/products/products.json');
                 if (response.ok) {
-                    products = await response.json();
+                    const jsonProducts = await response.json();
+                    products = jsonProducts.map(product => ({
+                        id: product.id,
+                        title: product.title,
+                        name: product.title,
+                        price: product.price,
+                        category: product.category,
+                        image: product.images && product.images.length > 0 ? product.images[0] : '/images/placeholder.jpg',
+                        brand: product.brand,
+                        sizes: product.sizes
+                    }));
                     console.log('📦 Products loaded from local JSON:', products.length);
                 } else {
                     throw new Error('Failed to load products from server');
@@ -626,55 +684,97 @@ async function loadExchangeItemsWithProductData() {
             }
         } catch (error) {
             console.error('❌ Error loading products:', error);
-            // Fallback to sample products if fetch fails (like in exchange.js)
+            // Fallback to sample products if fetch fails (like in products.js)
             products = [
                 {
                     id: "Circuit Board Hoodie",
                     title: "Circuit Board Hoodie",
-                    images: ["/images/products/Circuit Board Hoodie/Circuit Board Hoodie.png"],
+                    name: "Circuit Board Hoodie",
+                    image: "/images/products/Circuit Board Hoodie/Circuit Board Hoodie.png",
                     category: "hoodies",
                     sizes: ["S", "M", "L", "XL"],
-                    brand: "Zippy Originals"
+                    brand: "Zippy Originals",
+                    price: 129.99
                 },
                 {
                     id: "404 Not Found Tee", 
                     title: "404 Not Found Tee",
-                    images: ["/images/products/404 Not Found Tee/404 Not Found Tee.png"],
+                    name: "404 Not Found Tee",
+                    image: "/images/products/404 Not Found Tee/404 Not Found Tee.png",
                     category: "t-shirts",
                     sizes: ["S", "M", "L", "XL", "XXL"],
-                    brand: "Street Tech"
+                    brand: "Street Tech",
+                    price: 49.99
                 },
                 {
                     id: "SYSTEM OVERRIDE Tee",
                     title: "SYSTEM OVERRIDE Tee",
-                    images: ["/images/products/SYSTEM OVERRIDE Tee/SYSTEM OVERRIDE Tee.png"],
+                    name: "SYSTEM OVERRIDE Tee",
+                    image: "/images/products/SYSTEM OVERRIDE Tee/SYSTEM OVERRIDE Tee.png",
                     category: "t-shirts",
                     sizes: ["S", "M", "L", "XL", "XXL"],
-                    brand: "Street Tech"
+                    brand: "Street Tech",
+                    price: 49.99
                 },
                 {
                     id: "Neon Cargo Pants",
                     title: "Neon Cargo Pants", 
-                    images: ["/images/products/Neon Cargo Pants/Neon Cargo Pants.png"],
+                    name: "Neon Cargo Pants",
+                    image: "/images/products/Neon Cargo Pants/Neon Cargo Pants.png",
                     category: "pants",
                     sizes: ["28", "30", "32", "34", "36"],
-                    brand: "Future Wear"
+                    brand: "Future Wear",
+                    price: 89.99
                 },
                 {
                     id: "Circuit Pattern Hoodie",
                     title: "Circuit Pattern Hoodie",
-                    images: ["/images/products/Circuit Pattern Hoodie/Circuit Pattern Hoodie.png"],
+                    name: "Circuit Pattern Hoodie",
+                    image: "/images/products/Circuit Pattern Hoodie/Circuit Pattern Hoodie.png",
                     category: "hoodies",
                     sizes: ["S", "M", "L", "XL"],
-                    brand: "Zippy Originals"
+                    brand: "Zippy Originals",
+                    price: 199.99
                 },
                 {
                     id: "Circuit Breaker Pants",
                     title: "Circuit Breaker Pants",
-                    images: ["/images/products/Circuit Breaker Pants/Circuit Breaker Pants.png"],
+                    name: "Circuit Breaker Pants",
+                    image: "/images/products/Circuit Breaker Pants/Circuit Breaker Pants.png",
                     category: "pants",
                     sizes: ["S", "M", "L", "XL"],
-                    brand: "Street Tech"
+                    brand: "Street Tech",
+                    price: 69.99
+                },
+                {
+                    id: "Neural Network Hoodie",
+                    title: "Neural Network Hoodie",
+                    name: "Neural Network Hoodie",
+                    image: "/images/products/Neural Network Hoodie/Neural Network Hoodie.png",
+                    category: "hoodies",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Zippy Originals",
+                    price: 149.99
+                },
+                {
+                    id: "Cyber Samurai Hoodie",
+                    title: "Cyber Samurai Hoodie",
+                    name: "Cyber Samurai Hoodie",
+                    image: "/images/products/Cyber Samurai Hoodie/Cyber Samurai Hoodie.png",
+                    category: "hoodies",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Zippy Originals",
+                    price: 159.99
+                },
+                {
+                    id: "Quantum Circuit Hoodie",
+                    title: "Quantum Circuit Hoodie",
+                    name: "Quantum Circuit Hoodie",
+                    image: "/images/products/Quantum Circuit Hoodie/Quantum Circuit Hoodie.png",
+                    category: "hoodies",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Zippy Originals",
+                    price: 179.99
                 }
             ];
             console.log('📦 Using fallback products:', products.length);
@@ -693,17 +793,27 @@ async function loadExchangeItemsWithProductData() {
         const exchangeOrders = Object.entries(exchangeGroups).map(([exchangeId, items]) => {
             const firstItem = items[0];
             
-            // Enhance items with product data (like in exchange.js)
+            // Enhance items with product data (like in products.js)
             const enhancedItems = items.map(item => {
-                // Find matching product (like in exchange.js)
-                const product = products.find(p => 
-                    p.id === item.productId || 
-                    p.title === item.name || 
-                    p.name === item.name ||
-                    p.title === item.title
-                );
+                console.log('🔍 Looking for product match for item:', item);
+                
+                // Find matching product (like in products.js)
+                const product = products.find(p => {
+                    const itemName = (item.name || item.title || '').toLowerCase().trim();
+                    const productName = (p.title || p.name || '').toLowerCase().trim();
+                    
+                    return p.id === item.productId || 
+                           p.title === item.name || 
+                           p.name === item.name ||
+                           p.title === item.title ||
+                           p.id === item.id ||
+                           productName === itemName ||
+                           productName.includes(itemName) ||
+                           itemName.includes(productName);
+                });
                 
                 if (product) {
+                    console.log('✅ Found matching product for item:', item.name || item.title, '->', product.title);
                     return {
                         ...item,
                         title: product.title || product.name,
@@ -713,9 +823,14 @@ async function loadExchangeItemsWithProductData() {
                         description: product.description,
                         sizes: product.sizes
                     };
+                } else {
+                    console.log('❌ No matching product found for item:', item.name || item.title);
+                    // Return item with fallback image
+                    return {
+                        ...item,
+                        image: '/images/placeholder.jpg'
+                    };
                 }
-                
-                return item;
             });
             
             return {
@@ -1040,34 +1155,46 @@ function getStatusColor(status) {
 
 // Helper functions to get item data safely
 function getItemImage(item) {
+    console.log('🖼️ Getting image for item:', item);
+    
     if (item.type === 'exchange') {
-        // For exchange items, try to show actual product image (like in exchange.js)
-        if (item.image) {
+        // For exchange items, try to show actual product image (like in products.js)
+        if (item.image && item.image !== '/images/placeholder.jpg' && item.image !== '/images/placeholder.svg') {
+            console.log('✅ Using exchange item image:', item.image);
             return `<img src="${item.image}" alt="${getItemTitle(item)}" style="object-fit: cover; width: 100%; height: 100%;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 24px; color: #00ffff; background: rgba(0, 255, 255, 0.1); border-radius: 8px;\'>🔄</div>'">`;
         }
+        console.log('🔄 Using exchange placeholder for item:', getItemTitle(item));
         return '<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 24px; color: #00ffff; background: rgba(0, 255, 255, 0.1); border-radius: 8px;">🔄</div>';
     }
     
-    if (item.image) {
+    if (item.image && item.image !== '/images/placeholder.jpg' && item.image !== '/images/placeholder.svg') {
+        console.log('✅ Using regular item image:', item.image);
         return `<img src="${item.image}" alt="${getItemTitle(item)}" style="object-fit: cover; width: 100%; height: 100%;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 24px; color: #888;\'>🛍️</div>'">`;
     }
     
+    console.log('🛍️ Using regular placeholder for item:', getItemTitle(item));
     return '<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 24px; color: #888;">🛍️</div>';
 }
 
 function getItemImageForModal(item) {
+    console.log('🖼️ Getting modal image for item:', item);
+    
     if (item.type === 'exchange') {
-        // For exchange items in modal, show larger image (like in exchange.js)
-        if (item.image) {
+        // For exchange items in modal, show larger image (like in products.js)
+        if (item.image && item.image !== '/images/placeholder.jpg' && item.image !== '/images/placeholder.svg') {
+            console.log('✅ Using exchange item modal image:', item.image);
             return `<img src="${item.image}" alt="${getItemTitle(item)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 48px; color: #00ffff; background: rgba(0, 255, 255, 0.1); border-radius: 12px;\'>🔄</div>'">`;
         }
+        console.log('🔄 Using exchange modal placeholder for item:', getItemTitle(item));
         return '<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 48px; color: #00ffff; background: rgba(0, 255, 255, 0.1); border-radius: 12px;">🔄</div>';
     }
     
-    if (item.image) {
+    if (item.image && item.image !== '/images/placeholder.jpg' && item.image !== '/images/placeholder.svg') {
+        console.log('✅ Using regular item modal image:', item.image);
         return `<img src="${item.image}" alt="${getItemTitle(item)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 48px; color: #888;\'>🛍️</div>'">`;
     }
     
+    console.log('🛍️ Using regular modal placeholder for item:', getItemTitle(item));
     return '<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 48px; color: #888;">🛍️</div>';
 }
 

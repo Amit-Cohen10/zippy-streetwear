@@ -39,19 +39,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     brand: product.brand,
                     sizes: product.sizes
                 }));
-                console.log('Products loaded from API:', products.length);
+                console.log('✅ Products loaded from API:', products.length);
+                console.log('📦 First few API products:', products.slice(0, 3).map(p => ({ id: p.id, title: p.title, name: p.name })));
             } else {
                 // Fallback to local JSON
                 const response = await fetch('/data/products/products.json');
                 if (response.ok) {
                     products = await response.json();
-                    console.log('Products loaded from local JSON:', products.length);
+                    console.log('✅ Products loaded from local JSON:', products.length);
+                    console.log('📦 First few JSON products:', products.slice(0, 3).map(p => ({ id: p.id, title: p.title, name: p.name })));
                 } else {
                     throw new Error('Failed to load products from server');
                 }
             }
         } catch (error) {
-            console.error('Error loading products:', error);
+            console.error('❌ Error loading products:', error);
             // Fallback to sample products if fetch fails
             products = [
                 {
@@ -288,6 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             ];
             console.log('✅ Using fallback products:', products.length);
+            console.log('📦 First few fallback products:', products.slice(0, 3).map(p => ({ id: p.id, title: p.title, name: p.name })));
             console.log('✅ Fallback products have real image paths');
         }
     }
@@ -537,14 +540,59 @@ document.addEventListener('DOMContentLoaded', function() {
     // Helper function to get product by name
     function getProductById(productName) {
         if (!products || !Array.isArray(products)) {
-            console.warn('Products not loaded yet or invalid:', products);
+            console.warn('❌ Products not loaded yet or invalid:', products);
             return null;
         }
-        const product = products.find(p => p.title === productName || p.name === productName || p.id === productName);
+        
+        console.log('🔍 Looking for product:', productName);
+        console.log('📦 Available products count:', products.length);
+        console.log('📦 First few products:', products.slice(0, 3).map(p => ({ id: p.id, title: p.title, name: p.name })));
+        
+        const searchName = (productName || '').toLowerCase().trim();
+        
+        // Search by title first (since exchange data uses titles as IDs)
+        let product = products.find(p => {
+            const productTitle = (p.title || '').toLowerCase().trim();
+            return productTitle === searchName;
+        });
+        
+        // If not found by title, try by name
         if (!product) {
-            console.warn('Product not found:', productName);
-            return null;
+            product = products.find(p => {
+                const productName = (p.name || '').toLowerCase().trim();
+                return productName === searchName;
+            });
         }
+        
+        // If still not found, try by ID
+        if (!product) {
+            product = products.find(p => {
+                const productId = (p.id || '').toLowerCase().trim();
+                return productId === searchName;
+            });
+        }
+        
+        // If still not found, try partial matches
+        if (!product) {
+            product = products.find(p => {
+                const productTitle = (p.title || '').toLowerCase().trim();
+                const productName = (p.name || '').toLowerCase().trim();
+                
+                return productTitle.includes(searchName) ||
+                       productName.includes(searchName) ||
+                       searchName.includes(productTitle) ||
+                       searchName.includes(productName);
+            });
+        }
+        
+        if (product) {
+            console.log('✅ Found product:', product);
+        } else {
+            console.warn('❌ Product not found:', productName);
+            console.log('🔍 Search name was:', searchName);
+            console.log('📦 First few products:', products.slice(0, 3).map(p => ({ id: p.id, title: p.title, name: p.name })));
+        }
+        
         return product;
     }
 
@@ -773,11 +821,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const offeredImage = offeredProduct?.image || offeredProduct?.images?.[0] || '/images/placeholder.svg';
         const wantedImage = wantedProduct?.image || wantedProduct?.images?.[0] || '/images/placeholder.svg';
         
-        // Debug logging
-        console.log('Offered product:', offeredProduct);
-        console.log('Wanted product:', wantedProduct);
+        // Enhanced debug logging
+        console.log('=== Creating Exchange Card ===');
+        console.log('Exchange ID:', exchange.id);
+        console.log('Exchange title:', exchange.title);
+        console.log('Offered Product ID:', exchange.offeredProductId);
+        console.log('Wanted Product ID:', exchange.wantedProductId);
+        console.log('Offered product found:', offeredProduct);
+        console.log('Wanted product found:', wantedProduct);
         console.log('Offered image path:', offeredImage);
         console.log('Wanted image path:', wantedImage);
+        console.log('Products array length:', products?.length || 0);
+        console.log('First few products:', products?.slice(0, 3).map(p => ({ id: p.id, title: p.title })));
+        console.log('========================');
         
         // Use real product data or meaningful fallback
         const offeredTitle = offeredProduct?.title || offeredProduct?.name || 'Product Not Found';
@@ -1808,21 +1864,26 @@ document.addEventListener('DOMContentLoaded', function() {
             // Get current purchased items
             const purchasedItems = JSON.parse(localStorage.getItem('purchasedItems') || '[]');
             
-            // Get product information
+            // Get product information (like in products.js)
             const offeredProduct = getProductById(exchange.offeredProductId);
             const wantedProduct = getProductById(exchange.wantedProductId);
             
-            // Create items from the exchange
+            console.log('🔄 Adding exchange to My Items:', exchange);
+            console.log('📦 Offered product:', offeredProduct);
+            console.log('📦 Wanted product:', wantedProduct);
+            
+            // Create items from the exchange (like in products.js)
             const exchangeItems = [
                 {
                     id: `exchange-${exchange.id}-offered`,
                     name: offeredProduct?.title || offeredProduct?.name || `Product ${exchange.offeredProductId}`,
+                    title: offeredProduct?.title || offeredProduct?.name || `Product ${exchange.offeredProductId}`,
                     brand: offeredProduct?.brand || 'Exchange Item',
                     price: 0,
                     quantity: 1,
                     size: exchange.offeredSize,
                     category: offeredProduct?.category || 'unknown',
-                    image: offeredProduct?.image || offeredProduct?.images?.[0] || null,
+                    image: offeredProduct?.image || (offeredProduct?.images && offeredProduct?.images[0]) || '/images/placeholder.jpg',
                     type: 'exchange',
                     exchangeId: exchange.id,
                     isOffered: true,
@@ -1832,12 +1893,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 {
                     id: `exchange-${exchange.id}-wanted`,
                     name: wantedProduct?.title || wantedProduct?.name || `Product ${exchange.wantedProductId}`,
+                    title: wantedProduct?.title || wantedProduct?.name || `Product ${exchange.wantedProductId}`,
                     brand: wantedProduct?.brand || 'Exchange Item',
                     price: 0,
                     quantity: 1,
                     size: exchange.wantedSize,
                     category: wantedProduct?.category || 'unknown',
-                    image: wantedProduct?.image || wantedProduct?.images?.[0] || null,
+                    image: wantedProduct?.image || (wantedProduct?.images && wantedProduct?.images[0]) || '/images/placeholder.jpg',
                     type: 'exchange',
                     exchangeId: exchange.id,
                     isWanted: true,
@@ -1845,6 +1907,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     status: 'completed'
                 }
             ];
+            
+            console.log('✅ Created exchange items:', exchangeItems);
             
             // Add to purchased items
             purchasedItems.push(...exchangeItems);

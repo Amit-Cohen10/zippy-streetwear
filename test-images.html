@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Images</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .image-test {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+        .image-test img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 8px;
+        }
+        .error {
+            color: #ff4444;
+        }
+        .success {
+            color: #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Images</h1>
+    
+    <div class="image-test">
+        <h3>Circuit Board Hoodie</h3>
+        <img src="/images/products/Circuit Board Hoodie/Circuit Board Hoodie.png" 
+             alt="Circuit Board Hoodie" 
+             onerror="this.parentElement.innerHTML += '<p class=\'error\'>❌ Failed to load image</p>'"
+             onload="this.parentElement.innerHTML += '<p class=\'success\'>✅ Image loaded successfully</p>'">
+    </div>
+    
+    <div class="image-test">
+        <h3>404 Not Found Tee</h3>
+        <img src="/images/products/404 Not Found Tee/404 Not Found Tee.png" 
+             alt="404 Not Found Tee" 
+             onerror="this.parentElement.innerHTML += '<p class=\'error\'>❌ Failed to load image</p>'"
+             onload="this.parentElement.innerHTML += '<p class=\'success\'>✅ Image loaded successfully</p>'">
+    </div>
+    
+    <div class="image-test">
+        <h3>Neon Cargo Pants</h3>
+        <img src="/images/products/Neon Cargo Pants/Neon Cargo Pants.png" 
+             alt="Neon Cargo Pants" 
+             onerror="this.parentElement.innerHTML += '<p class=\'error\'>❌ Failed to load image</p>'"
+             onload="this.parentElement.innerHTML += '<p class=\'success\'>✅ Image loaded successfully</p>'">
+    </div>
+    
+    <script>
+        console.log('Testing images...');
+        
+        // Test if images exist
+        const testImages = [
+            '/images/products/Circuit Board Hoodie/Circuit Board Hoodie.png',
+            '/images/products/404 Not Found Tee/404 Not Found Tee.png',
+            '/images/products/Neon Cargo Pants/Neon Cargo Pants.png'
+        ];
+        
+        testImages.forEach(imagePath => {
+            fetch(imagePath)
+                .then(response => {
+                    if (response.ok) {
+                        console.log('✅ Image exists:', imagePath);
+                    } else {
+                        console.log('❌ Image not found:', imagePath);
+                    }
+                })
+                .catch(error => {
+                    console.log('❌ Error loading image:', imagePath, error);
+                });
+        });
+    </script>
+</body>
+</html> 
