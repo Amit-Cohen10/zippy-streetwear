@@ -96,6 +96,49 @@
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', updateButtonImmediate);
         }
+        
+        // קריאה לפונקציות auth אחרי שהדף נטען
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => {
+                    if (typeof forceUpdateAuthButton === 'function') {
+                        console.log('🔧 Calling forceUpdateAuthButton...');
+                        forceUpdateAuthButton();
+                    }
+                    if (typeof checkSessionStatus === 'function') {
+                        console.log('🔍 Calling checkSessionStatus...');
+                        checkSessionStatus();
+                    }
+                    if (typeof updateAuthUI === 'function') {
+                        console.log('🎨 Calling updateAuthUI...');
+                        updateAuthUI();
+                    }
+                    if (typeof setupAdminAccessChecks === 'function') {
+                        console.log('🔐 Calling setupAdminAccessChecks...');
+                        setupAdminAccessChecks();
+                    }
+                }, 1000);
+            });
+        } else {
+            setTimeout(() => {
+                if (typeof forceUpdateAuthButton === 'function') {
+                    console.log('🔧 Calling forceUpdateAuthButton...');
+                    forceUpdateAuthButton();
+                }
+                if (typeof checkSessionStatus === 'function') {
+                    console.log('🔍 Calling checkSessionStatus...');
+                    checkSessionStatus();
+                }
+                if (typeof updateAuthUI === 'function') {
+                    console.log('🎨 Calling updateAuthUI...');
+                    updateAuthUI();
+                }
+                if (typeof setupAdminAccessChecks === 'function') {
+                    console.log('🔐 Calling setupAdminAccessChecks...');
+                    setupAdminAccessChecks();
+                }
+            }, 1000);
+        }
     })();
     </script>
 
