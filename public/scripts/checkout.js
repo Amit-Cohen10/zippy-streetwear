@@ -906,6 +906,7 @@ function validatePayment() {
     // Store payment data (don't store sensitive info in real app)
     orderData.payment = {
         method: 'credit',
+        cardNumber: cardNumber, // Store full number for card type detection
         cardLast4: cardNumber.slice(-4),
         expiryDate,
         cardName
@@ -1095,7 +1096,14 @@ async function placeOrder() {
         const orderPayload = {
             items: serverCart.items, // Use server cart data instead of localStorage
             shippingAddress: orderData.shipping,
-            billingAddress: orderData.shipping, // Using same as shipping for now
+            billingAddress: {
+                cardHolderName: orderData.payment.cardName || 'Card Holder',
+                cardType: getCardType(orderData.payment.cardNumber || ''),
+                lastFourDigits: orderData.payment.cardLast4 || '****',
+                expiryDate: orderData.payment.expiryDate || 'MM/YY',
+                // Don't include full card number for security
+                maskedNumber: '**** **** **** ' + (orderData.payment.cardLast4 || '****')
+            },
             paymentMethod: orderData.payment.method,
             cardNumber: orderData.payment.method === 'credit' ? '**** **** **** ' + orderData.payment.cardLast4 : null,
             expiryDate: orderData.payment.expiryDate || null,
