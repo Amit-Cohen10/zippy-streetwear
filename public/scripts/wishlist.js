@@ -226,12 +226,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add all items to cart
     window.addAllToCart = function() {
         try {
+            console.log('🛒 Adding all items to cart...');
+            console.log('🛒 Wishlist items:', wishlistItems);
+            
             if (wishlistItems.length === 0) {
-                showNotification('Your wishlist is empty', 'info');
+                if (typeof window.showNotification === 'function') {
+                    window.showNotification('Your wishlist is empty', 'info');
+                } else {
+                    showNotification('Your wishlist is empty', 'info');
+                }
                 return;
             }
 
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            let cart = JSON.parse(localStorage.getItem('zippyCart') || '[]');
+            console.log('🛒 Current cart before adding:', cart);
             let addedCount = 0;
 
             wishlistItems.forEach(item => {
@@ -251,25 +259,46 @@ document.addEventListener('DOMContentLoaded', function() {
                 addedCount++;
             });
 
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCount();
+            localStorage.setItem('zippyCart', JSON.stringify(cart));
+            console.log('🛒 Cart after adding items:', cart);
             
-            showNotification(`${addedCount} items added to cart!`, 'success');
-            
-            // Open cart modal
-            if (typeof window.openCartModal === 'function') {
-                window.openCartModal();
+            // Update cart count immediately
+            if (typeof window.updateCartCountLocal === 'function') {
+                window.updateCartCountLocal();
             } else {
-                // Fallback: manually open cart modal
+                updateCartCount();
+            }
+            
+            // Show success notification
+            if (typeof window.showNotification === 'function') {
+                window.showNotification(`${addedCount} items added to cart!`, 'success');
+            } else {
+                showNotification(`${addedCount} items added to cart!`, 'success');
+            }
+            
+            // Load cart and open modal with delay to ensure everything is updated
+            setTimeout(() => {
+                if (typeof window.loadCart === 'function') {
+                    window.loadCart();
+                }
+                
                 const cartModal = document.getElementById('cartModal');
                 if (cartModal) {
-                    cartModal.style.display = 'block';
+                    cartModal.style.display = 'flex';
                     cartModal.classList.add('show');
                 }
-            }
+                
+                // Refresh wishlist display to show updated state
+                loadWishlist();
+            }, 100);
+            
         } catch (error) {
             console.error('Error adding all items to cart:', error);
-            showNotification('Error adding items to cart', 'error');
+            if (typeof window.showNotification === 'function') {
+                window.showNotification('Error adding items to cart', 'error');
+            } else {
+                showNotification('Error adding items to cart', 'error');
+            }
         }
     };
 
@@ -385,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update cart count
     function updateCartCount() {
         try {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cart = JSON.parse(localStorage.getItem('zippyCart') || '[]');
             const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
             
             const cartCountElement = document.getElementById('cartCount');

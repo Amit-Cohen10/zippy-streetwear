@@ -97,11 +97,17 @@ function initCart() {
 function loadCartFromStorage() {
     try {
         const savedCart = localStorage.getItem('zippyCart');
+        console.log('🛒 Saved cart from localStorage:', savedCart);
+        
         if (savedCart) {
             let loaded = JSON.parse(savedCart);
             if (!Array.isArray(loaded)) loaded = [];
             window.cartItems = loaded;
+            console.log('🛒 Loaded cart items:', window.cartItems);
             updateCartDisplay();
+        } else {
+            console.log('🛒 No saved cart found in localStorage');
+            window.cartItems = [];
         }
     } catch (error) {
         console.error('Failed to load cart from localStorage:', error);
@@ -121,14 +127,26 @@ function saveCartToStorage() {
 
 // Load cart display
 function loadCart() {
+    console.log('🛒 Loading cart...');
+    
+    // Load cart data from localStorage
+    loadCartFromStorage();
+    
+    console.log('🛒 Cart items after loading:', window.cartItems);
+    
     // Ensure cartItems is an array
     if (!Array.isArray(window.cartItems)) {
         window.cartItems = [];
     }
     
+    // Update cart count
+    updateCartCount();
+    
     if (window.cartItems.length === 0) {
+        console.log('🛒 Cart is empty, showing empty cart');
         showEmptyCart();
     } else {
+        console.log('🛒 Cart has items, rendering cart items');
         renderCartItems();
         updateCartSummary();
     }
@@ -846,6 +864,9 @@ function getCartStatus() {
         return null;
     }
 }
+
+// Make loadCart available globally
+window.loadCart = loadCart;
 
 // Run test on page load
 document.addEventListener('DOMContentLoaded', function() {
