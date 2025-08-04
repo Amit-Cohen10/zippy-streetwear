@@ -2558,7 +2558,7 @@ body.theme-light .auth-container {
 /* Exchange Grid */
 .exchange-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
   gap: 2rem;
   margin-bottom: 4rem;
 }
@@ -3157,6 +3157,25 @@ body.theme-light .auth-container {
   .add-comment {
     flex-direction: column;
     align-items: stretch;
+  }
+  
+  .exchange-card .item-display {
+    width: 140px;
+    min-width: 120px;
+    max-width: 160px;
+  }
+  
+  .exchange-card .product-info h5 {
+    font-size: 0.9rem;
+  }
+  
+  .exchange-card .product-info p {
+    font-size: 0.75rem;
+  }
+  
+  .exchange-card .product-image {
+    width: 50px;
+    height: 50px;
   }
 }
 
@@ -8708,13 +8727,13 @@ body.theme-light .auth-container {
 
 /* --- Improved Exchange Card Product Display (Override) --- */
 .exchange-card .item-display {
-  width: 160px;
-  min-width: 140px;
-  max-width: 180px;
+  width: 200px;
+  min-width: 180px;
+  max-width: 220px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 8px 6px;
+  align-items: flex-start;
+  padding: 12px 8px;
 }
 
 .exchange-card .product-info h5,
@@ -8723,7 +8742,7 @@ body.theme-light .auth-container {
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
-  text-align: center;
+  text-align: left;
   margin: 0;
   padding: 0;
 }
@@ -8745,12 +8764,13 @@ body.theme-light .auth-container {
   width: 60px;
   height: 60px;
   margin-bottom: 6px;
+  align-self: flex-start;
 }
 
 /* Ensure text stays on one line */
 .exchange-card .product-info {
   width: 100%;
-  text-align: center;
+  text-align: left;
   overflow: hidden;
 }
 
