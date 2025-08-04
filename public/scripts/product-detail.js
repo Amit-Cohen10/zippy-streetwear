@@ -148,6 +148,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const gallery = document.getElementById('thumbnailGallery');
         if (!gallery) return;
 
+        // אם יש רק תמונה אחת, אל תציג thumbnail gallery
+        if (!images || images.length <= 1) {
+            gallery.style.display = 'none';
+            return;
+        }
+
+        gallery.style.display = 'flex';
         gallery.innerHTML = '';
         images.forEach((image, index) => {
             const thumbnail = document.createElement('div');
