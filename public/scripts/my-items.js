@@ -242,14 +242,19 @@ function displayOrders(orders) {
                     ${(order.items || []).map(item => `
                         <div class="order-item">
                             <div class="item-image">
-                                <img src="${getItemImage(item)}" alt="${getItemTitle(item)}" onerror="this.src='/images/placeholder.jpg'">
+                                <img src="${getItemImage(item)}" alt="${getItemTitle(item)}" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 24px; color: #888;\'>🛍️</div>'">
                             </div>
                             <div class="item-details">
-                                <div class="item-name">${getItemTitle(item)}</div>
-                                <div class="item-brand">${getItemBrand(item)}</div>
-                                <div class="item-price">$${getItemPrice(item)}</div>
-                                ${item.size ? `<div style="color: #888; font-size: 0.9rem;">Size: ${item.size}</div>` : ''}
-                                ${item.quantity ? `<div style="color: #888; font-size: 0.9rem;">Qty: ${item.quantity}</div>` : ''}
+                                <div>
+                                    <div class="item-name">${getItemTitle(item)}</div>
+                                    <div class="item-brand">${getItemBrand(item)}</div>
+                                </div>
+                                <div class="item-meta">
+                                    <div class="item-size-qty">
+                                        ${item.size ? `Size: ${item.size}` : ''}${item.size && item.quantity ? ' • ' : ''}${item.quantity ? `Qty: ${item.quantity}` : ''}
+                                    </div>
+                                    <div class="item-price">$${getItemPrice(item)}</div>
+                                </div>
                             </div>
                         </div>
                     `).join('')}

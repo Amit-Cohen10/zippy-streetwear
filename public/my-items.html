@@ -359,19 +359,38 @@
             100% { transform: rotate(360deg); }
         }
         
+        /* Main grid layout */
+        #ordersGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
+        
         .order-card {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(0, 255, 255, 0.3);
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: 16px;
+            padding: 25px;
             backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 255, 255, 0.2);
+            border-color: rgba(0, 255, 255, 0.5);
         }
         
         .order-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 1px solid rgba(0, 255, 255, 0.2);
         }
@@ -380,6 +399,7 @@
             color: #00ffff;
             font-weight: 700;
             font-size: 1.1rem;
+            margin-bottom: 5px;
         }
         
         .order-date {
@@ -388,62 +408,163 @@
         }
         
         .status-badge {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 25px;
+            font-size: 0.75rem;
+            font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         
-        .status-completed { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }
-        .status-processing { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
-        .status-shipped { background: rgba(52, 152, 219, 0.2); color: #3498db; }
+        .status-completed { 
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(46, 204, 113, 0.1)); 
+            color: #2ecc71; 
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+        .status-processing { 
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 193, 7, 0.1)); 
+            color: #ffc107; 
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+        .status-shipped { 
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.2), rgba(52, 152, 219, 0.1)); 
+            color: #3498db; 
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .order-items {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
         
         .order-item {
             display: flex;
             gap: 15px;
-            margin-bottom: 15px;
             padding: 15px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .order-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(0, 255, 255, 0.2);
+        }
+        
+        .item-image {
+            flex-shrink: 0;
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .item-image img {
-            width: 60px;
-            height: 60px;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border-radius: 6px;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .item-image img:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Fallback for missing images */
+        .item-image:empty::before,
+        .item-image img[src=""],
+        .item-image img:not([src]) {
+            content: "🛍️";
+            font-size: 24px;
+            color: #888;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
         }
         
         .item-details {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         
         .item-name {
             color: #fff;
             font-size: 1rem;
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
+            line-height: 1.3;
         }
         
         .item-brand {
             color: #888;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+        
+        .item-size-qty {
+            color: #ccc;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
         
         .item-price {
             color: #00ffff;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1rem;
         }
         
         .order-total {
             text-align: right;
-            padding-top: 15px;
+            padding-top: 20px;
+            margin-top: auto;
             border-top: 1px solid rgba(0, 255, 255, 0.2);
             color: #00ffff;
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            #ordersGrid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 15px 0;
+            }
+            
+            .order-card {
+                padding: 20px;
+            }
+            
+            .item-image {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .order-item {
+                padding: 12px;
+            }
         }
         
         /* Fix dropdown menu styling - remove any list bullets */
