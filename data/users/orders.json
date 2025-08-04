@@ -23,11 +23,10 @@
         "zipCode": "12345"
       },
       "billingAddress": {
-        "firstName": "Amit",
-        "lastName": "Cohen",
-        "address": "123 Test St",
-        "city": "Tel Aviv",
-        "zipCode": "12345"
+        "cardHolderName": "Amit Cohen",
+        "cardType": "Visa",
+        "lastFourDigits": "4242",
+        "expiryDate": "12/26"
       },
       "paymentMethod": "credit",
       "paymentId": "pay_1754222101999_gm305m6rq",
@@ -67,11 +66,10 @@
         "zipCode": "12345"
       },
       "billingAddress": {
-        "firstName": "Amit",
-        "lastName": "Cohen",
-        "address": "123 Test St",
-        "city": "Tel Aviv",
-        "zipCode": "12345"
+        "cardHolderName": "Amit Cohen",
+        "cardType": "Mastercard",
+        "lastFourDigits": "5555",
+        "expiryDate": "08/25"
       },
       "paymentMethod": "credit",
       "paymentId": "pay_1754221767161_vb1htf7u6",
@@ -111,11 +109,10 @@
         "zipCode": "12345"
       },
       "billingAddress": {
-        "firstName": "Amit",
-        "lastName": "Cohen",
-        "address": "123 Test St",
-        "city": "Tel Aviv",
-        "zipCode": "12345"
+        "cardHolderName": "Amit Cohen",
+        "cardType": "American Express",
+        "lastFourDigits": "1234",
+        "expiryDate": "03/27"
       },
       "paymentMethod": "credit",
       "paymentId": "pay_1754221606941_9ybeh1gp9",
@@ -164,11 +161,10 @@
         "zipCode": "12345"
       },
       "billingAddress": {
-        "firstName": "Amit",
-        "lastName": "Cohen",
-        "address": "123 Test St",
-        "city": "Tel Aviv",
-        "zipCode": "12345"
+        "cardHolderName": "Amit Cohen",
+        "cardType": "Visa",
+        "lastFourDigits": "8888",
+        "expiryDate": "11/26"
       },
       "paymentMethod": "credit",
       "paymentId": "pay_1754220205575_7bzuvx22s",
@@ -199,11 +195,10 @@
         "zipCode": "12345"
       },
       "billingAddress": {
-        "firstName": "Amit",
-        "lastName": "Cohen",
-        "address": "123 Test St",
-        "city": "Tel Aviv",
-        "zipCode": "12345"
+        "cardHolderName": "Amit Cohen",
+        "cardType": "Mastercard",
+        "lastFourDigits": "9999",
+        "expiryDate": "06/25"
       },
       "paymentMethod": "credit",
       "paymentId": "pay_1754220117693_66ye2hsre",
@@ -243,11 +238,10 @@
         "zipCode": "12345"
       },
       "billingAddress": {
-        "firstName": "Amit",
-        "lastName": "Cohen",
-        "address": "123 Test St",
-        "city": "Tel Aviv",
-        "zipCode": "12345"
+        "cardHolderName": "Amit Cohen",
+        "cardType": "American Express",
+        "lastFourDigits": "7777",
+        "expiryDate": "09/26"
       },
       "paymentMethod": "credit",
       "paymentId": "pay_1754219954817_6ndoo2t3x",

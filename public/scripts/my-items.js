@@ -294,6 +294,17 @@ function showOrderDetails(orderId) {
     // Show modal
     modal.style.display = 'flex';
     
+    // Scroll to top of modal content smoothly
+    setTimeout(() => {
+        const modalContainer = document.querySelector('.order-details-container');
+        if (modalContainer) {
+            modalContainer.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    }, 100);
+    
     // Add event listeners
     const closeBtn = document.getElementById('closeOrderModal');
     closeBtn.onclick = closeOrderModal;
@@ -327,6 +338,20 @@ function generateOrderDetailsHTML(order) {
                 ${address.address}<br>
                 ${address.city}, ${address.zipCode || ''}<br>
                 ${address.phone ? `Phone: ${address.phone}` : ''}`;
+    };
+    
+    const formatBillingInfo = (billing) => {
+        if (!billing) return 'N/A';
+        
+        // Check if it's credit card info or address
+        if (billing.cardHolderName) {
+            return `${billing.cardHolderName}<br>
+                    <span style="color: #00ffff; font-weight: 600;">${billing.cardType} •••• ${billing.lastFourDigits}</span><br>
+                    Expires: ${billing.expiryDate}`;
+        } else {
+            // Fallback to address format
+            return formatAddress(billing);
+        }
     };
     
     return `
@@ -368,10 +393,10 @@ function generateOrderDetailsHTML(order) {
         <div class="order-info-section">
             <div class="section-title">
                 <i class="fas fa-credit-card"></i>
-                Billing Address
+                Payment Information
             </div>
             <div class="info-item">
-                <div class="info-value">${formatAddress(order.billingAddress)}</div>
+                <div class="info-value">${formatBillingInfo(order.billingAddress)}</div>
             </div>
         </div>
         
