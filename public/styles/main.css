@@ -8057,3 +8057,434 @@ body.theme-light .auth-container {
         height: 150px;
     }
 }
+
+/* Approve Exchange Button Styles */
+.approve-btn {
+    background: linear-gradient(135deg, var(--accent-neon-green), #00cc00);
+    border: 2px solid var(--accent-neon-green);
+    color: var(--text-light);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.approve-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.approve-btn:hover {
+    background: linear-gradient(135deg, #00cc00, var(--accent-neon-green));
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+.approve-btn:hover::before {
+    left: 100%;
+}
+
+.approve-btn:active {
+    transform: translateY(0);
+}
+
+/* Approval Modal Styles */
+.approval-form {
+    max-width: 100%;
+    margin: 0;
+}
+
+.form-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(26, 26, 26, 0.6);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.form-section h3 {
+    color: var(--accent-neon-cyan);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+}
+
+.form-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--accent-neon-cyan);
+    box-shadow: 0 0 10px var(--accent-neon-cyan);
+}
+
+.exchange-summary {
+    background: rgba(0, 255, 255, 0.05);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.exchange-summary h3 {
+    color: var(--accent-neon-cyan);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.exchange-details p {
+    margin-bottom: 10px;
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.exchange-details strong {
+    color: var(--accent-neon-cyan);
+    font-weight: 600;
+}
+
+.exchange-items-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(26, 26, 26, 0.8);
+    border-radius: 6px;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.offering-summary,
+.wanted-summary {
+    flex: 1;
+    text-align: center;
+}
+
+.offering-summary h4,
+.wanted-summary h4 {
+    color: var(--accent-neon-green);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.offering-summary p,
+.wanted-summary p {
+    color: var(--text-light);
+    font-size: 13px;
+    margin: 0;
+}
+
+.exchange-arrow {
+    color: var(--accent-neon-cyan);
+    font-size: 24px;
+    margin: 0 20px;
+    animation: exchange-pulse 2s infinite;
+}
+
+/* Contract Text Styles */
+.contract-text {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.contract-text p {
+    color: var(--text-light);
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.contract-text strong {
+    color: var(--accent-neon-cyan);
+    font-weight: 600;
+}
+
+.contract-text ol {
+    margin-left: 20px;
+    color: var(--text-light);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.contract-text li {
+    margin-bottom: 8px;
+    padding-left: 10px;
+}
+
+/* Checkbox Styles */
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    cursor: pointer;
+    color: var(--text-light);
+    font-size: 14px;
+    line-height: 1.5;
+    position: relative;
+    padding-left: 35px;
+}
+
+.checkbox-label input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background: rgba(26, 26, 26, 0.8);
+    border: 2px solid var(--accent-neon-cyan);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.checkbox-label:hover .checkmark {
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark {
+    background: var(--accent-neon-cyan);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+#submitApprovalBtn {
+    background: linear-gradient(135deg, var(--accent-neon-green), #00cc00);
+    border: 2px solid var(--accent-neon-green);
+    color: var(--text-light);
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+#submitApprovalBtn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+#submitApprovalBtn:hover {
+    background: linear-gradient(135deg, #00cc00, var(--accent-neon-green));
+    box-shadow: 0 0 25px rgba(0, 255, 0, 0.6);
+    transform: translateY(-2px);
+}
+
+#submitApprovalBtn:hover::before {
+    left: 100%;
+}
+
+#submitApprovalBtn:active {
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .exchange-items-summary {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .exchange-arrow {
+        transform: rotate(90deg);
+        margin: 10px 0;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    #submitApprovalBtn {
+        width: 100%;
+    }
+    
+    .form-section {
+        padding: 15px;
+    }
+    
+    .contract-text {
+        padding: 15px;
+    }
+    
+    .contract-text ol {
+        margin-left: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .exchange-summary {
+        padding: 15px;
+    }
+    
+    .exchange-summary h3 {
+        font-size: 18px;
+    }
+    
+    .form-section h3 {
+        font-size: 16px;
+    }
+    
+    .checkbox-label {
+        font-size: 13px;
+        padding-left: 30px;
+    }
+    
+    .checkmark {
+        height: 18px;
+        width: 18px;
+    }
+    
+    .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+        left: 5px;
+        top: 1px;
+        width: 5px;
+        height: 9px;
+    }
+}
+
+/* Exchange Items in My Items */
+.exchange-order {
+    border: 2px solid var(--accent-neon-cyan) !important;
+    background: rgba(0, 255, 255, 0.05) !important;
+    position: relative;
+}
+
+.exchange-order::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+    pointer-events: none;
+    animation: exchange-glow 3s ease-in-out infinite;
+}
+
+@keyframes exchange-glow {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+.exchange-badge {
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 14px;
+    animation: exchange-pulse 2s infinite;
+}
+
+.exchange-item {
+    border-left: 3px solid var(--accent-neon-cyan);
+    background: rgba(0, 255, 255, 0.02);
+}
+
+.exchange-type {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-neon-cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+    padding: 2px 6px;
+    background: rgba(0, 255, 255, 0.1);
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.exchange-order .order-number {
+    color: var(--accent-neon-cyan);
+    font-weight: 600;
+}
+
+.exchange-order .status-badge {
+    background: var(--accent-neon-cyan);
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+.exchange-order .order-total {
+    color: var(--accent-neon-cyan);
+    font-weight: 600;
+}
+
+/* Responsive design for exchange items */
+@media (max-width: 768px) {
+    .exchange-order {
+        margin-bottom: 20px;
+    }
+    
+    .exchange-badge {
+        font-size: 12px;
+        margin-left: 6px;
+    }
+    
+    .exchange-type {
+        font-size: 11px;
+        padding: 1px 4px;
+    }
+}

@@ -150,6 +150,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
+            // Load approved exchanges from localStorage
+            loadApprovedExchanges();
+            
             // Initialize with requestAnimationFrame for better performance
             requestAnimationFrame(() => {
                 try {
@@ -258,6 +261,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button class="action-btn respond-btn" data-exchange-id="${exchange.id}">
                         <span>💬</span> Respond
                     </button>
+                    <button class="action-btn approve-btn" data-exchange-id="${exchange.id}">
+                        <span>✅</span> Approve Exchange
+                    </button>
                 </div>
                 <div class="card-stats">
                     <button class="like-btn ${exchange.liked ? 'liked' : ''}" data-exchange-id="${exchange.id}">
@@ -278,6 +284,11 @@ document.addEventListener('DOMContentLoaded', function() {
         card.querySelector('.respond-btn').addEventListener('click', (e) => {
             e.stopPropagation();
             respondToExchange(exchange.id);
+        });
+        
+        card.querySelector('.approve-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            approveExchange(exchange.id);
         });
         
         card.querySelector('.like-btn').addEventListener('click', (e) => {
@@ -914,6 +925,314 @@ document.addEventListener('DOMContentLoaded', function() {
         renderComments(exchange.comments);
         
         showNotification('Question submitted successfully!', 'success');
+    }
+
+    // Approve exchange function
+    function approveExchange(exchangeId) {
+        console.log('approveExchange called with ID:', exchangeId);
+        const exchange = exchanges.find(e => e.id === exchangeId);
+        if (!exchange) {
+            console.log('Exchange not found in approveExchange');
+            return;
+        }
+
+        // Check if exchange is still active
+        if (exchange.status !== 'active') {
+            showNotification(`This exchange is ${exchange.status} and cannot be approved.`, 'error');
+            return;
+        }
+
+        // Create approval modal
+        const approvalModal = document.createElement('div');
+        approvalModal.className = 'modal active';
+        approvalModal.innerHTML = `
+            <div class="modal-container large">
+                <div class="modal-header">
+                    <h2>Approve Exchange</h2>
+                    <button class="close-btn" id="closeApprovalModal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="exchange-summary">
+                        <h3>Exchange Summary</h3>
+                        <div class="exchange-details">
+                            <p><strong>Title:</strong> ${exchange.title}</p>
+                            <p><strong>Description:</strong> ${exchange.description}</p>
+                            <div class="exchange-items-summary">
+                                <div class="offering-summary">
+                                    <h4>You're Offering:</h4>
+                                    <p>${exchange.offeredCategory} - Size ${exchange.offeredSize}</p>
+                                </div>
+                                <div class="exchange-arrow">⇄</div>
+                                <div class="wanted-summary">
+                                    <h4>You Want:</h4>
+                                    <p>${exchange.wantedCategory} - Size ${exchange.wantedSize}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form id="approvalForm" class="approval-form">
+                        <div class="form-section">
+                            <h3>Contact Information</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="approvalPhone">Phone Number *</label>
+                                    <input type="tel" id="approvalPhone" class="form-input" placeholder="+1 (555) 123-4567" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="approvalEmail">Email Address *</label>
+                                    <input type="email" id="approvalEmail" class="form-input" placeholder="your.email@example.com" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Shipping Address</h3>
+                            <div class="form-group">
+                                <label for="approvalAddress">Street Address *</label>
+                                <input type="text" id="approvalAddress" class="form-input" placeholder="123 Main Street" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="approvalCity">City *</label>
+                                    <input type="text" id="approvalCity" class="form-input" placeholder="New York" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="approvalState">State/Province *</label>
+                                    <input type="text" id="approvalState" class="form-input" placeholder="NY" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="approvalZip">ZIP/Postal Code *</label>
+                                    <input type="text" id="approvalZip" class="form-input" placeholder="10001" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Exchange Agreement</h3>
+                            <div class="contract-text">
+                                <p><strong>Exchange Terms and Conditions:</strong></p>
+                                <ol>
+                                    <li>I confirm that the item I'm offering is in the condition described and is authentic.</li>
+                                    <li>I agree to ship my item within 3 business days of exchange approval.</li>
+                                    <li>I understand that Zippy Streetwear acts as a facilitator and is not responsible for item condition or shipping delays.</li>
+                                    <li>I agree to provide accurate contact information and shipping address for this exchange.</li>
+                                </ol>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="approvalAgreement" required>
+                                    <span class="checkmark"></span>
+                                    I have read and agree to the exchange terms and conditions above
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" id="cancelApprovalBtn">Cancel</button>
+                            <button type="submit" class="btn-primary" id="submitApprovalBtn">
+                                <span>✅</span> Approve & Complete Exchange
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(approvalModal);
+        
+        // Add event listeners
+        approvalModal.querySelector('#closeApprovalModal').addEventListener('click', () => {
+            approvalModal.remove();
+        });
+        
+        approvalModal.querySelector('#cancelApprovalBtn').addEventListener('click', () => {
+            approvalModal.remove();
+        });
+        
+        approvalModal.querySelector('#approvalForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitApproval(e, exchangeId);
+            approvalModal.remove();
+        });
+        
+        // Center modal
+        setTimeout(() => {
+            // Scroll page to top first
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            
+            // Then scroll modal to top
+            approvalModal.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+                inline: 'nearest'
+            });
+        }, 100);
+    }
+
+    // Submit approval function
+    function submitApproval(event, exchangeId) {
+        console.log('submitApproval called for exchange:', exchangeId);
+        
+        const formData = {
+            phone: document.getElementById('approvalPhone').value,
+            email: document.getElementById('approvalEmail').value,
+            address: document.getElementById('approvalAddress').value,
+            city: document.getElementById('approvalCity').value,
+            state: document.getElementById('approvalState').value,
+            zip: document.getElementById('approvalZip').value,
+            agreement: document.getElementById('approvalAgreement').checked
+        };
+        
+        // Validate form
+        if (!formData.phone || !formData.email || !formData.address || !formData.city || !formData.state || !formData.zip || !formData.agreement) {
+            showNotification('Please fill in all required fields and agree to the terms.', 'error');
+            return;
+        }
+        
+        const exchange = exchanges.find(e => e.id === exchangeId);
+        if (!exchange) return;
+        
+        // Update exchange status to completed
+        exchange.status = 'completed';
+        exchange.approvalData = {
+            ...formData,
+            approvedAt: new Date().toISOString(),
+            approvedBy: 1 // Current user ID
+        };
+        
+        // Save approved exchanges to localStorage
+        saveApprovedExchange(exchange);
+        
+        // Add exchange items to My Items
+        addExchangeToMyItems(exchange);
+        
+        // Update UI
+        const exchangeCard = document.querySelector(`[data-exchange-id="${exchangeId}"]`);
+        if (exchangeCard) {
+            const statusBadge = exchangeCard.querySelector('.exchange-status');
+            if (statusBadge) {
+                statusBadge.textContent = 'completed';
+                statusBadge.className = 'exchange-status completed';
+            }
+        }
+        
+        // Add approval comment
+        const approvalComment = {
+            id: exchange.comments.length + 1,
+            userId: 1, // Current user
+            text: `✅ Exchange approved and completed! Contact: ${formData.phone} | ${formData.email}`,
+            date: new Date().toISOString().split('T')[0],
+            isApproval: true
+        };
+        
+        exchange.comments.push(approvalComment);
+        
+        // Update stats
+        updateStats();
+        
+        showNotification('Exchange approved and completed successfully!', 'success');
+        
+        // Re-render exchanges to update status
+        renderExchanges();
+    }
+
+    // Save approved exchange to localStorage
+    function saveApprovedExchange(exchange) {
+        try {
+            const approvedExchanges = JSON.parse(localStorage.getItem('approvedExchanges') || '[]');
+            approvedExchanges.push(exchange);
+            localStorage.setItem('approvedExchanges', JSON.stringify(approvedExchanges));
+            console.log('✅ Approved exchange saved to localStorage');
+        } catch (error) {
+            console.error('❌ Error saving approved exchange:', error);
+        }
+    }
+
+    // Add exchange items to My Items
+    function addExchangeToMyItems(exchange) {
+        try {
+            // Get current purchased items
+            const purchasedItems = JSON.parse(localStorage.getItem('purchasedItems') || '[]');
+            
+            // Create items from the exchange
+            const exchangeItems = [
+                {
+                    id: `exchange-${exchange.id}-offered`,
+                    name: `${exchange.offeredCategory} - ${exchange.title}`,
+                    brand: 'Exchange Item',
+                    price: 0,
+                    quantity: 1,
+                    size: exchange.offeredSize,
+                    category: exchange.offeredCategory,
+                    image: null,
+                    type: 'exchange',
+                    exchangeId: exchange.id,
+                    isOffered: true,
+                    purchaseDate: new Date().toISOString(),
+                    status: 'completed'
+                },
+                {
+                    id: `exchange-${exchange.id}-wanted`,
+                    name: `${exchange.wantedCategory} - ${exchange.title}`,
+                    brand: 'Exchange Item',
+                    price: 0,
+                    quantity: 1,
+                    size: exchange.wantedSize,
+                    category: exchange.wantedCategory,
+                    image: null,
+                    type: 'exchange',
+                    exchangeId: exchange.id,
+                    isWanted: true,
+                    purchaseDate: new Date().toISOString(),
+                    status: 'completed'
+                }
+            ];
+            
+            // Add to purchased items
+            purchasedItems.push(...exchangeItems);
+            localStorage.setItem('purchasedItems', JSON.stringify(purchasedItems));
+            
+            console.log('✅ Exchange items added to My Items');
+        } catch (error) {
+            console.error('❌ Error adding exchange to My Items:', error);
+        }
+    }
+
+    // Load approved exchanges from localStorage on page load
+    function loadApprovedExchanges() {
+        try {
+            const approvedExchanges = JSON.parse(localStorage.getItem('approvedExchanges') || '[]');
+            
+            // Update exchanges with approved status
+            approvedExchanges.forEach(approvedExchange => {
+                const existingExchange = exchanges.find(e => e.id === approvedExchange.id);
+                if (existingExchange) {
+                    existingExchange.status = 'completed';
+                    existingExchange.approvalData = approvedExchange.approvalData;
+                    
+                    // Add approval comment if not exists
+                    const hasApprovalComment = existingExchange.comments.some(c => c.isApproval);
+                    if (!hasApprovalComment && approvedExchange.approvalData) {
+                        const approvalComment = {
+                            id: existingExchange.comments.length + 1,
+                            userId: 1,
+                            text: `✅ Exchange approved and completed! Contact: ${approvedExchange.approvalData.phone} | ${approvedExchange.approvalData.email}`,
+                            date: new Date(approvedExchange.approvalData.approvedAt).toISOString().split('T')[0],
+                            isApproval: true
+                        };
+                        existingExchange.comments.push(approvalComment);
+                    }
+                }
+            });
+            
+            console.log('✅ Loaded approved exchanges from localStorage');
+        } catch (error) {
+            console.error('❌ Error loading approved exchanges:', error);
+        }
     }
 
     // Show notification

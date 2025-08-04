@@ -562,16 +562,68 @@ async function loadOrders() {
         
         console.log('📋 Processing orders:', orders.length);
         
-        if (orders.length === 0) {
+        // Load exchange items from localStorage
+        const exchangeItems = loadExchangeItems();
+        console.log('🔄 Processing exchange items:', exchangeItems.length);
+        
+        // Combine orders and exchange items
+        const allItems = [...orders, ...exchangeItems];
+        
+        if (allItems.length === 0) {
             showEmpty();
         } else {
-            displayOrders(orders);
+            displayOrders(allItems);
             showOrders();
         }
         
     } catch (error) {
         console.error('❌ Failed to load orders:', error);
-        showError();
+        
+        // If API fails, try to load only exchange items
+        const exchangeItems = loadExchangeItems();
+        if (exchangeItems.length > 0) {
+            displayOrders(exchangeItems);
+            showOrders();
+        } else {
+            showError();
+        }
+    }
+}
+
+// Load exchange items from localStorage
+function loadExchangeItems() {
+    try {
+        const purchasedItems = JSON.parse(localStorage.getItem('purchasedItems') || '[]');
+        const exchangeItems = purchasedItems.filter(item => item.type === 'exchange');
+        
+        // Group exchange items by exchangeId
+        const exchangeGroups = {};
+        exchangeItems.forEach(item => {
+            if (!exchangeGroups[item.exchangeId]) {
+                exchangeGroups[item.exchangeId] = [];
+            }
+            exchangeGroups[item.exchangeId].push(item);
+        });
+        
+        // Convert to order format
+        const exchangeOrders = Object.entries(exchangeGroups).map(([exchangeId, items]) => {
+            const firstItem = items[0];
+            return {
+                id: `exchange-${exchangeId}`,
+                type: 'exchange',
+                status: 'completed',
+                createdAt: firstItem.purchaseDate,
+                items: items,
+                total: 0,
+                exchangeId: exchangeId
+            };
+        });
+        
+        console.log('🔄 Converted exchange items to orders:', exchangeOrders.length);
+        return exchangeOrders;
+    } catch (error) {
+        console.error('❌ Error loading exchange items:', error);
+        return [];
     }
 }
 
@@ -584,47 +636,50 @@ function displayOrders(orders) {
     ordersGrid.innerHTML = orders.map(order => {
         console.log('📦 Processing order:', order.id, order);
         
+        const isExchange = order.type === 'exchange';
+        const orderTypeLabel = isExchange ? 'Exchange' : 'Order';
+        const orderTypeClass = isExchange ? 'exchange-order' : 'regular-order';
+        
         return `
-            <div class="order-card" onclick="showOrderDetails('${order.id}')" style="cursor: pointer;">
+            <div class="order-card ${orderTypeClass}" onclick="showOrderDetails('${order.id}')" style="cursor: pointer;">
                 <div class="order-header">
                     <div>
-                        <div class="order-number">Order #${order.id}</div>
+                        <div class="order-number">
+                            ${orderTypeLabel} #${order.id}
+                            ${isExchange ? '<span class="exchange-badge">🔄</span>' : ''}
+                        </div>
                         <div class="order-date">${formatDate(order.createdAt || order.timestamp || new Date())}</div>
                     </div>
-                    <div class="status-badge status-${(order.status || 'completed').toLowerCase()}">${order.status || 'Completed'}</div>
+                    <div class="status-badge status-${(order.status || 'completed').toLowerCase()}">
+                        ${order.status || 'Completed'}
+                    </div>
                 </div>
                 
                 <div class="order-items">
                     ${(order.items || []).map(item => `
-                        <div class="order-item">
+                        <div class="order-item ${isExchange ? 'exchange-item' : ''}">
                             <div class="item-image">
-                                <img src="${getItemImage(item)}" alt="${getItemTitle(item)}" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 24px; color: #888;\'>🛍️</div>'">
+                                ${getItemImage(item)}
                             </div>
                             <div class="item-details">
-                                <div>
-                                    <div class="item-name">${getItemTitle(item)}</div>
-                                    <div class="item-brand">${getItemBrand(item)}</div>
-                                </div>
-                                <div class="item-meta">
-                                    <div class="item-size-qty">
-                                        ${item.size ? `Size: ${item.size}` : ''}${item.size && item.quantity ? ' • ' : ''}${item.quantity ? `Qty: ${item.quantity}` : ''}
-                                    </div>
-                                    <div class="item-price">$${getItemPrice(item)}</div>
-                                </div>
+                                <div class="item-name">${getItemTitle(item)}</div>
+                                <div class="item-description">${getItemBrand(item)}</div>
+                                <div class="item-price">${getItemPrice(item)}</div>
+                                <div class="item-quantity">Qty: ${item.quantity || 1}</div>
+                                ${item.size ? `<div class="item-size">Size: ${item.size}</div>` : ''}
+                                ${isExchange ? `<div class="exchange-type">${item.isOffered ? 'Offered' : 'Wanted'}</div>` : ''}
                             </div>
                         </div>
                     `).join('')}
                 </div>
                 
                 <div class="order-total">
-                    Total: $${(order.total || 0).toFixed(2)}
+                    <span>Total:</span>
+                    <span>${isExchange ? 'Exchange' : `$${(order.total || 0).toFixed(2)}`}</span>
                 </div>
             </div>
         `;
     }).join('');
-    
-    // Store orders globally for modal access
-    window.currentOrders = orders;
 }
 
 // Show order details modal
@@ -831,7 +886,15 @@ function getStatusColor(status) {
 
 // Helper functions to get item data safely
 function getItemImage(item) {
-    return item.image || (item.product && item.product.images && item.product.images[0]) || '/images/placeholder.jpg';
+    if (item.type === 'exchange') {
+        return '<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 24px; color: #00ffff; background: rgba(0, 255, 255, 0.1); border-radius: 8px;">🔄</div>';
+    }
+    
+    if (item.image) {
+        return `<img src="${item.image}" alt="${getItemTitle(item)}" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 24px; color: #888;\'>🛍️</div>'">`;
+    }
+    
+    return '<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 24px; color: #888;">🛍️</div>';
 }
 
 function getItemTitle(item) {
@@ -843,9 +906,12 @@ function getItemBrand(item) {
 }
 
 function getItemPrice(item) {
-    const price = item.price || (item.product && item.product.price) || 0;
-    const quantity = item.quantity || 1;
-    return (price * quantity).toFixed(2);
+    if (item.type === 'exchange') {
+        return 'Exchange Item';
+    }
+    
+    const price = item.price || item.product?.price || 0;
+    return `$${price.toFixed(2)}`;
 }
 
 // Format date nicely
