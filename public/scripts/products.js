@@ -383,6 +383,10 @@ function toggleWishlist(productId) {
             const wishlistBtn = document.querySelector(`[data-product-id="${productId}"]`);
             if (wishlistBtn) {
                 wishlistBtn.classList.remove('active');
+                // Force re-render of the button
+                wishlistBtn.style.animation = 'none';
+                wishlistBtn.offsetHeight; // Trigger reflow
+                wishlistBtn.style.animation = null;
             }
             
             // Show notification
@@ -406,15 +410,14 @@ function toggleWishlist(productId) {
                 const wishlistBtn = document.querySelector(`[data-product-id="${productId}"]`);
                 if (wishlistBtn) {
                     wishlistBtn.classList.add('active');
+                    // Force re-render of the button
+                    wishlistBtn.style.animation = 'none';
+                    wishlistBtn.offsetHeight; // Trigger reflow
+                    wishlistBtn.style.animation = null;
                 }
                 
-                // Show notification and redirect to wishlist page
-                showNotification('Product added to wishlist! Redirecting to wishlist page...', 'success');
-                
-                // Redirect to wishlist page after a short delay
-                setTimeout(() => {
-                    window.location.href = '/wishlist.html';
-                }, 1500);
+                // Show notification only
+                showNotification('Product added to wishlist!', 'success');
             } else {
                 console.error('Product not found:', productId);
                 showNotification('Product not found', 'error');
@@ -423,6 +426,9 @@ function toggleWishlist(productId) {
         
         // Update wishlist count in navbar if it exists
         updateWishlistCount();
+        
+        // Update all wishlist buttons on the page immediately
+        updateWishlistButtonStates();
         
     } catch (error) {
         console.error('Error toggling wishlist:', error);
