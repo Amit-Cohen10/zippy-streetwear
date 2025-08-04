@@ -342,4 +342,45 @@ router.get('/validate', requireAuth, async (req, res) => {
   }
 });
 
+// Get user's orders
+router.get('/orders', requireAuth, async (req, res) => {
+  try {
+    const orders = await persist.readData(persist.ordersFile);
+    const userOrders = orders[req.user.id] || [];
+    
+    // Sort orders by creation date (newest first)
+    userOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    res.json({
+      orders: userOrders,
+      count: userOrders.length
+    });
+    
+  } catch (error) {
+    console.error('Orders fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+});
+
+// Get specific order
+router.get('/orders/:orderId', requireAuth, async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const orders = await persist.readData(persist.ordersFile);
+    const userOrders = orders[req.user.id] || [];
+    
+    const order = userOrders.find(o => o.id === orderId);
+    
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    res.json({ order });
+    
+  } catch (error) {
+    console.error('Order fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch order' });
+  }
+});
+
 module.exports = router; 

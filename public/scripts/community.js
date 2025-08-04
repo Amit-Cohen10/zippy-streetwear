@@ -5,6 +5,13 @@ document.addEventListener('DOMContentLoaded', function() {
     'use strict';
 
     console.log('Community Feed DOM loaded, initializing...');
+    
+    // Setup admin access checks
+    setTimeout(() => {
+        if (typeof setupAdminAccessChecks === 'function') {
+            setupAdminAccessChecks();
+        }
+    }, 1000);
 
     // Sample data for community posts
     const communityPosts = [

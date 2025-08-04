@@ -5,6 +5,13 @@ console.log('🚀 My Items page loading...');
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 DOM loaded, initializing My Items...');
     initMyItems();
+    
+    // Setup admin access checks
+    setTimeout(() => {
+        if (typeof setupAdminAccessChecks === 'function') {
+            setupAdminAccessChecks();
+        }
+    }, 1000);
 });
 
 // Check user login status with better timing

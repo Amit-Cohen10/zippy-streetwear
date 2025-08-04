@@ -4,6 +4,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!window.location.pathname.includes('exchange')) {
         return;
     }
+    
+    // Setup admin access checks
+    setTimeout(() => {
+        if (typeof setupAdminAccessChecks === 'function') {
+            setupAdminAccessChecks();
+        }
+    }, 1000);
 
     // Sample data for 3 fictional users
     const users = [

@@ -796,4 +796,62 @@ router.put('/:id/read', requireAuth, async (req, res) => {
   }
 });
 
+// Get user's exchanges
+router.get('/user', requireAuth, async (req, res) => {
+  try {
+    const { status, limit = 20 } = req.query;
+    
+    const exchanges = await persist.readData(persist.exchangesFile);
+    let userExchanges = exchanges.filter(e => 
+      e.initiatorId === req.user.id || e.recipientId === req.user.id
+    );
+    
+    // Filter by status if provided
+    if (status && status !== 'all') {
+      userExchanges = userExchanges.filter(e => e.status === status);
+    }
+    
+    // Sort by creation date (newest first)
+    userExchanges.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    // Limit results
+    userExchanges = userExchanges.slice(0, parseInt(limit));
+    
+    // Get user details for exchanges
+    const users = await persist.readData(persist.usersFile);
+    const exchangesWithUsers = userExchanges.map(exchange => {
+      const isInitiator = exchange.initiatorId === req.user.id;
+      const otherUserId = isInitiator ? exchange.recipientId : exchange.initiatorId;
+      const otherUser = users.find(u => u.id === otherUserId);
+      
+      return {
+        id: exchange.id,
+        title: exchange.title || `Exchange #${exchange.id}`,
+        status: exchange.status,
+        createdAt: exchange.createdAt,
+        lastActivity: exchange.lastActivity || exchange.createdAt,
+        partner: otherUser ? otherUser.username : 'Unknown User',
+        partnerId: otherUserId,
+        isInitiator: isInitiator,
+        initiatorId: exchange.initiatorId,
+        recipientId: exchange.recipientId,
+        unreadMessages: exchange.messages ? 
+          exchange.messages.filter(m => 
+            m.userId !== req.user.id && 
+            new Date(m.timestamp) > new Date(exchange.lastRead?.[req.user.id] || 0)
+          ).length : 0
+      };
+    });
+    
+    res.json({
+      exchanges: exchangesWithUsers,
+      count: exchangesWithUsers.length
+    });
+    
+  } catch (error) {
+    console.error('User exchanges fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch user exchanges' });
+  }
+});
+
 module.exports = router; 

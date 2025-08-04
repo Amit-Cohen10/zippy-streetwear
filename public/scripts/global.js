@@ -37,14 +37,18 @@ function updateCartCount() {
 
 // Show notification
 function showNotification(message, type = 'info') {
+    console.log(`🔔 Showing notification: ${message} (type: ${type})`);
+    
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.textContent = message;
     
     document.body.appendChild(notification);
+    console.log('✅ Notification added to DOM');
     
     setTimeout(() => {
         notification.remove();
+        console.log('🗑️ Notification removed from DOM');
     }, 3000);
 }
 
@@ -96,8 +100,13 @@ function closeSearchModal() {
 
 // Open auth modal
 function openAuthModal() {
+    console.log('🔐 Global openAuthModal called');
     const modal = document.getElementById('authModal');
+    
+    console.log('🔍 Auth modal element:', !!modal);
+    
     if (modal) {
+        console.log('✅ Auth modal found, activating...');
         modal.classList.add('active');
         
         // Center modal on screen and scroll to top
@@ -110,15 +119,26 @@ function openAuthModal() {
             
             // Then scroll modal to top
             modal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            console.log('✅ Auth modal activated and scrolled to top');
         }, 100);
+    } else {
+        console.log('❌ Auth modal not found in global.js');
     }
 }
 
 // Close auth modal
 function closeAuthModal() {
+    console.log('🔐 Global closeAuthModal called');
     const modal = document.getElementById('authModal');
+    
+    console.log('🔍 Auth modal element:', !!modal);
+    
     if (modal) {
+        console.log('✅ Auth modal found, deactivating...');
         modal.classList.remove('active');
+        console.log('✅ Auth modal deactivated');
+    } else {
+        console.log('❌ Auth modal not found in global.js');
     }
 }
 
@@ -132,6 +152,15 @@ window.GlobalModule = {
     openAuthModal,
     closeAuthModal
 };
+
+// Setup admin access checks when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        if (typeof setupAdminAccessChecks === 'function') {
+            setupAdminAccessChecks();
+        }
+    }, 1000);
+});
 
 // Global close cart modal function
 function closeCartModal() {

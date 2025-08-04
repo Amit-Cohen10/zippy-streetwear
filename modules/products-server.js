@@ -646,4 +646,161 @@ router.delete('/bulk', requireAuth, async (req, res) => {
   }
 });
 
+// Get user's wishlist
+router.get('/wishlist', requireAuth, async (req, res) => {
+  try {
+    const wishlist = await persist.readData(persist.wishlistFile);
+    const userWishlist = wishlist[req.user.id] || [];
+    
+    // Get product details for wishlist items
+    const products = await persist.readData(persist.productsFile);
+    const wishlistWithDetails = userWishlist.map(item => {
+      const product = products.find(p => p.id === item.productId);
+      return product ? {
+        id: item.id,
+        productId: item.productId,
+        addedAt: item.addedAt,
+        title: product.title,
+        price: product.price,
+        image: product.images[0] || '/images/placeholder.jpg',
+        brand: product.brand,
+        description: product.description
+      } : null;
+    }).filter(item => item !== null);
+    
+    res.json({
+      items: wishlistWithDetails,
+      count: wishlistWithDetails.length
+    });
+    
+  } catch (error) {
+    console.error('Wishlist fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch wishlist' });
+  }
+});
+
+// Add item to wishlist
+router.post('/wishlist', requireAuth, async (req, res) => {
+  try {
+    const { productId } = req.body;
+    
+    if (!productId) {
+      return res.status(400).json({ error: 'Product ID is required' });
+    }
+    
+    // Validate product exists
+    const products = await persist.readData(persist.productsFile);
+    const product = products.find(p => p.id === productId);
+    
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    
+    // Get current wishlist
+    const wishlist = await persist.readData(persist.wishlistFile);
+    const userWishlist = wishlist[req.user.id] || [];
+    
+    // Check if item already exists in wishlist
+    const existingItem = userWishlist.find(item => item.productId === productId);
+    
+    if (existingItem) {
+      return res.status(400).json({ error: 'Item already in wishlist' });
+    }
+    
+    // Add to wishlist
+    const wishlistItem = {
+      id: persist.generateId('wishlist'),
+      productId: productId,
+      addedAt: new Date().toISOString()
+    };
+    
+    userWishlist.push(wishlistItem);
+    wishlist[req.user.id] = userWishlist;
+    
+    await persist.writeData(persist.wishlistFile, wishlist);
+    
+    // Log activity
+    await persist.logActivity(req.user.id, 'wishlist_add', { 
+      productId, 
+      title: product.title 
+    });
+    
+    res.json({
+      message: 'Item added to wishlist',
+      item: wishlistItem
+    });
+    
+  } catch (error) {
+    console.error('Wishlist add error:', error);
+    res.status(500).json({ error: 'Failed to add item to wishlist' });
+  }
+});
+
+// Remove item from wishlist
+router.delete('/wishlist/:productId', requireAuth, async (req, res) => {
+  try {
+    const { productId } = req.params;
+    
+    const wishlist = await persist.readData(persist.wishlistFile);
+    const userWishlist = wishlist[req.user.id] || [];
+    
+    const itemIndex = userWishlist.findIndex(item => item.productId === productId);
+    
+    if (itemIndex === -1) {
+      return res.status(404).json({ error: 'Item not found in wishlist' });
+    }
+    
+    const removedItem = userWishlist[itemIndex];
+    userWishlist.splice(itemIndex, 1);
+    wishlist[req.user.id] = userWishlist;
+    
+    await persist.writeData(persist.wishlistFile, wishlist);
+    
+    // Log activity
+    await persist.logActivity(req.user.id, 'wishlist_remove', { 
+      productId 
+    });
+    
+    res.json({
+      message: 'Item removed from wishlist',
+      removedItem
+    });
+    
+  } catch (error) {
+    console.error('Wishlist remove error:', error);
+    res.status(500).json({ error: 'Failed to remove item from wishlist' });
+  }
+});
+
+// Clear user's wishlist
+router.delete('/wishlist', requireAuth, async (req, res) => {
+  try {
+    const wishlist = await persist.readData(persist.wishlistFile);
+    const userWishlist = wishlist[req.user.id] || [];
+    
+    if (userWishlist.length === 0) {
+      return res.status(400).json({ error: 'Wishlist is already empty' });
+    }
+    
+    const removedCount = userWishlist.length;
+    wishlist[req.user.id] = [];
+    
+    await persist.writeData(persist.wishlistFile, wishlist);
+    
+    // Log activity
+    await persist.logActivity(req.user.id, 'wishlist_clear', { 
+      removedCount 
+    });
+    
+    res.json({
+      message: 'Wishlist cleared',
+      removedCount
+    });
+    
+  } catch (error) {
+    console.error('Wishlist clear error:', error);
+    res.status(500).json({ error: 'Failed to clear wishlist' });
+  }
+});
+
 module.exports = router; 

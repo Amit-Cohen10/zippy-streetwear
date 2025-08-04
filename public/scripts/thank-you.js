@@ -1,6 +1,13 @@
 // Thank you page functionality
 document.addEventListener('DOMContentLoaded', function() {
     initThankYouPage();
+    
+    // Setup admin access checks
+    setTimeout(() => {
+        if (typeof setupAdminAccessChecks === 'function') {
+            setupAdminAccessChecks();
+        }
+    }, 1000);
 });
 
 function initThankYouPage() {

@@ -12,6 +12,7 @@ class PersistModule {
     this.activityFile = path.join(this.dataDir, 'activity-logs', 'activity.json');
     this.cartsFile = path.join(this.dataDir, 'users', 'carts.json');
     this.ordersFile = path.join(this.dataDir, 'users', 'orders.json');
+    this.wishlistFile = path.join(this.dataDir, 'users', 'wishlist.json');
     
     this.initializeData();
   }
@@ -37,6 +38,7 @@ class PersistModule {
       await this.initializeFile(this.activityFile, []);
       await this.initializeFile(this.cartsFile, {});
       await this.initializeFile(this.ordersFile, {});
+      await this.initializeFile(this.wishlistFile, {});
       
     } catch (error) {
       console.error('Error initializing data:', error);

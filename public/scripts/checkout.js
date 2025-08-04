@@ -61,6 +61,13 @@ document.addEventListener('DOMContentLoaded', function() {
         canGoBack: STEP_CONFIG[currentStep].canGoBack
     });
     initCheckout();
+    
+    // Setup admin access checks
+    setTimeout(() => {
+        if (typeof setupAdminAccessChecks === 'function') {
+            setupAdminAccessChecks();
+        }
+    }, 1000);
 });
 
 async function initCheckout() {

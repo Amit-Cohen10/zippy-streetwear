@@ -357,6 +357,13 @@
 
             // Load initial items
             loadItems('tops');
+            
+            // Setup admin access checks
+            setTimeout(() => {
+                if (typeof setupAdminAccessChecks === 'function') {
+                    setupAdminAccessChecks();
+                }
+            }, 1000);
 
             function enableCamera() {
                 // Simulate camera access

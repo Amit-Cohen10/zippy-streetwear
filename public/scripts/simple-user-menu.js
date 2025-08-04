@@ -57,6 +57,39 @@
     document.addEventListener('DOMContentLoaded', function() {
         // ללא עיכוב - כל האתחול כבר קרה
         initUserMenu();
+        
+        // Allow auth system to update UI when needed
+        window.blockGlobalUserMenu = false;
+        
+        // Listen for session timeout events
+        window.addEventListener('sessionTimeout', function() {
+            console.log('🔄 Session timeout detected, updating UI...');
+            // Force update the button state
+            const savedUser = localStorage.getItem('currentUser');
+            if (!savedUser) {
+                const authBtn = document.getElementById('authBtn');
+                const userMenu = document.getElementById('userMenu');
+                
+                if (authBtn && userMenu) {
+                    authBtn.style.display = 'inline-block';
+                    userMenu.style.display = 'none';
+                } else if (authBtn) {
+                    authBtn.textContent = 'LOGIN';
+                    authBtn.onclick = function() {
+                        if (typeof openAuthModal === 'function') {
+                            openAuthModal();
+                        }
+                    };
+                }
+            }
+        });
+        
+        // Setup admin access checks
+        setTimeout(() => {
+            if (typeof setupAdminAccessChecks === 'function') {
+                setupAdminAccessChecks();
+            }
+        }, 1000);
     });
     
     function initUserMenu() {

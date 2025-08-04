@@ -658,23 +658,77 @@
                 // Check if user is already logged in
                 const savedUser = localStorage.getItem('currentUser');
                 if (savedUser) {
-                    console.log('✅ User already logged in, not opening modal');
-                    // Remove the login=required parameter from URL
-                    const newUrl = window.location.pathname;
-                    window.history.replaceState({}, document.title, newUrl);
-                    return;
+                    try {
+                        const user = JSON.parse(savedUser);
+                        console.log('✅ User already logged in:', user.username || 'User');
+                        // Remove the login=required parameter from URL
+                        const newUrl = window.location.pathname;
+                        window.history.replaceState({}, document.title, newUrl);
+                        return;
+                    } catch (e) {
+                        console.log('❌ Error parsing user data, removing invalid data');
+                        localStorage.removeItem('currentUser');
+                    }
                 }
                 
                 console.log('🔐 No user found, opening auth modal');
-                // Wait a bit for auth system to initialize
-                setTimeout(() => {
+                
+                // Function to try opening the modal
+                function tryOpenModal() {
                     if (typeof openAuthModal === 'function') {
+                        console.log('✅ openAuthModal function found, opening modal');
                         openAuthModal();
+                        return true;
                     } else {
-                        console.log('❌ openAuthModal function not available');
+                        console.log('❌ openAuthModal function not available yet');
+                        return false;
                     }
-                }, 1000);
+                }
+                
+                // Function to check if auth system is ready
+                function isAuthSystemReady() {
+                    return typeof openAuthModal === 'function' && 
+                           typeof updateAuthUI === 'function' &&
+                           typeof forceUpdateAuthButton === 'function';
+                }
+                
+                // Try immediately
+                if (!tryOpenModal()) {
+                    // If not available, try again after a short delay
+                    setTimeout(() => {
+                        if (!tryOpenModal()) {
+                            // If still not available, try again after longer delay
+                            setTimeout(() => {
+                                if (!tryOpenModal()) {
+                                    console.log('❌ Failed to open auth modal after multiple attempts');
+                                    // Force update UI and try one more time
+                                    if (typeof forceUpdateAuthButton === 'function') {
+                                        forceUpdateAuthButton();
+                                    }
+                                    setTimeout(() => {
+                                        if (!tryOpenModal()) {
+                                            // Final fallback: show a simple alert
+                                            alert('Please click the LOGIN button to sign in.');
+                                        }
+                                    }, 1000);
+                                }
+                            }, 2000);
+                        }
+                    }, 500);
+                }
             }
+            
+            // Check session status on page load
+            setTimeout(() => {
+                if (typeof checkSessionStatus === 'function') {
+                    checkSessionStatus();
+                }
+                
+                // Setup admin access checks
+                if (typeof setupAdminAccessChecks === 'function') {
+                    setupAdminAccessChecks();
+                }
+            }, 1000);
         });
     </script>
 </body>

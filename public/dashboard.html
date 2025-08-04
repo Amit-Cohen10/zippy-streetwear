@@ -7,6 +7,442 @@
     <link rel="stylesheet" href="styles/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(0, 255, 255, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .user-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid rgba(0, 255, 255, 0.5);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .user-avatar::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ffff);
+            border-radius: 50%;
+            z-index: -1;
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .user-details h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .user-email {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0 0 1rem 0;
+        }
+
+        .user-stats {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00ffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00ffff, #ff00ff, #ffff00);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00ffff;
+            margin: 0;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            color: #ff00ff;
+        }
+
+        .activity-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border-left: 3px solid #00ffff;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .activity-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(0, 255, 255, 0.2);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-message {
+            margin: 0 0 0.25rem 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .order-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .order-id {
+            font-weight: 700;
+            color: #00ffff;
+            font-size: 1.1rem;
+        }
+
+        .order-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .order-status.completed {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+            border: 1px solid rgba(0, 255, 0, 0.5);
+        }
+
+        .order-status.shipped {
+            background: rgba(255, 165, 0, 0.2);
+            color: #ffa500;
+            border: 1px solid rgba(255, 165, 0, 0.5);
+        }
+
+        .order-status.pending {
+            background: rgba(255, 255, 0, 0.2);
+            color: #ffff00;
+            border: 1px solid rgba(255, 255, 0, 0.5);
+        }
+
+        .order-details {
+            margin-bottom: 1rem;
+        }
+
+        .order-date, .order-total, .order-items {
+            margin: 0.5rem 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .order-total {
+            font-weight: 700;
+            color: #ff00ff;
+            font-size: 1.1rem;
+        }
+
+        .exchanges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .exchange-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .exchange-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.2);
+        }
+
+        .exchange-status.active {
+            background: rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+        }
+
+        .exchange-status.completed {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+            border: 1px solid rgba(0, 255, 0, 0.5);
+        }
+
+        .exchange-status.pending {
+            background: rgba(255, 255, 0, 0.2);
+            color: #ffff00;
+            border: 1px solid rgba(255, 255, 0, 0.5);
+        }
+
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .wishlist-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 0, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 255, 0, 0.2);
+        }
+
+        .item-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .wishlist-item:hover .item-image img {
+            transform: scale(1.1);
+        }
+
+        .item-info {
+            padding: 1rem;
+        }
+
+        .item-name {
+            margin: 0 0 0.5rem 0;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+        }
+
+        .item-price {
+            color: #ffff00;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: #00ffff;
+            font-size: 1.2rem;
+        }
+
+        .loading::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00ffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: rgba(0, 255, 255, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .user-avatar {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .user-details h1 {
+                font-size: 2rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="cyberpunk-background">
@@ -57,7 +493,7 @@
 
     <!-- Main Content -->
     <main class="dashboard">
-        <div class="container">
+        <div class="dashboard-container">
             <!-- Dashboard Header -->
             <section class="dashboard-header">
                 <div class="user-info">
@@ -65,203 +501,101 @@
                         <img src="/images/avatar.jpg" alt="User Avatar" id="userAvatar" onerror="this.src='/images/default-avatar.jpg'">
                     </div>
                     <div class="user-details">
-                        <h1 class="user-name" id="userName">Cyber User</h1>
-                        <p class="user-email" id="userEmail">user@zippy.com</p>
+                        <h1 class="user-name" id="userName">Loading...</h1>
+                        <p class="user-email" id="userEmail">Loading...</p>
                         <div class="user-stats">
-                            <span class="stat">Member since <span id="joinDate">2024</span></span>
-                            <span class="stat">Exchange rating: <span id="exchangeRating">4.8</span>⭐</span>
+                            <div class="stat-item">
+                                <span class="stat-number" id="totalOrders">0</span>
+                                <span class="stat-label">Orders</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="totalExchanges">0</span>
+                                <span class="stat-label">Exchanges</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="wishlistItems">0</span>
+                                <span class="stat-label">Wishlist</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="exchangeRating">0.0</span>
+                                <span class="stat-label">Rating</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="dashboard-actions">
-                    <button class="cyber-btn secondary" id="editProfileBtn">Edit Profile</button>
-                    <button class="cyber-btn primary" id="logoutBtn">Logout</button>
-                </div>
-            </section>
-
-            <!-- Dashboard Navigation -->
-            <section class="dashboard-nav">
-                <div class="nav-tabs">
-                    <button class="tab-btn active" data-tab="overview">Overview</button>
-                    <button class="tab-btn" data-tab="orders">My Orders</button>
-                    <button class="tab-btn" data-tab="exchanges">My Exchanges</button>
-                    <button class="tab-btn" data-tab="wishlist">Wishlist</button>
-                    <button class="tab-btn" data-tab="settings">Settings</button>
                 </div>
             </section>
 
             <!-- Dashboard Content -->
             <section class="dashboard-content">
-                <!-- Overview Tab -->
-                <div class="tab-content active" id="overview">
-                    <div class="overview-grid">
-                        <div class="overview-card cyber-card">
-                            <h3>Recent Activity</h3>
-                            <div class="activity-list" id="recentActivity">
-                                <!-- Activity items will be populated here -->
+                <div class="dashboard-grid">
+                    <!-- Recent Activity -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Activity</h3>
+                            <i class="fas fa-chart-line card-icon"></i>
+                        </div>
+                        <div class="activity-list" id="recentActivity">
+                            <div class="loading">Loading activity...</div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Quick Stats</h3>
+                            <i class="fas fa-tachometer-alt card-icon"></i>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-number" id="totalSpent">$0</span>
+                                <span class="stat-label">Total Spent</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="avgOrderValue">$0</span>
+                                <span class="stat-label">Avg Order</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="memberSince">2024</span>
+                                <span class="stat-label">Member Since</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="lastOrder">-</span>
+                                <span class="stat-label">Last Order</span>
                             </div>
                         </div>
-                        <div class="overview-card cyber-card">
-                            <h3>Quick Stats</h3>
-                            <div class="stats-grid">
-                                <div class="stat-item">
-                                    <span class="stat-number" id="totalOrders">12</span>
-                                    <span class="stat-label">Orders</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-number" id="totalExchanges">8</span>
-                                    <span class="stat-label">Exchanges</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-number" id="wishlistItems">15</span>
-                                    <span class="stat-label">Wishlist</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-number" id="exchangeRating">4.8</span>
-                                    <span class="stat-label">Rating</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
-                <!-- Orders Tab -->
-                <div class="tab-content" id="orders">
-                    <div class="orders-container">
-                        <div class="orders-header">
-                            <h2>My Orders</h2>
-                            <div class="order-filters">
-                                <select id="orderStatusFilter" class="cyber-select">
-                                    <option value="all">All Orders</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="shipped">Shipped</option>
-                                    <option value="delivered">Delivered</option>
-                                    <option value="cancelled">Cancelled</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="orders-list" id="ordersList">
-                            <!-- Orders will be populated here -->
-                        </div>
+                <!-- Orders Section -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Orders</h3>
+                        <i class="fas fa-shopping-bag card-icon"></i>
+                    </div>
+                    <div class="orders-grid" id="ordersGrid">
+                        <div class="loading">Loading orders...</div>
                     </div>
                 </div>
 
-                <!-- Exchanges Tab -->
-                <div class="tab-content" id="exchanges">
-                    <div class="exchanges-container">
-                        <div class="exchanges-header">
-                            <h2>My Exchanges</h2>
-                            <button class="cyber-btn primary" id="createExchangeBtn">Create Exchange</button>
-                        </div>
-                        <div class="exchanges-tabs">
-                            <button class="exchange-tab active" data-status="active">Active</button>
-                            <button class="exchange-tab" data-status="pending">Pending</button>
-                            <button class="exchange-tab" data-status="completed">Completed</button>
-                        </div>
-                        <div class="exchanges-list" id="exchangesList">
-                            <!-- Exchanges will be populated here -->
-                        </div>
+                <!-- Exchanges Section -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">My Exchanges</h3>
+                        <i class="fas fa-exchange-alt card-icon"></i>
+                    </div>
+                    <div class="exchanges-grid" id="exchangesGrid">
+                        <div class="loading">Loading exchanges...</div>
                     </div>
                 </div>
 
-                <!-- Wishlist Tab -->
-                <div class="tab-content" id="wishlist">
-                    <div class="wishlist-container">
-                        <div class="wishlist-header">
-                            <h2>My Wishlist</h2>
-                            <button class="cyber-btn secondary" id="clearWishlistBtn">Clear All</button>
-                        </div>
-                        <div class="wishlist-grid" id="wishlistGrid">
-                            <!-- Wishlist items will be populated here -->
-                        </div>
+                <!-- Wishlist Section -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Wishlist Items</h3>
+                        <i class="fas fa-heart card-icon"></i>
                     </div>
-                </div>
-
-                <!-- Settings Tab -->
-                <div class="tab-content" id="settings">
-                    <div class="settings-container">
-                        <div class="settings-section">
-                            <h3>Profile Settings</h3>
-                            <form id="profileForm" class="settings-form">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="displayName">Display Name</label>
-                                        <input type="text" id="displayName" class="cyber-input" value="Cyber User">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Email</label>
-                                        <input type="email" id="email" class="cyber-input" value="user@zippy.com">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="phone">Phone</label>
-                                        <input type="tel" id="phone" class="cyber-input" value="+1 (555) 123-4567">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="location">Location</label>
-                                        <input type="text" id="location" class="cyber-input" value="Neo Tokyo">
-                                    </div>
-                                </div>
-                                <button type="submit" class="cyber-btn primary">Update Profile</button>
-                            </form>
-                        </div>
-
-                        <div class="settings-section">
-                            <h3>Preferences</h3>
-                            <form id="preferencesForm" class="settings-form">
-                                <div class="form-group">
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" id="darkMode" checked>
-                                        <span class="checkmark"></span>
-                                        Dark Mode
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" id="emailNotifications" checked>
-                                        <span class="checkmark"></span>
-                                        Email Notifications
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" id="exchangeNotifications" checked>
-                                        <span class="checkmark"></span>
-                                        Exchange Notifications
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label for="language">Language</label>
-                                    <select id="language" class="cyber-select">
-                                        <option value="en">English</option>
-                                        <option value="es">Spanish</option>
-                                        <option value="fr">French</option>
-                                        <option value="de">German</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="cyber-btn primary">Save Preferences</button>
-                            </form>
-                        </div>
-
-                        <div class="settings-section">
-                            <h3>Security</h3>
-                            <form id="passwordForm" class="settings-form">
-                                <div class="form-group">
-                                    <label for="currentPassword">Current Password</label>
-                                    <input type="password" id="currentPassword" class="cyber-input">
-                                </div>
-                                <div class="form-group">
-                                    <label for="newPassword">New Password</label>
-                                    <input type="password" id="newPassword" class="cyber-input">
-                                </div>
-                                <div class="form-group">
-                                    <label for="confirmPassword">Confirm New Password</label>
-                                    <input type="password" id="confirmPassword" class="cyber-input">
-                                </div>
-                                <button type="submit" class="cyber-btn primary">Change Password</button>
-                            </form>
-                        </div>
+                    <div class="wishlist-grid" id="wishlistGrid">
+                        <div class="loading">Loading wishlist...</div>
                     </div>
                 </div>
             </section>
@@ -346,275 +680,342 @@
     <script>
         // Dashboard specific functionality
         document.addEventListener('DOMContentLoaded', function() {
-            const tabBtns = document.querySelectorAll('.tab-btn');
-            const tabContents = document.querySelectorAll('.tab-content');
-            const profileForm = document.getElementById('profileForm');
-            const preferencesForm = document.getElementById('preferencesForm');
-            const passwordForm = document.getElementById('passwordForm');
-            const logoutBtn = document.getElementById('logoutBtn');
-
-            // Event listeners
-            tabBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const targetTab = btn.dataset.tab;
-                    switchTab(targetTab);
-                });
-            });
-
-            profileForm.addEventListener('submit', updateProfile);
-            preferencesForm.addEventListener('submit', updatePreferences);
-            passwordForm.addEventListener('submit', changePassword);
-            logoutBtn.addEventListener('click', logout);
-
-            // Load dashboard data
+            // Load dashboard data immediately
             loadDashboardData();
-
-            function switchTab(tabName) {
-                // Update tab buttons
-                tabBtns.forEach(btn => {
-                    btn.classList.remove('active');
-                    if (btn.dataset.tab === tabName) {
-                        btn.classList.add('active');
-                    }
-                });
-
-                // Update tab content
-                tabContents.forEach(content => {
-                    content.classList.remove('active');
-                    if (content.id === tabName) {
-                        content.classList.add('active');
-                    }
-                });
-
-                // Load tab-specific data
-                loadTabData(tabName);
-            }
-
-            function loadDashboardData() {
-                loadUserInfo();
-                loadRecentActivity();
-                loadQuickStats();
-            }
-
-            function loadUserInfo() {
-                // ננסה לקבל את המשתמש מהאפליקציה הגלובלית
-                let user = (window.ZippyApp && typeof window.ZippyApp.currentUser === 'function')
-                    ? window.ZippyApp.currentUser()
-                    : null;
-
-                if (!user) {
-                    // ננסה לבדוק התחברות מהשרת
-                    fetch('/api/auth/verify-token')
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data && data.user) {
-                                setUserInfo(data.user);
-                            } else {
-                                window.location.href = '/';
-                            }
-                        })
-                        .catch(() => window.location.href = '/');
-                } else {
-                    setUserInfo(user);
+            
+            // Refresh data every 30 seconds
+            setInterval(loadDashboardData, 30000);
+            
+            // Refresh data when page becomes visible
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    loadDashboardData();
                 }
-
-                function setUserInfo(userData) {
-                    document.getElementById('userName').textContent = userData.username || userData.name || 'User';
-                    document.getElementById('userEmail').textContent = userData.email || '';
-                    document.getElementById('joinDate').textContent = userData.joinDate || '';
-                    document.getElementById('exchangeRating').textContent = userData.exchangeRating || (userData.profile && userData.profile.exchangeRating) || '';
-                    if (userData.avatar) {
-                        document.getElementById('userAvatar').src = userData.avatar;
-                    }
-                }
-            }
-
-            function loadRecentActivity() {
-                const activities = [
-                    { type: 'order', message: 'Order #1234 shipped', time: '2 hours ago' },
-                    { type: 'exchange', message: 'Exchange offer received', time: '1 day ago' },
-                    { type: 'wishlist', message: 'Item added to wishlist', time: '2 days ago' },
-                    { type: 'review', message: 'Review posted', time: '3 days ago' }
-                ];
-
-                const activityList = document.getElementById('recentActivity');
-                activityList.innerHTML = activities.map(activity => `
-                    <div class="activity-item">
-                        <span class="activity-icon">${getActivityIcon(activity.type)}</span>
-                        <div class="activity-content">
-                            <p class="activity-message">${activity.message}</p>
-                            <span class="activity-time">${activity.time}</span>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            function getActivityIcon(type) {
-                const icons = {
-                    order: '📦',
-                    exchange: '🔄',
-                    wishlist: '❤️',
-                    review: '⭐'
-                };
-                return icons[type] || '📝';
-            }
-
-            function loadQuickStats() {
-                // Stats are already set in HTML, but could be updated from API
-                console.log('Loading quick stats...');
-            }
-
-            function loadTabData(tabName) {
-                switch(tabName) {
-                    case 'orders':
-                        loadOrders();
-                        break;
-                    case 'exchanges':
-                        loadExchanges();
-                        break;
-                    case 'wishlist':
-                        loadWishlist();
-                        break;
-                    case 'settings':
-                        loadSettings();
-                        break;
-                }
-            }
-
-            function loadOrders() {
-                const orders = [
-                    {
-                        id: '1234',
-                        date: '2024-01-15',
-                        status: 'shipped',
-                        total: '$129.99',
-                        items: ['Neon Cyber Hoodie', 'Glitch Art Tee']
-                    },
-                    {
-                        id: '1233',
-                        date: '2024-01-10',
-                        status: 'delivered',
-                        total: '$89.99',
-                        items: ['Holographic Cargo Pants']
-                    }
-                ];
-
-                const ordersList = document.getElementById('ordersList');
-                ordersList.innerHTML = orders.map(order => `
-                    <div class="order-card cyber-card">
-                        <div class="order-header">
-                            <h4>Order #${order.id}</h4>
-                            <span class="order-status ${order.status}">${order.status}</span>
-                        </div>
-                        <div class="order-details">
-                            <p class="order-date">${order.date}</p>
-                            <p class="order-total">${order.total}</p>
-                            <p class="order-items">${order.items.join(', ')}</p>
-                        </div>
-                        <div class="order-actions">
-                            <button class="cyber-btn secondary">View Details</button>
-                            <button class="cyber-btn primary">Track Order</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            function loadExchanges() {
-                const exchanges = [
-                    {
-                        id: 'EX001',
-                        title: 'Neon Hoodie Exchange',
-                        status: 'active',
-                        partner: 'CyberStylist',
-                        date: '2024-01-14'
-                    },
-                    {
-                        id: 'EX002',
-                        title: 'Glitch Tee Trade',
-                        status: 'completed',
-                        partner: 'StreetGuru',
-                        date: '2024-01-08'
-                    }
-                ];
-
-                const exchangesList = document.getElementById('exchangesList');
-                exchangesList.innerHTML = exchanges.map(exchange => `
-                    <div class="exchange-card cyber-card">
-                        <div class="exchange-header">
-                            <h4>${exchange.title}</h4>
-                            <span class="exchange-status ${exchange.status}">${exchange.status}</span>
-                        </div>
-                        <div class="exchange-details">
-                            <p class="exchange-partner">with ${exchange.partner}</p>
-                            <p class="exchange-date">${exchange.date}</p>
-                        </div>
-                        <div class="exchange-actions">
-                            <button class="cyber-btn secondary">View Details</button>
-                            <button class="cyber-btn primary">Message</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            function loadWishlist() {
-                const wishlistItems = [
-                    { id: 1, name: 'LED Sneakers', price: '$199.99', image: '/images/items/sneakers.jpg' },
-                    { id: 2, name: 'Cyber Jacket', price: '$149.99', image: '/images/items/jacket.jpg' },
-                    { id: 3, name: 'Neon Glasses', price: '$79.99', image: '/images/items/glasses.jpg' }
-                ];
-
-                const wishlistGrid = document.getElementById('wishlistGrid');
-                wishlistGrid.innerHTML = wishlistItems.map(item => `
-                    <div class="wishlist-item cyber-card">
-                        <div class="item-image">
-                            <img src="${item.image}" alt="${item.name}" onerror="this.src='/images/placeholder.jpg'">
-                        </div>
-                        <div class="item-info">
-                            <h4 class="item-name">${item.name}</h4>
-                            <span class="item-price">${item.price}</span>
-                        </div>
-                        <div class="item-actions">
-                            <button class="cyber-btn primary">Add to Cart</button>
-                            <button class="cyber-btn secondary" onclick="removeFromWishlist('${item.id}')">Remove</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            function loadSettings() {
-                // Settings are already loaded in HTML
-                console.log('Settings loaded');
-            }
-
-            function updateProfile(e) {
-                e.preventDefault();
-                console.log('Profile updated');
-                // Implement profile update logic
-            }
-
-            function updatePreferences(e) {
-                e.preventDefault();
-                console.log('Preferences updated');
-                // Implement preferences update logic
-            }
-
-            function changePassword(e) {
-                e.preventDefault();
-                console.log('Password changed');
-                // Implement password change logic
-            }
-
-            function logout() {
-                console.log('Logging out...');
-                // Implement logout logic
-                window.location.href = '/';
-            }
+            });
         });
 
-        // Global functions
-        function removeFromWishlist(itemId) {
-            console.log('Removing item from wishlist:', itemId);
-            // Implement remove from wishlist logic
+        async function loadDashboardData() {
+            try {
+                // Load user info
+                await loadUserInfo();
+                
+                // Load all dashboard sections
+                await Promise.all([
+                    loadRecentActivity(),
+                    loadQuickStats(),
+                    loadOrders(),
+                    loadExchanges(),
+                    loadWishlist()
+                ]);
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        async function loadUserInfo() {
+            try {
+                const response = await fetch('/api/auth/verify-token');
+                const data = await response.json();
+                
+                if (data && data.user) {
+                    setUserInfo(data.user);
+                } else {
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                window.location.href = '/';
+            }
+        }
+
+        function setUserInfo(userData) {
+            document.getElementById('userName').textContent = userData.profile?.displayName || userData.username || 'User';
+            document.getElementById('userEmail').textContent = userData.email || '';
+            
+            if (userData.profile?.avatar) {
+                document.getElementById('userAvatar').src = userData.profile.avatar;
+            }
+        }
+
+        async function loadRecentActivity() {
+            try {
+                const response = await fetch('/api/auth/profile');
+                const data = await response.json();
+                
+                if (data && data.user) {
+                    // Get user's recent activity from various sources
+                    const activities = await getUserActivity(data.user.id);
+                    displayRecentActivity(activities);
+                }
+            } catch (error) {
+                console.error('Error loading recent activity:', error);
+                document.getElementById('recentActivity').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Unable to load activity</p></div>';
+            }
+        }
+
+        async function getUserActivity(userId) {
+            const activities = [];
+            
+            try {
+                // Get orders
+                const ordersResponse = await fetch('/api/cart/orders');
+                const ordersData = await ordersResponse.json();
+                
+                if (ordersData.orders) {
+                    ordersData.orders.slice(0, 3).forEach(order => {
+                        activities.push({
+                            type: 'order',
+                            message: `Order #${order.id} ${order.status}`,
+                            time: formatTimeAgo(order.createdAt),
+                            icon: '📦'
+                        });
+                    });
+                }
+                
+                // Get exchanges
+                const exchangesResponse = await fetch('/api/exchanges/user');
+                const exchangesData = await exchangesResponse.json();
+                
+                if (exchangesData.exchanges) {
+                    exchangesData.exchanges.slice(0, 2).forEach(exchange => {
+                        activities.push({
+                            type: 'exchange',
+                            message: `Exchange with ${exchange.partner}`,
+                            time: formatTimeAgo(exchange.createdAt),
+                            icon: '🔄'
+                        });
+                    });
+                }
+                
+                // Sort by time
+                activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+                
+                return activities.slice(0, 5);
+            } catch (error) {
+                console.error('Error getting user activity:', error);
+                return [];
+            }
+        }
+
+        function displayRecentActivity(activities) {
+            const activityList = document.getElementById('recentActivity');
+            
+            if (activities.length === 0) {
+                activityList.innerHTML = '<div class="empty-state"><i class="fas fa-info-circle"></i><p>No recent activity</p></div>';
+                return;
+            }
+            
+            activityList.innerHTML = activities.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        ${activity.icon}
+                    </div>
+                    <div class="activity-content">
+                        <p class="activity-message">${activity.message}</p>
+                        <span class="activity-time">${activity.time}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadQuickStats() {
+            try {
+                const response = await fetch('/api/auth/profile');
+                const data = await response.json();
+                
+                if (data && data.user) {
+                    const stats = await getUserStats(data.user.id);
+                    displayQuickStats(stats);
+                }
+            } catch (error) {
+                console.error('Error loading quick stats:', error);
+            }
+        }
+
+        async function getUserStats(userId) {
+            try {
+                const [ordersResponse, exchangesResponse, wishlistResponse] = await Promise.all([
+                    fetch('/api/cart/orders'),
+                    fetch('/api/exchanges/user'),
+                    fetch('/api/products/wishlist')
+                ]);
+                
+                const ordersData = await ordersResponse.json();
+                const exchangesData = await exchangesResponse.json();
+                const wishlistData = await wishlistResponse.json();
+                
+                const orders = ordersData.orders || [];
+                const exchanges = exchangesData.exchanges || [];
+                const wishlist = wishlistData.items || [];
+                
+                const totalSpent = orders.reduce((sum, order) => sum + (order.total || 0), 0);
+                const avgOrderValue = orders.length > 0 ? totalSpent / orders.length : 0;
+                const lastOrder = orders.length > 0 ? formatDate(orders[0].createdAt) : '-';
+                
+                return {
+                    totalOrders: orders.length,
+                    totalExchanges: exchanges.length,
+                    wishlistItems: wishlist.length,
+                    totalSpent: totalSpent,
+                    avgOrderValue: avgOrderValue,
+                    lastOrder: lastOrder
+                };
+            } catch (error) {
+                console.error('Error getting user stats:', error);
+                return {
+                    totalOrders: 0,
+                    totalExchanges: 0,
+                    wishlistItems: 0,
+                    totalSpent: 0,
+                    avgOrderValue: 0,
+                    lastOrder: '-'
+                };
+            }
+        }
+
+        function displayQuickStats(stats) {
+            document.getElementById('totalOrders').textContent = stats.totalOrders;
+            document.getElementById('totalExchanges').textContent = stats.totalExchanges;
+            document.getElementById('wishlistItems').textContent = stats.wishlistItems;
+            document.getElementById('totalSpent').textContent = `$${stats.totalSpent.toFixed(2)}`;
+            document.getElementById('avgOrderValue').textContent = `$${stats.avgOrderValue.toFixed(2)}`;
+            document.getElementById('lastOrder').textContent = stats.lastOrder;
+        }
+
+        async function loadOrders() {
+            try {
+                const response = await fetch('/api/cart/orders');
+                const data = await response.json();
+                
+                if (data && data.orders) {
+                    displayOrders(data.orders.slice(0, 6));
+                } else {
+                    document.getElementById('ordersGrid').innerHTML = '<div class="empty-state"><i class="fas fa-shopping-bag"></i><p>No orders yet</p></div>';
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                document.getElementById('ordersGrid').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Unable to load orders</p></div>';
+            }
+        }
+
+        function displayOrders(orders) {
+            const ordersGrid = document.getElementById('ordersGrid');
+            
+            if (orders.length === 0) {
+                ordersGrid.innerHTML = '<div class="empty-state"><i class="fas fa-shopping-bag"></i><p>No orders yet</p></div>';
+                return;
+            }
+            
+            ordersGrid.innerHTML = orders.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <span class="order-id">Order #${order.id}</span>
+                        <span class="order-status ${order.status}">${order.status}</span>
+                    </div>
+                    <div class="order-details">
+                        <p class="order-date">${formatDate(order.createdAt)}</p>
+                        <p class="order-total">$${order.total.toFixed(2)}</p>
+                        <p class="order-items">${order.items.map(item => item.title).join(', ')}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadExchanges() {
+            try {
+                const response = await fetch('/api/exchanges/user');
+                const data = await response.json();
+                
+                if (data && data.exchanges) {
+                    displayExchanges(data.exchanges.slice(0, 6));
+                } else {
+                    document.getElementById('exchangesGrid').innerHTML = '<div class="empty-state"><i class="fas fa-exchange-alt"></i><p>No exchanges yet</p></div>';
+                }
+            } catch (error) {
+                console.error('Error loading exchanges:', error);
+                document.getElementById('exchangesGrid').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Unable to load exchanges</p></div>';
+            }
+        }
+
+        function displayExchanges(exchanges) {
+            const exchangesGrid = document.getElementById('exchangesGrid');
+            
+            if (exchanges.length === 0) {
+                exchangesGrid.innerHTML = '<div class="empty-state"><i class="fas fa-exchange-alt"></i><p>No exchanges yet</p></div>';
+                return;
+            }
+            
+            exchangesGrid.innerHTML = exchanges.map(exchange => `
+                <div class="exchange-card">
+                    <div class="order-header">
+                        <span class="order-id">${exchange.title}</span>
+                        <span class="exchange-status ${exchange.status}">${exchange.status}</span>
+                    </div>
+                    <div class="order-details">
+                        <p class="order-date">${formatDate(exchange.createdAt)}</p>
+                        <p class="order-items">with ${exchange.partner}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadWishlist() {
+            try {
+                const response = await fetch('/api/products/wishlist');
+                const data = await response.json();
+                
+                if (data && data.items) {
+                    displayWishlist(data.items.slice(0, 8));
+                } else {
+                    document.getElementById('wishlistGrid').innerHTML = '<div class="empty-state"><i class="fas fa-heart"></i><p>Wishlist is empty</p></div>';
+                }
+            } catch (error) {
+                console.error('Error loading wishlist:', error);
+                document.getElementById('wishlistGrid').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Unable to load wishlist</p></div>';
+            }
+        }
+
+        function displayWishlist(items) {
+            const wishlistGrid = document.getElementById('wishlistGrid');
+            
+            if (items.length === 0) {
+                wishlistGrid.innerHTML = '<div class="empty-state"><i class="fas fa-heart"></i><p>Wishlist is empty</p></div>';
+                return;
+            }
+            
+            wishlistGrid.innerHTML = items.map(item => `
+                <div class="wishlist-item">
+                    <div class="item-image">
+                        <img src="${item.image}" alt="${item.title}" onerror="this.src='/images/placeholder.jpg'">
+                    </div>
+                    <div class="item-info">
+                        <h4 class="item-name">${item.title}</h4>
+                        <span class="item-price">$${item.price.toFixed(2)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function formatTimeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) return 'Just now';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+            if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+            
+            return formatDate(dateString);
         }
     </script>
     
@@ -625,6 +1026,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             updateCartCount();
             updateAuthButton();
+            
+            // Setup admin access checks
+            setTimeout(() => {
+                if (typeof setupAdminAccessChecks === 'function') {
+                    setupAdminAccessChecks();
+                }
+            }, 1000);
         });
     </script>
 </body>

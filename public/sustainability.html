@@ -360,6 +360,13 @@
 
             // Event listeners
             carbonForm.addEventListener('submit', calculateCarbonFootprint);
+            
+            // Setup admin access checks
+            setTimeout(() => {
+                if (typeof setupAdminAccessChecks === 'function') {
+                    setupAdminAccessChecks();
+                }
+            }, 1000);
 
             function calculateCarbonFootprint(e) {
                 e.preventDefault();

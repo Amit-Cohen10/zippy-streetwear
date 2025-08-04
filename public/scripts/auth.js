@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initAuth() {
-    console.log('Setting up auth components...');
+    console.log('🔐 Setting up auth components...');
     
     const authBtn = document.getElementById('authBtn');
     const authModal = document.getElementById('authModal');
@@ -52,21 +52,30 @@ function initAuth() {
     const registerForm = document.getElementById('registerForm');
     const authTabs = document.querySelectorAll('.auth-tab');
     
+    console.log('🔍 Found elements:', {
+        authBtn: !!authBtn,
+        authModal: !!authModal,
+        closeAuth: !!closeAuth,
+        loginForm: !!loginForm,
+        registerForm: !!registerForm,
+        authTabs: authTabs.length
+    });
+    
     if (!authBtn) {
-        console.error('Auth button not found!');
+        console.error('❌ Auth button not found!');
         return;
     }
     
     // Auth button click handler
     if (authBtn) {
         authBtn.onclick = function() {
-            console.log('Auth button clicked');
+            console.log('🔘 Auth button clicked');
             const savedUser = localStorage.getItem('currentUser');
             if (!savedUser) {
-                console.log('No saved user, opening login modal');
+                console.log('👤 No saved user, opening login modal');
                 openAuthModal();
             } else {
-                console.log('User is logged in, handling logout');
+                console.log('👤 User is logged in, handling logout');
                 handleLogout();
             }
         };
@@ -91,7 +100,7 @@ function initAuth() {
         if (tab) {
             tab.onclick = function() {
                 const targetTab = tab.dataset.tab;
-                console.log('Switching to tab:', targetTab);
+                console.log('🔄 Switching to tab:', targetTab);
                 
                 authTabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
@@ -112,24 +121,28 @@ function initAuth() {
     // Form submissions
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
-        console.log('Login form event listener added');
+        console.log('✅ Login form event listener added');
     }
     
     if (registerForm) {
         registerForm.addEventListener('submit', handleRegister);
-        console.log('Register form event listener added');
+        console.log('✅ Register form event listener added');
     }
     
-    console.log('Auth initialization complete');
+    console.log('✅ Auth initialization complete');
     
     // Update UI based on current login status
     updateAuthUI();
 }
 
 function openAuthModal() {
-    console.log('Opening auth modal');
+    console.log('🔐 Opening auth modal...');
     const authModal = document.getElementById('authModal');
+    
+    console.log('🔍 Auth modal element:', !!authModal);
+    
     if (authModal) {
+        console.log('✅ Auth modal found, displaying...');
         authModal.style.display = 'flex';
         authModal.classList.add('active');
         
@@ -138,24 +151,36 @@ function openAuthModal() {
         
         // Prevent body scroll
         document.body.style.overflow = 'hidden';
+        
+        console.log('✅ Auth modal opened successfully');
+    } else {
+        console.log('❌ Auth modal not found!');
     }
 }
 
 function closeAuthModal() {
-    console.log('Closing auth modal');
+    console.log('🔐 Closing auth modal...');
     const authModal = document.getElementById('authModal');
+    
+    console.log('🔍 Auth modal element:', !!authModal);
+    
     if (authModal) {
+        console.log('✅ Auth modal found, hiding...');
         authModal.style.display = 'none';
         authModal.classList.remove('active');
         
         // Restore body scroll
         document.body.style.overflow = '';
+        
+        console.log('✅ Auth modal closed successfully');
+    } else {
+        console.log('❌ Auth modal not found for closing!');
     }
 }
 
 async function handleLogin(e) {
     e.preventDefault();
-    console.log('Handling login...');
+    console.log('🔐 Handling login...');
     
     console.log('Form submitted:', e.target);
     console.log('Form elements:', e.target.elements);
@@ -332,7 +357,7 @@ async function handleLogin(e) {
 
 async function handleRegister(e) {
     e.preventDefault();
-    console.log('Handling registration...');
+    console.log('🔐 Handling registration...');
     
     const formData = new FormData(e.target);
     const username = formData.get('username');
@@ -340,18 +365,22 @@ async function handleRegister(e) {
     const password = formData.get('password');
     const confirmPassword = formData.get('confirmPassword');
     
+    console.log('📝 Registration data:', { username, email, password: '***', confirmPassword: '***' });
+    
     if (password !== confirmPassword) {
+        console.log('❌ Passwords do not match');
         alert('Passwords do not match');
         return;
     }
     
     if (password.length < 6) {
+        console.log('❌ Password too short');
         alert('Password must be at least 6 characters');
         return;
     }
     
     try {
-        console.log('Sending registration request...');
+        console.log('🔄 Sending registration request...');
         const response = await fetch('/api/auth/register', {
             method: 'POST',
             headers: {
@@ -365,9 +394,10 @@ async function handleRegister(e) {
         });
         
         const data = await response.json();
-        console.log('Registration response:', data);
+        console.log('📥 Registration response:', data);
         
         if (response.ok && data.user) {
+            console.log('✅ Registration successful');
             window.currentUser = data.user;
             localStorage.setItem('currentUser', JSON.stringify(data.user));
             
@@ -399,28 +429,34 @@ async function handleRegister(e) {
             }, 500);
             
         } else {
+            console.log('❌ Registration failed:', data.error);
             throw new Error(data.error || 'Registration failed');
         }
         
     } catch (error) {
-        console.error('Registration error:', error);
+        console.error('❌ Registration error:', error);
         alert(error.message);
     }
 }
 
 async function handleLogout() {
-    console.log('Handling logout...');
+    console.log('🔐 Handling logout...');
     
     try {
+        console.log('🔄 Sending logout request to server...');
         await fetch('/api/auth/logout', {
             method: 'POST',
             credentials: 'include'
         });
         
+        console.log('✅ Server logout successful');
+        
         currentUser = null;
         localStorage.removeItem('currentUser');
         localStorage.removeItem('userData');
         localStorage.removeItem('userToken');
+        
+        console.log('🗑️ Cleared localStorage data');
         
         // Hide admin activity link
         const adminActivityLink = document.getElementById('adminActivityLink');
@@ -433,7 +469,7 @@ async function handleLogout() {
         updateAuthUI();
         
     } catch (error) {
-        console.error('Logout error:', error);
+        console.error('❌ Logout error:', error);
         alert('Error during logout');
     }
 }
@@ -442,6 +478,8 @@ function updateAuthUI() {
     // אם הסקריפט החדש פועל, אל תפריע לו
     if (window.blockGlobalUserMenu) {
         console.log('🚫 Auth UI update blocked by simple-user-menu.js');
+        // אבל עדיין ננסה לעדכן את הכפתור אם הוא לא מעודכן
+        forceUpdateAuthButton();
         return;
     }
     
@@ -541,15 +579,14 @@ function updateAuthUI() {
                 };
             }
             
-            // Hide admin activity link
-            const adminActivityLink = document.getElementById('adminActivityLink');
-            if (adminActivityLink) {
-                adminActivityLink.style.display = 'none !important';
-                console.log('✅ Admin activity link hidden in updateAuthUI error state');
-            }
+            // Reset global login status
+            window.isLoggedIn = false;
+            window.currentUser = null;
+            
+            console.log('✅ Updated auth UI for logged-out user');
         }
     } else {
-        console.log('👤 No saved user, showing login state');
+        console.log('👤 No saved user, showing login button');
         
         // Show login button and hide user menu
         if (authBtn && userMenu) {
@@ -560,30 +597,89 @@ function updateAuthUI() {
             authBtn.onclick = function() {
                 openAuthModal();
             };
-        } else {
-            console.log('❌ Neither authBtn nor userMenu found for logout state');
         }
         
-        // Hide admin activity link
-        const adminActivityLink = document.getElementById('adminActivityLink');
-        if (adminActivityLink) {
-            adminActivityLink.style.display = 'none !important';
-            console.log('✅ Admin activity link hidden in updateAuthUI else state');
-        }
-        
-        // Hide admin activity link (logout state)
-        const adminActivityLinkLogout = document.getElementById('adminActivityLink');
-        if (adminActivityLinkLogout) {
-            adminActivityLinkLogout.style.display = 'none !important';
-            console.log('✅ Admin activity link hidden in updateAuthUI logout state');
-        }
-        
-        // Set global login status
+        // Reset global login status
         window.isLoggedIn = false;
         window.currentUser = null;
+        
+        console.log('✅ Updated auth UI for logged-out user');
+    }
+}
+
+// Force update auth button even when simple-user-menu.js is active
+function forceUpdateAuthButton() {
+    console.log('🔧 Force updating auth button...');
+    const authBtn = document.getElementById('authBtn');
+    const userMenu = document.getElementById('userMenu');
+    
+    console.log('🔍 Found elements:', { 
+        authBtn: !!authBtn, 
+        userMenu: !!userMenu,
+        authBtnText: authBtn ? authBtn.textContent : 'N/A',
+        authBtnDisplay: authBtn ? authBtn.style.display : 'N/A',
+        userMenuDisplay: userMenu ? userMenu.style.display : 'N/A'
+    });
+    
+    if (!authBtn) {
+        console.log('❌ Auth button not found for force update');
+        return;
     }
     
-    console.log('✅ Auth UI update complete');
+    const savedUser = localStorage.getItem('currentUser');
+    console.log('👤 Saved user for force update:', savedUser ? 'exists' : 'none');
+    
+    if (savedUser) {
+        try {
+            const user = JSON.parse(savedUser);
+            const displayName = user.profile?.displayName || user.username || 'User';
+            console.log('✅ Parsed user for force update:', displayName);
+            
+            // Update button to show user is logged in
+            if (authBtn && userMenu) {
+                authBtn.style.display = 'none';
+                userMenu.style.display = 'inline-block';
+                
+                const usernameDisplay = document.getElementById('usernameDisplay');
+                if (usernameDisplay) {
+                    usernameDisplay.textContent = displayName;
+                }
+                console.log('✅ Updated userMenu to show logged-in user');
+            } else if (authBtn) {
+                authBtn.textContent = displayName;
+                authBtn.onclick = function() {
+                    if (confirm('Do you want to logout?')) {
+                        handleLogout();
+                    }
+                };
+                console.log('✅ Updated authBtn to show logged-in user');
+            }
+            
+            console.log('✅ Force updated auth button for logged-in user');
+        } catch (error) {
+            console.error('❌ Error parsing user data in force update:', error);
+            localStorage.removeItem('currentUser');
+            forceUpdateAuthButton(); // Recursive call to handle logout
+        }
+    } else {
+        // User is not logged in
+        console.log('👤 No user data, updating for logged-out state');
+        
+        if (authBtn && userMenu) {
+            authBtn.style.display = 'inline-block';
+            userMenu.style.display = 'none';
+            console.log('✅ Updated UI to show login button');
+        } else if (authBtn) {
+            authBtn.textContent = 'LOGIN';
+            authBtn.onclick = function() {
+                console.log('🔐 Login button clicked in force update');
+                openAuthModal();
+            };
+            console.log('✅ Updated authBtn to show LOGIN');
+        }
+        
+        console.log('✅ Force updated auth button for logged-out user');
+    }
 }
 
 // Make functions globally available
@@ -593,31 +689,52 @@ window.closeAuthModal = closeAuthModal;
 
 // Add user menu functionality (copied and adapted from simple-user-menu.js)
 function positionDropdownBelowButton() {
+    console.log('📍 Positioning dropdown below button...');
     const userMenuToggle = document.getElementById('userMenuToggle');
     const userDropdown = document.getElementById('userDropdown');
+    
+    console.log('🔍 Found elements:', { userMenuToggle: !!userMenuToggle, userDropdown: !!userDropdown });
+    
     if (userMenuToggle && userDropdown) {
         const buttonRect = userMenuToggle.getBoundingClientRect();
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
         const top = buttonRect.bottom + scrollTop + 5;
         const left = buttonRect.right + scrollLeft - 220;
+        
+        console.log('📊 Positioning data:', { 
+            buttonRect: { bottom: buttonRect.bottom, right: buttonRect.right },
+            scrollTop, scrollLeft, top, left 
+        });
+        
         userDropdown.style.setProperty('position', 'absolute', 'important');
         userDropdown.style.setProperty('top', top + 'px', 'important');
         userDropdown.style.setProperty('left', left + 'px', 'important');
         userDropdown.style.setProperty('right', 'auto', 'important');
+        
+        console.log('✅ Dropdown positioned successfully');
+    } else {
+        console.log('❌ Missing elements for dropdown positioning');
     }
 }
 
 function toggleDropdown() {
     console.log('🔄 Auth.js toggleDropdown called');
     const userDropdown = document.getElementById('userDropdown');
+    
+    console.log('🔍 User dropdown element:', !!userDropdown);
+    
     if (userDropdown) {
         const computedDisplay = getComputedStyle(userDropdown).display;
         const isVisible = computedDisplay === 'block';
+        
+        console.log('📊 Current dropdown state:', { computedDisplay, isVisible });
+        
         if (isVisible) {
             userDropdown.style.setProperty('display', 'none', 'important');
             console.log('🔒 Auth.js dropdown closed');
         } else {
+            console.log('🔓 Opening dropdown...');
             positionDropdownBelowButton();
             userDropdown.style.setProperty('display', 'block', 'important');
             userDropdown.style.setProperty('visibility', 'visible', 'important');
@@ -637,22 +754,37 @@ function initUserMenu() {
         console.log('🚫 Auth.js initUserMenu blocked by simple-user-menu.js');
         return;
     }
+    
+    console.log('🔍 Setting up user menu elements...');
+    
     // Remove all event listeners from the toggle to prevent conflicts
     const existingToggle = document.getElementById('userMenuToggle');
     if (existingToggle) {
         const newToggle = existingToggle.cloneNode(true);
         existingToggle.parentNode.replaceChild(newToggle, existingToggle);
+        console.log('🔄 Replaced user menu toggle to clear event listeners');
     }
+    
     const authBtn = document.getElementById('authBtn');
     const userMenu = document.getElementById('userMenu');
     const userMenuToggle = document.getElementById('userMenuToggle');
     const userDropdown = document.getElementById('userDropdown');
     const usernameDisplay = document.getElementById('usernameDisplay');
+    
+    console.log('🔍 Found user menu elements:', {
+        authBtn: !!authBtn,
+        userMenu: !!userMenu,
+        userMenuToggle: !!userMenuToggle,
+        userDropdown: !!userDropdown,
+        usernameDisplay: !!usernameDisplay
+    });
+    
     // Check login state
     const savedUser = localStorage.getItem('currentUser');
     let isLoggedIn = false;
     let username = '';
     let isAdmin = false;
+    
     if (savedUser) {
         try {
             const user = JSON.parse(savedUser);
@@ -664,9 +796,13 @@ function initUserMenu() {
             console.log('❌ Error parsing user data');
             localStorage.removeItem('currentUser');
         }
+    } else {
+        console.log('👤 No user data found');
     }
+    
     // Set display according to state
     if (isLoggedIn) {
+        console.log('🎯 Setting up logged-in user menu...');
         if (authBtn) authBtn.style.display = 'none';
         if (userMenu) userMenu.style.display = 'block';
         if (usernameDisplay) usernameDisplay.textContent = username;
@@ -694,16 +830,19 @@ function initUserMenu() {
         }
         console.log('✅ User menu setup completed');
     } else {
+        console.log('🎯 Setting up login button...');
         if (authBtn) authBtn.style.display = 'inline-block';
         if (userMenu) userMenu.style.display = 'none';
         console.log('✅ Login button setup completed');
     }
+    
     // Close dropdown on outside click
     document.addEventListener('click', function(e) {
         if (userDropdown && !userMenu.contains(e.target)) {
             userDropdown.style.display = 'none';
         }
     });
+    
     // Reposition on resize/scroll
     window.addEventListener('resize', function() {
         if (userDropdown && getComputedStyle(userDropdown).display === 'block') {
@@ -715,10 +854,17 @@ function initUserMenu() {
             positionDropdownBelowButton();
         }
     });
+    
+    console.log('✅ User menu initialization complete');
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     initUserMenu();
+    
+    // Setup admin access checks
+    setTimeout(() => {
+        setupAdminAccessChecks();
+    }, 1000);
 });
 
 // Make handleLogout globally available
@@ -734,10 +880,12 @@ function initGlobalSessionTimeout() {
     // Clear any existing global interval
     if (globalSessionCheckInterval) {
         clearInterval(globalSessionCheckInterval);
+        console.log('🔄 Cleared existing global session check interval');
     }
     
     // Start global periodic check (every 30 seconds)
     globalSessionCheckInterval = setInterval(async () => {
+        console.log('🔄 Global session check running...');
         const userData = localStorage.getItem('currentUser');
         if (!userData) {
             console.log('❌ No user logged in globally');
@@ -756,6 +904,8 @@ function initGlobalSessionTimeout() {
             // Check if session has expired
             const currentTime = Date.now();
             const sessionAge = currentTime - sessionStartTime;
+            
+            console.log(`⏰ Session age: ${Math.floor(sessionAge / 1000)}s, timeout: ${Math.floor(timeoutMs / 1000)}s`);
             
             if (sessionAge >= timeoutMs) {
                 console.log('⏰ Global session expired, logging out...');
@@ -795,6 +945,7 @@ function initGlobalSessionTimeout() {
 // Force global logout
 function forceGlobalLogout() {
     console.log('🔒 Force logging out globally due to session timeout');
+    console.log('📍 Current page:', window.location.pathname);
     
     // Clear ALL localStorage data
     localStorage.removeItem('currentUser');
@@ -805,6 +956,8 @@ function forceGlobalLogout() {
     localStorage.removeItem('sessionStartTime');
     localStorage.removeItem('rememberMe');
     localStorage.removeItem('lastLoginTime');
+    
+    console.log('🗑️ Cleared all localStorage data');
     
     // Clear any other potential auth data
     for (let i = 0; i < localStorage.length; i++) {
@@ -818,6 +971,8 @@ function forceGlobalLogout() {
     window.isLoggedIn = false;
     window.currentUser = null;
     
+    console.log('🔄 Reset global state');
+    
     // Force server logout
     fetch('/api/auth/logout', {
         method: 'POST',
@@ -826,10 +981,9 @@ function forceGlobalLogout() {
         console.log('Server logout request failed:', error);
     });
     
-    // Update UI globally
-    if (typeof window.updateAuthUI === 'function') {
-        window.updateAuthUI();
-    }
+    // Update UI globally - force update even if simple-user-menu.js is active
+    console.log('🎨 Updating UI...');
+    forceUpdateAuthButton();
     
     // Show notification
     if (typeof window.showNotification === 'function') {
@@ -860,17 +1014,43 @@ function forceGlobalLogout() {
         }, 5000);
     }
     
-    // Force page reload to ensure complete logout
-    setTimeout(() => {
-        console.log('🔄 Reloading page to ensure complete logout...');
-        window.location.reload();
-    }, 2000);
+    // Check if we're on a protected page and need to show login modal
+    const currentPath = window.location.pathname;
+    const protectedPages = ['/style-guide', '/exchange', '/community', '/fitting-room', '/admin'];
+    const isOnProtectedPage = protectedPages.some(page => currentPath.includes(page));
+    
+    console.log('🔍 Protected page check:', { currentPath, isOnProtectedPage });
+    
+    // Trigger session timeout event for other scripts
+    window.dispatchEvent(new CustomEvent('sessionTimeout'));
+    
+    if (isOnProtectedPage) {
+        console.log('🔐 On protected page, opening auth modal after session timeout');
+        // Wait a bit for UI to update, then open modal
+        setTimeout(() => {
+            if (typeof openAuthModal === 'function') {
+                console.log('✅ Opening auth modal...');
+                openAuthModal();
+            } else {
+                console.log('❌ openAuthModal function not available');
+            }
+        }, 1000);
+    }
+    
+    // Force page reload to ensure complete logout (only if not on protected page)
+    if (!isOnProtectedPage) {
+        setTimeout(() => {
+            console.log('🔄 Reloading page to ensure complete logout...');
+            window.location.reload();
+        }, 2000);
+    }
 }
 
 // Update session start time when user logs in
 function updateSessionStartTime() {
-    localStorage.setItem('sessionStartTime', Date.now().toString());
-    console.log('⏰ Session start time updated');
+    const now = Date.now();
+    localStorage.setItem('sessionStartTime', now.toString());
+    console.log('⏰ Session start time updated:', new Date(now).toLocaleString());
 }
 
 // Try to open auth modal function
@@ -887,17 +1067,65 @@ function tryOpenAuth() {
 
 // Check if user is logged in
 function checkUserLogin() {
+    console.log('🔍 checkUserLogin called');
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
         try {
             const user = JSON.parse(savedUser);
+            console.log('✅ User found:', user.username || 'User');
             return user;
         } catch (e) {
             console.log('❌ Error parsing user data');
+            localStorage.removeItem('currentUser');
             return null;
         }
+    } else {
+        console.log('❌ No user data found');
+        return null;
     }
-    return null;
+}
+
+// Enhanced session check function
+function checkSessionStatus() {
+    console.log('🔍 Checking session status...');
+    
+    const savedUser = localStorage.getItem('currentUser');
+    if (!savedUser) {
+        console.log('❌ No user data found');
+        forceUpdateAuthButton();
+        return false;
+    }
+    
+    try {
+        const user = JSON.parse(savedUser);
+        const rememberMe = user.rememberMe || false;
+        const timeoutMs = rememberMe ? 12 * 24 * 60 * 60 * 1000 : 30 * 60 * 1000;
+        
+        // Get session start time
+        const sessionStartStr = localStorage.getItem('sessionStartTime');
+        const sessionStartTime = sessionStartStr ? parseInt(sessionStartStr) : Date.now();
+        
+        // Check if session has expired
+        const currentTime = Date.now();
+        const sessionAge = currentTime - sessionStartTime;
+        
+        console.log(`⏰ Session check - Age: ${Math.floor(sessionAge / 1000)}s, Timeout: ${Math.floor(timeoutMs / 1000)}s, RememberMe: ${rememberMe}`);
+        
+        if (sessionAge >= timeoutMs) {
+            console.log('⏰ Session expired, logging out...');
+            forceGlobalLogout();
+            return false;
+        }
+        
+        console.log(`✅ Session valid (${Math.floor((timeoutMs - sessionAge) / 1000)}s remaining)`);
+        return true;
+        
+    } catch (error) {
+        console.error('❌ Error checking session status:', error);
+        localStorage.removeItem('currentUser');
+        forceUpdateAuthButton();
+        return false;
+    }
 }
 
 // Make functions globally available
@@ -906,10 +1134,120 @@ window.closeAuthModal = closeAuthModal;
 window.handleLogin = handleLogin;
 window.handleRegister = handleRegister;
 window.updateAuthUI = updateAuthUI;
+window.forceUpdateAuthButton = forceUpdateAuthButton;
 window.checkUserLogin = checkUserLogin;
 window.handleLogout = handleLogout;
 window.initGlobalSessionTimeout = initGlobalSessionTimeout;
 window.forceGlobalLogout = forceGlobalLogout;
 window.updateSessionStartTime = updateSessionStartTime;
+window.checkSessionStatus = checkSessionStatus;
+window.openAuthModal = openAuthModal;
+window.checkAdminAccess = checkAdminAccess;
+window.setupAdminAccessChecks = setupAdminAccessChecks;
 
 console.log('✅ Auth script loaded successfully');
+
+// Check admin access and show message if not admin
+function checkAdminAccess(event) {
+    console.log('🔐 Checking admin access...');
+    
+    const savedUser = localStorage.getItem('currentUser');
+    if (!savedUser) {
+        console.log('❌ No user logged in');
+        event.preventDefault();
+        showNotification('You need to be logged in to access admin features.', 'warning');
+        return false;
+    }
+    
+    try {
+        const user = JSON.parse(savedUser);
+        const isAdmin = user.role === 'admin';
+        
+        console.log('👤 User role check:', { username: user.username, role: user.role, isAdmin });
+        
+        if (!isAdmin) {
+            console.log('❌ User is not admin');
+            event.preventDefault();
+            showNotification('You do not have permission to access admin features. Admin privileges required.', 'error');
+            return false;
+        }
+        
+        console.log('✅ User is admin, allowing access');
+        return true;
+        
+    } catch (error) {
+        console.error('❌ Error checking admin access:', error);
+        event.preventDefault();
+        showNotification('Error checking admin access. Please try again.', 'error');
+        return false;
+    }
+}
+
+// Add admin access check to all admin activity links
+function setupAdminAccessChecks() {
+    console.log('🔐 Setting up admin access checks...');
+    
+    // Find all admin activity links by text content
+    const allLinks = document.querySelectorAll('a');
+    const adminLinks = Array.from(allLinks).filter(link => 
+        link.textContent.includes('Admin Activity') || 
+        link.href.includes('admin') ||
+        link.getAttribute('href')?.includes('admin')
+    );
+    
+    console.log('🔍 Found admin links:', adminLinks.length);
+    
+    adminLinks.forEach((link, index) => {
+        console.log(`🔗 Admin link ${index + 1}:`, {
+            href: link.href,
+            text: link.textContent.trim(),
+            id: link.id
+        });
+        
+        // Remove existing event listeners by cloning the element
+        const newLink = link.cloneNode(true);
+        link.parentNode.replaceChild(newLink, link);
+        
+        // Add click event listener
+        newLink.addEventListener('click', function(event) {
+            console.log(`🔐 Admin link clicked: ${newLink.href}`);
+            
+            // Check admin access
+            if (!checkAdminAccess(event)) {
+                console.log('❌ Admin access denied');
+            } else {
+                console.log('✅ Admin access granted');
+            }
+        });
+        
+        console.log(`✅ Added admin access check to link ${index + 1}`);
+    });
+    
+    // Also check for admin activity links in dropdown menus
+    const dropdownLinks = document.querySelectorAll('.dropdown-item a, .user-dropdown a');
+    dropdownLinks.forEach((link, index) => {
+        if (link.textContent.includes('Admin Activity')) {
+            console.log(`🔗 Found admin activity link in dropdown ${index + 1}:`, link.textContent.trim());
+            
+            // Remove existing event listeners by cloning the element
+            const newLink = link.cloneNode(true);
+            link.parentNode.replaceChild(newLink, link);
+            
+            // Add click event listener
+            newLink.addEventListener('click', function(event) {
+                console.log(`🔐 Admin activity link clicked: ${newLink.textContent.trim()}`);
+                
+                // Check admin access
+                if (!checkAdminAccess(event)) {
+                    console.log('❌ Admin access denied');
+                } else {
+                    console.log('✅ Admin access granted');
+                }
+            });
+            
+            console.log(`✅ Added admin access check to dropdown link ${index + 1}`);
+        }
+    });
+    
+    console.log('✅ Admin access checks setup complete');
+}

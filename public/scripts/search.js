@@ -1,6 +1,13 @@
 // Search functionality
 document.addEventListener('DOMContentLoaded', function() {
     initSearch();
+    
+    // Setup admin access checks
+    setTimeout(() => {
+        if (typeof setupAdminAccessChecks === 'function') {
+            setupAdminAccessChecks();
+        }
+    }, 1000);
 });
 
 function initSearch() {

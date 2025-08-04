@@ -347,6 +347,13 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         setTimeout(init, 0);
     }
+    
+    // Setup admin access checks
+    setTimeout(() => {
+        if (typeof setupAdminAccessChecks === 'function') {
+            setupAdminAccessChecks();
+        }
+    }, 1000);
 
     window.addEventListener('beforeunload', function() {
         cleanup();

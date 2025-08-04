@@ -5,6 +5,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!window.location.pathname.includes('wishlist')) {
         return;
     }
+    
+    // Setup admin access checks
+    setTimeout(() => {
+        if (typeof setupAdminAccessChecks === 'function') {
+            setupAdminAccessChecks();
+        }
+    }, 1000);
 
     let wishlistItems = [];
     let filteredItems = [];

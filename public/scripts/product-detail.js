@@ -14,6 +14,13 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCartCountLocal: typeof window.updateCartCountLocal
         });
     }, 100);
+    
+    // Setup admin access checks
+    setTimeout(() => {
+        if (typeof setupAdminAccessChecks === 'function') {
+            setupAdminAccessChecks();
+        }
+    }, 1000);
 
     let currentProduct = null;
     let selectedSize = 'M';

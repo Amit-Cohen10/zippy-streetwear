@@ -773,6 +773,14 @@ try {
     };
     
     console.log('Cart module exported successfully');
+    
+    // Setup admin access checks
+    setTimeout(() => {
+        if (typeof setupAdminAccessChecks === 'function') {
+            setupAdminAccessChecks();
+        }
+    }, 1000);
+    
 } catch (error) {
     console.error('Failed to export cart module functions:', error);
 }

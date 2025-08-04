@@ -526,6 +526,14 @@ async function init() {
 document.addEventListener('DOMContentLoaded', function() {
     try {
         init();
+        
+        // Setup admin access checks
+        setTimeout(() => {
+            if (typeof setupAdminAccessChecks === 'function') {
+                setupAdminAccessChecks();
+            }
+        }, 1000);
+        
     } catch (error) {
         console.error('Failed to start application:', error);
         showNotification('Failed to start application', 'error');

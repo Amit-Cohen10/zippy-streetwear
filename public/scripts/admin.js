@@ -4,6 +4,13 @@ let userData = [];
 
 document.addEventListener('DOMContentLoaded', function() {
     initAdmin();
+    
+    // Setup admin access checks
+    setTimeout(() => {
+        if (typeof setupAdminAccessChecks === 'function') {
+            setupAdminAccessChecks();
+        }
+    }, 1000);
 });
 
 function initAdmin() {
