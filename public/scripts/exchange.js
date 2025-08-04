@@ -19,65 +19,187 @@ document.addEventListener('DOMContentLoaded', function() {
         { id: 3, name: "StreetTech", avatar: "🧑‍🔧", color: "#00ff00" }
     ];
 
-    // Sample exchange data
+    // Load products data for exchange
+    let products = [];
+    
+    // Function to load products
+    async function loadProducts() {
+        try {
+            const response = await fetch('/data/products/products.json');
+            products = await response.json();
+            console.log('Products loaded:', products.length);
+        } catch (error) {
+            console.error('Error loading products:', error);
+            // Fallback to sample products if fetch fails
+            products = [
+                {
+                    id: "prod-001",
+                    title: "Circuit Board Hoodie",
+                    images: ["/images/products/Circuit Board Hoodie/Circuit Board Hoodie.png"],
+                    category: "hoodies",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Zippy Originals"
+                },
+                {
+                    id: "prod-002", 
+                    title: "404 Not Found Tee",
+                    images: ["/images/products/404 Not Found Tee/404 Not Found Tee.png"],
+                    category: "t-shirts",
+                    sizes: ["S", "M", "L", "XL", "XXL"],
+                    brand: "Street Tech"
+                },
+                {
+                    id: "prod-003",
+                    title: "Neon Cargo Pants", 
+                    images: ["/images/products/Neon Cargo Pants/Neon Cargo Pants.png"],
+                    category: "pants",
+                    sizes: ["28", "30", "32", "34", "36"],
+                    brand: "Future Wear"
+                },
+                {
+                    id: "prod-004",
+                    title: "Circuit Pattern Hoodie",
+                    images: ["/images/products/Circuit Pattern Hoodie/Circuit Pattern Hoodie.png"],
+                    category: "hoodies",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Zippy Originals"
+                },
+                {
+                    id: "prod-005",
+                    title: "Circuit Breaker Pants",
+                    images: ["/images/products/Circuit Breaker Pants/Circuit Breaker Pants.png"],
+                    category: "pants",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Street Tech"
+                },
+                {
+                    id: "prod-006",
+                    title: "Neural Network Hoodie",
+                    images: ["/images/products/Neural Network Hoodie/Neural Network Hoodie.png"],
+                    category: "hoodies",
+                    sizes: ["S", "M", "L", "XL", "XXL"],
+                    brand: "Zippy Originals"
+                },
+                {
+                    id: "prod-007",
+                    title: "Cyber Samurai Hoodie",
+                    images: ["/images/products/Cyber Samurai Hoodie/Cyber Samurai Hoodie.png"],
+                    category: "hoodies",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Zippy Originals"
+                },
+                {
+                    id: "prod-008",
+                    title: "Crypto Punk Tee",
+                    images: ["/images/products/Crypto Punk Tee/Crypto Punk Tee.png"],
+                    category: "t-shirts",
+                    sizes: ["S", "M", "L", "XL", "XXL"],
+                    brand: "Street Tech"
+                },
+                {
+                    id: "prod-009",
+                    title: "SYSTEM OVERRIDE Tee",
+                    images: ["/images/products/SYSTEM OVERRIDE Tee/SYSTEM OVERRIDE Tee.png"],
+                    category: "t-shirts",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Street Tech"
+                },
+                {
+                    id: "prod-010",
+                    title: "Quantum Circuit Hoodie",
+                    images: ["/images/products/Quantum Circuit Hoodie/Quantum Circuit Hoodie.png"],
+                    category: "hoodies",
+                    sizes: ["S", "M", "L", "XL", "XXL"],
+                    brand: "Zippy Originals"
+                },
+                {
+                    id: "prod-011",
+                    title: "Code Cargo Pants",
+                    images: ["/images/products/Code Cargo Pants/Code Cargo Pants.png"],
+                    category: "pants",
+                    sizes: ["S", "M", "L", "XL"],
+                    brand: "Future Wear"
+                },
+                {
+                    id: "prod-012",
+                    title: "Digital Glitch Tee",
+                    images: ["/images/products/Digital Glitch Tee/Digital Glitch Tee.png"],
+                    category: "t-shirts",
+                    sizes: ["28", "30", "32", "34", "36"],
+                    brand: "Future Wear"
+                },
+                {
+                    id: "prod-013",
+                    title: "Code Warrior Tee",
+                    images: ["/images/products/Code Warrior Tee/Code Warrior Tee.png"],
+                    category: "t-shirts",
+                    sizes: ["S", "M", "L", "XL", "XXL"],
+                    brand: "Street Tech"
+                }
+            ];
+            console.log('✅ Using fallback products:', products.length);
+        }
+    }
+
+    // Sample exchange data with real product references
     const exchanges = [
         {
             id: 1,
-            title: "Vintage Neural Network Hoodie for Retro Future",
-            description: "Looking to trade my rare vintage Neural Network hoodie (M) for any Retro Future hoodie in size M. This is a limited edition piece from 2022 that's no longer available.",
-            offeredCategory: "hoodies",
+            title: "Circuit Board Hoodie for Neural Network Hoodie",
+            description: "Looking to trade my Circuit Board Hoodie (M) for any Neural Network Hoodie in size M. Both are from the Zippy Originals collection and in excellent condition.",
+            offeredProductId: "prod-001",
             offeredSize: "M",
-            wantedCategory: "hoodies",
+            wantedProductId: "prod-006", 
             wantedSize: "M",
             status: "active",
             userId: 1,
             likes: 12,
             comments: [
-                { id: 1, userId: 2, text: "I have a Retro Future hoodie in M! DM me", date: "2024-01-15" },
+                { id: 1, userId: 2, text: "I have a Neural Network Hoodie in M! DM me", date: "2024-01-15" },
                 { id: 2, userId: 3, text: "Great piece! Wish I had something to trade", date: "2024-01-14" }
             ],
             createdAt: "2024-01-10"
         },
         {
             id: 2,
-            title: "Cyber Samurai Pants for Data Stream",
-            description: "Trading my Cyber Samurai pants (L) for Data Stream pants in size L. Both are in excellent condition, barely worn.",
-            offeredCategory: "pants",
+            title: "Cyber Samurai Hoodie for Quantum Circuit Hoodie",
+            description: "Trading my Cyber Samurai Hoodie (L) for Quantum Circuit Hoodie in size L. Both are limited edition pieces from Zippy Originals.",
+            offeredProductId: "prod-007",
             offeredSize: "L",
-            wantedCategory: "pants",
-            wantedSize: "L",
+            wantedProductId: "prod-010",
+            wantedSize: "L", 
             status: "pending",
             userId: 2,
             likes: 8,
             comments: [
-                { id: 3, userId: 1, text: "I have Data Stream pants in L! Let's trade", date: "2024-01-13" }
+                { id: 3, userId: 1, text: "I have Quantum Circuit Hoodie in L! Let's trade", date: "2024-01-13" }
             ],
             createdAt: "2024-01-12"
         },
         {
             id: 3,
-            title: "404 Not Found Tee for System Override",
-            description: "Looking to exchange my 404 Not Found tee (XL) for System Override tee in XL. Both are from the same collection.",
-            offeredCategory: "t-shirts",
+            title: "404 Not Found Tee for SYSTEM OVERRIDE Tee",
+            description: "Looking to exchange my 404 Not Found Tee (XL) for SYSTEM OVERRIDE Tee in XL. Both are from Street Tech collection.",
+            offeredProductId: "prod-002",
             offeredSize: "XL",
-            wantedCategory: "t-shirts",
+            wantedProductId: "prod-009",
             wantedSize: "XL",
             status: "completed",
             userId: 3,
             likes: 15,
             comments: [
-                { id: 4, userId: 1, text: "Perfect! I have System Override in XL", date: "2024-01-11" },
+                { id: 4, userId: 1, text: "Perfect! I have SYSTEM OVERRIDE in XL", date: "2024-01-11" },
                 { id: 5, userId: 2, text: "Great trade! Both pieces are amazing", date: "2024-01-10" }
             ],
             createdAt: "2024-01-08"
         },
         {
             id: 4,
-            title: "Hologram Hoodie for Quantum",
-            description: "Trading my Hologram hoodie (S) for Quantum hoodie in size S. Both are from the latest collection.",
-            offeredCategory: "hoodies",
+            title: "Circuit Pattern Hoodie for Circuit Board Hoodie",
+            description: "Trading my Circuit Pattern Hoodie (S) for Circuit Board Hoodie in size S. Both are from the latest Zippy Originals collection.",
+            offeredProductId: "prod-004",
             offeredSize: "S",
-            wantedCategory: "hoodies",
+            wantedProductId: "prod-001",
             wantedSize: "S",
             status: "active",
             userId: 1,
@@ -87,35 +209,95 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         {
             id: 5,
-            title: "Matrix Rain for Digital Camo",
-            description: "Looking to trade Matrix Rain hoodie (M) for Digital Camo hoodie in M. Both are in perfect condition.",
-            offeredCategory: "hoodies",
+            title: "Crypto Punk Tee for Code Warrior Tee",
+            description: "Looking to trade Crypto Punk Tee (M) for Code Warrior Tee in M. Both are from Street Tech collection.",
+            offeredProductId: "prod-008",
             offeredSize: "M",
-            wantedCategory: "hoodies",
+            wantedProductId: "prod-013",
             wantedSize: "M",
             status: "active",
             userId: 2,
             likes: 9,
             comments: [
-                { id: 6, userId: 3, text: "I have Digital Camo in M! Interested?", date: "2024-01-15" }
+                { id: 6, userId: 3, text: "I have Code Warrior Tee in M! Interested?", date: "2024-01-15" }
             ],
             createdAt: "2024-01-14"
         },
         {
             id: 6,
-            title: "Tactical Tech Cargo for Urban Operator",
-            description: "Trading Tactical Tech cargo pants (L) for Urban Operator pants in L. Both are tactical style.",
-            offeredCategory: "pants",
-            offeredSize: "L",
-            wantedCategory: "pants",
-            wantedSize: "L",
+            title: "Neon Cargo Pants for Code Cargo Pants",
+            description: "Trading Neon Cargo Pants (32) for Code Cargo Pants in 32. Both are tactical style from Future Wear.",
+            offeredProductId: "prod-003",
+            offeredSize: "32",
+            wantedProductId: "prod-011",
+            wantedSize: "32",
             status: "pending",
             userId: 3,
             likes: 11,
             comments: [
-                { id: 7, userId: 1, text: "I have Urban Operator pants! Let's discuss", date: "2024-01-13" }
+                { id: 7, userId: 1, text: "I have Code Cargo Pants! Let's discuss", date: "2024-01-13" }
             ],
             createdAt: "2024-01-12"
+        },
+        {
+            id: 7,
+            title: "Circuit Breaker Pants for Digital Glitch Tee",
+            description: "Trading Circuit Breaker Pants (L) for Digital Glitch Tee in L. Looking for something more casual.",
+            offeredProductId: "prod-005",
+            offeredSize: "L",
+            wantedProductId: "prod-012",
+            wantedSize: "L",
+            status: "active",
+            userId: 1,
+            likes: 7,
+            comments: [],
+            createdAt: "2024-01-17"
+        },
+        {
+            id: 8,
+            title: "Quantum Circuit Hoodie for Cyber Samurai Hoodie",
+            description: "Looking to trade Quantum Circuit Hoodie (XL) for Cyber Samurai Hoodie in XL. Both are premium Zippy Originals pieces.",
+            offeredProductId: "prod-010",
+            offeredSize: "XL",
+            wantedProductId: "prod-007",
+            wantedSize: "XL",
+            status: "active",
+            userId: 2,
+            likes: 13,
+            comments: [
+                { id: 8, userId: 3, text: "I have Cyber Samurai in XL! Perfect match", date: "2024-01-16" }
+            ],
+            createdAt: "2024-01-15"
+        },
+        {
+            id: 9,
+            title: "Code Cargo Pants for Circuit Breaker Pants",
+            description: "Trading Code Cargo Pants (M) for Circuit Breaker Pants in M. Both are from Street Tech collection.",
+            offeredProductId: "prod-011",
+            offeredSize: "M",
+            wantedProductId: "prod-005",
+            wantedSize: "M",
+            status: "active",
+            userId: 3,
+            likes: 5,
+            comments: [],
+            createdAt: "2024-01-18"
+        },
+        {
+            id: 10,
+            title: "Digital Glitch Tee for Crypto Punk Tee",
+            description: "Looking to exchange Digital Glitch Tee (S) for Crypto Punk Tee in S. Both are from Future Wear collection.",
+            offeredProductId: "prod-012",
+            offeredSize: "S",
+            wantedProductId: "prod-008",
+            wantedSize: "S",
+            status: "active",
+            userId: 1,
+            likes: 10,
+            comments: [
+                { id: 9, userId: 2, text: "I have Crypto Punk Tee in S! Let's trade", date: "2024-01-17" }
+            ],
+            createdAt: "2024-01-16"
         }
     ];
 
@@ -125,11 +307,73 @@ document.addEventListener('DOMContentLoaded', function() {
     let lastRenderTime = 0;
     const RENDER_THROTTLE = 100;
 
+    // Helper function to get product by ID
+    function getProductById(productId) {
+        if (!products || !Array.isArray(products)) {
+            console.warn('Products not loaded yet or invalid:', products);
+            return null;
+        }
+        const product = products.find(p => p.id === productId);
+        if (!product) {
+            console.warn('Product not found:', productId);
+            return null;
+        }
+        return product;
+    }
+
+    // Load products into select elements
+    function loadProductsIntoSelects() {
+        try {
+            // Check if products are loaded
+            if (!products || products.length === 0) {
+                console.warn('⚠️ Products not loaded yet, skipping select population');
+                return;
+            }
+            
+            const offeredProductSelect = document.getElementById('offeredProduct');
+            const wantedProductSelect = document.getElementById('wantedProduct');
+            
+            if (offeredProductSelect && wantedProductSelect) {
+                // Clear existing options
+                offeredProductSelect.innerHTML = '<option value="">Select Product</option>';
+                wantedProductSelect.innerHTML = '<option value="">Select Product</option>';
+                
+                // Add products to both selects
+                products.forEach(product => {
+                    const option = document.createElement('option');
+                    option.value = product.id;
+                    option.textContent = `${product.title} - ${product.brand}`;
+                    option.dataset.category = product.category;
+                    
+                    // Clone for both selects
+                    offeredProductSelect.appendChild(option.cloneNode(true));
+                    wantedProductSelect.appendChild(option);
+                });
+                
+                console.log('✅ Products loaded into select elements');
+            }
+        } catch (error) {
+            console.error('❌ Error loading products into selects:', error);
+        }
+    }
+
     // Initialize the page
-    function init() {
+    async function init() {
         if (isInitialized) return;
         
         try {
+            // Load products first
+            await loadProducts();
+            
+            // Verify products are loaded
+            if (!products || products.length === 0) {
+                console.error('❌ No products loaded, cannot initialize exchange page');
+                setTimeout(init, 1000);
+                return;
+            }
+            
+            console.log('✅ Products loaded successfully:', products.length);
+            
             // Pre-load critical elements
             const criticalElements = [
                 'exchangeGrid',
@@ -151,11 +395,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Load approved exchanges from localStorage
-            loadApprovedExchanges();
+            setTimeout(() => {
+                if (products && products.length > 0) {
+                    loadApprovedExchanges();
+                } else {
+                    console.warn('⚠️ Products not ready for approved exchanges load');
+                }
+            }, 200);
             
             // Initialize with requestAnimationFrame for better performance
             requestAnimationFrame(() => {
                 try {
+                    // Double-check products are loaded
+                    if (!products || products.length === 0) {
+                        console.error('❌ Products still not loaded, retrying...');
+                        setTimeout(init, 1000);
+                        return;
+                    }
+                    
                     renderExchanges();
                     setupEventListeners();
                     updateStats();
@@ -190,6 +447,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         lastRenderTime = now;
 
+        // Check if products are loaded
+        if (!products || products.length === 0) {
+            console.warn('⚠️ Products not loaded yet, skipping render');
+            return;
+        }
+
         const grid = document.getElementById('exchangeGrid');
         if (!grid) {
             console.error('Exchange grid not found');
@@ -219,12 +482,25 @@ document.addEventListener('DOMContentLoaded', function() {
         grid.appendChild(fragment);
     }
 
-    // Create exchange card with all interactions
+    // Create exchange card with product images
     function createExchangeCard(exchange) {
         const user = users.find(u => u.id === exchange.userId);
+        const offeredProduct = getProductById(exchange.offeredProductId);
+        const wantedProduct = getProductById(exchange.wantedProductId);
+        
         const card = document.createElement('div');
         card.className = 'exchange-card';
         card.dataset.exchangeId = exchange.id;
+        
+        // Get product images or fallback
+        const offeredImage = offeredProduct?.images?.[0] || '/images/placeholder.svg';
+        const wantedImage = wantedProduct?.images?.[0] || '/images/placeholder.svg';
+        
+        // Fallback product info if product not found
+        const offeredTitle = offeredProduct?.title || `Product ${exchange.offeredProductId}`;
+        const offeredBrand = offeredProduct?.brand || 'Unknown Brand';
+        const wantedTitle = wantedProduct?.title || `Product ${exchange.wantedProductId}`;
+        const wantedBrand = wantedProduct?.brand || 'Unknown Brand';
         
         card.innerHTML = `
             <div class="card-header">
@@ -241,14 +517,28 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="offering-section">
                         <h4>Offering</h4>
                         <div class="item-display">
-                            ${exchange.offeredCategory} - Size ${exchange.offeredSize}
+                            <div class="product-image">
+                                <img src="${offeredImage}" alt="${offeredProduct?.title || 'Product'}" onerror="this.src='/images/placeholder.svg'">
+                            </div>
+                            <div class="product-info">
+                                <h5>${offeredTitle}</h5>
+                                <p>${offeredBrand}</p>
+                                <p>Size: ${exchange.offeredSize}</p>
+                            </div>
                         </div>
                     </div>
                     <div class="exchange-arrow">⇄</div>
                     <div class="wanted-section">
                         <h4>Wanting</h4>
                         <div class="item-display">
-                            ${exchange.wantedCategory} - Size ${exchange.wantedSize}
+                            <div class="product-image">
+                                <img src="${wantedImage}" alt="${wantedProduct?.title || 'Product'}" onerror="this.src='/images/placeholder.svg'">
+                            </div>
+                            <div class="product-info">
+                                <h5>${wantedTitle}</h5>
+                                <p>${wantedBrand}</p>
+                                <p>Size: ${exchange.wantedSize}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -310,6 +600,15 @@ document.addEventListener('DOMContentLoaded', function() {
             sizeFilter: document.getElementById('sizeFilter'),
             statusFilter: document.getElementById('statusFilter')
         };
+
+        // Load products into select elements
+        setTimeout(() => {
+            if (products && products.length > 0) {
+                loadProductsIntoSelects();
+            } else {
+                console.warn('⚠️ Products not ready for select population');
+            }
+        }, 100);
 
         // Add event listeners only if elements exist
         if (elements.createExchangeBtn) {
@@ -387,6 +686,12 @@ document.addEventListener('DOMContentLoaded', function() {
     let lastFilterState = '';
     function filterExchanges() {
         try {
+            // Check if products are loaded
+            if (!products || products.length === 0) {
+                console.warn('⚠️ Products not loaded yet, skipping filter');
+                return;
+            }
+            
             const searchTerm = document.getElementById('exchangeSearch')?.value.toLowerCase() || '';
             const category = document.getElementById('categoryFilter')?.value || '';
             const size = document.getElementById('sizeFilter')?.value || '';
@@ -402,13 +707,18 @@ document.addEventListener('DOMContentLoaded', function() {
             lastFilterState = filterState;
 
             filteredExchanges = exchanges.filter(exchange => {
+                const offeredProduct = getProductById(exchange.offeredProductId);
+                const wantedProduct = getProductById(exchange.wantedProductId);
+                
                 const matchesSearch = !searchTerm || 
                     exchange.title.toLowerCase().includes(searchTerm) ||
-                    exchange.description.toLowerCase().includes(searchTerm);
+                    exchange.description.toLowerCase().includes(searchTerm) ||
+                    (offeredProduct?.title?.toLowerCase().includes(searchTerm)) ||
+                    (wantedProduct?.title?.toLowerCase().includes(searchTerm));
                 
                 const matchesCategory = !category || 
-                    exchange.offeredCategory === category || 
-                    exchange.wantedCategory === category;
+                    (offeredProduct?.category === category) || 
+                    (wantedProduct?.category === category);
                 
                 const matchesSize = !size || 
                     exchange.offeredSize === size || 
@@ -451,11 +761,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = {
                 title: document.getElementById('exchangeTitle').value,
                 description: document.getElementById('exchangeDescription').value,
-                offeredCategory: document.getElementById('offeredCategory').value,
+                offeredProductId: document.getElementById('offeredProduct').value,
                 offeredSize: document.getElementById('offeredSize').value,
-                wantedCategory: document.getElementById('wantedCategory').value,
+                wantedProductId: document.getElementById('wantedProduct').value,
                 wantedSize: document.getElementById('wantedSize').value
             };
+
+            // Validate that products are selected
+            if (!formData.offeredProductId || !formData.wantedProductId) {
+                showNotification('Please select both products for exchange', 'error');
+                return;
+            }
 
             // Create new exchange
             const newExchange = {
@@ -492,12 +808,47 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!exchange) return;
 
         const user = users.find(u => u.id === exchange.userId);
+        const offeredProduct = getProductById(exchange.offeredProductId);
+        const wantedProduct = getProductById(exchange.wantedProductId);
         
         // Populate modal
         document.getElementById('detailTitle').textContent = exchange.title;
         document.getElementById('detailDescription').textContent = exchange.description;
-        document.getElementById('offeringDisplay').textContent = `${exchange.offeredCategory} - Size ${exchange.offeredSize}`;
-        document.getElementById('wantedDisplay').textContent = `${exchange.wantedCategory} - Size ${exchange.wantedSize}`;
+        
+        // Update offering and wanting displays with product info
+        const offeringDisplay = document.getElementById('offeringDisplay');
+        const wantedDisplay = document.getElementById('wantedDisplay');
+        
+        if (offeringDisplay) {
+            const offeredTitle = offeredProduct?.title || `Product ${exchange.offeredProductId}`;
+            const offeredBrand = offeredProduct?.brand || 'Unknown Brand';
+            offeringDisplay.innerHTML = `
+                <div class="product-detail">
+                    <img src="${offeredProduct?.images?.[0] || '/images/placeholder.svg'}" alt="${offeredTitle}" onerror="this.src='/images/placeholder.svg'">
+                    <div class="product-info">
+                        <h4>${offeredTitle}</h4>
+                        <p>${offeredBrand}</p>
+                        <p>Size: ${exchange.offeredSize}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        if (wantedDisplay) {
+            const wantedTitle = wantedProduct?.title || `Product ${exchange.wantedProductId}`;
+            const wantedBrand = wantedProduct?.brand || 'Unknown Brand';
+            wantedDisplay.innerHTML = `
+                <div class="product-detail">
+                    <img src="${wantedProduct?.images?.[0] || '/images/placeholder.svg'}" alt="${wantedTitle}" onerror="this.src='/images/placeholder.svg'">
+                    <div class="product-info">
+                        <h4>${wantedTitle}</h4>
+                        <p>${wantedBrand}</p>
+                        <p>Size: ${exchange.wantedSize}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
         document.getElementById('likeCount').textContent = exchange.likes;
         
         // Render comments
@@ -1120,11 +1471,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
+        // Get product names for approval comment
+        const offeredProduct = getProductById(exchange.offeredProductId);
+        const wantedProduct = getProductById(exchange.wantedProductId);
+        
         // Add approval comment
         const approvalComment = {
             id: exchange.comments.length + 1,
             userId: 1, // Current user
-            text: `✅ Exchange approved and completed! Contact: ${formData.phone} | ${formData.email}`,
+            text: `✅ Exchange approved and completed! ${offeredProduct?.title || `Product ${exchange.offeredProductId}`} for ${wantedProduct?.title || `Product ${exchange.wantedProductId}`}. Contact: ${formData.phone} | ${formData.email}`,
             date: new Date().toISOString().split('T')[0],
             isApproval: true
         };
@@ -1158,17 +1513,21 @@ document.addEventListener('DOMContentLoaded', function() {
             // Get current purchased items
             const purchasedItems = JSON.parse(localStorage.getItem('purchasedItems') || '[]');
             
+            // Get product information
+            const offeredProduct = getProductById(exchange.offeredProductId);
+            const wantedProduct = getProductById(exchange.wantedProductId);
+            
             // Create items from the exchange
             const exchangeItems = [
                 {
                     id: `exchange-${exchange.id}-offered`,
-                    name: `${exchange.offeredCategory} - ${exchange.title}`,
-                    brand: 'Exchange Item',
+                    name: offeredProduct?.title || `Product ${exchange.offeredProductId}`,
+                    brand: offeredProduct?.brand || 'Exchange Item',
                     price: 0,
                     quantity: 1,
                     size: exchange.offeredSize,
-                    category: exchange.offeredCategory,
-                    image: null,
+                    category: offeredProduct?.category || 'unknown',
+                    image: offeredProduct?.images?.[0] || null,
                     type: 'exchange',
                     exchangeId: exchange.id,
                     isOffered: true,
@@ -1177,13 +1536,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 {
                     id: `exchange-${exchange.id}-wanted`,
-                    name: `${exchange.wantedCategory} - ${exchange.title}`,
-                    brand: 'Exchange Item',
+                    name: wantedProduct?.title || `Product ${exchange.wantedProductId}`,
+                    brand: wantedProduct?.brand || 'Exchange Item',
                     price: 0,
                     quantity: 1,
                     size: exchange.wantedSize,
-                    category: exchange.wantedCategory,
-                    image: null,
+                    category: wantedProduct?.category || 'unknown',
+                    image: wantedProduct?.images?.[0] || null,
                     type: 'exchange',
                     exchangeId: exchange.id,
                     isWanted: true,
@@ -1205,6 +1564,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load approved exchanges from localStorage on page load
     function loadApprovedExchanges() {
         try {
+            // Check if products are loaded
+            if (!products || products.length === 0) {
+                console.warn('⚠️ Products not loaded yet, skipping approved exchanges load');
+                return;
+            }
+            
             const approvedExchanges = JSON.parse(localStorage.getItem('approvedExchanges') || '[]');
             
             // Update exchanges with approved status
@@ -1217,10 +1582,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Add approval comment if not exists
                     const hasApprovalComment = existingExchange.comments.some(c => c.isApproval);
                     if (!hasApprovalComment && approvedExchange.approvalData) {
+                        const offeredProduct = getProductById(existingExchange.offeredProductId);
+                        const wantedProduct = getProductById(existingExchange.wantedProductId);
+                        
                         const approvalComment = {
                             id: existingExchange.comments.length + 1,
                             userId: 1,
-                            text: `✅ Exchange approved and completed! Contact: ${approvedExchange.approvalData.phone} | ${approvedExchange.approvalData.email}`,
+                            text: `✅ Exchange approved and completed! ${offeredProduct?.title || `Product ${existingExchange.offeredProductId}`} for ${wantedProduct?.title || `Product ${existingExchange.wantedProductId}`}. Contact: ${approvedExchange.approvalData.phone} | ${approvedExchange.approvalData.email}`,
                             date: new Date(approvedExchange.approvalData.approvedAt).toISOString().split('T')[0],
                             isApproval: true
                         };

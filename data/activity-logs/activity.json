@@ -1204,5 +1204,17 @@
     },
     "timestamp": "2025-08-04T20:29:33.895Z",
     "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754343082452-y67eb4rsy",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-04T21:31:22.452Z",
+    "ip": "127.0.0.1"
   }
 ]
