@@ -177,6 +177,18 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCartCount();
             
             showNotification('Item added to cart!', 'success');
+            
+            // Open cart modal
+            if (typeof window.openCartModal === 'function') {
+                window.openCartModal();
+            } else {
+                // Fallback: manually open cart modal
+                const cartModal = document.getElementById('cartModal');
+                if (cartModal) {
+                    cartModal.style.display = 'block';
+                    cartModal.classList.add('show');
+                }
+            }
         } catch (error) {
             console.error('Error adding item to cart:', error);
             showNotification('Error adding item to cart', 'error');
@@ -243,6 +255,18 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCartCount();
             
             showNotification(`${addedCount} items added to cart!`, 'success');
+            
+            // Open cart modal
+            if (typeof window.openCartModal === 'function') {
+                window.openCartModal();
+            } else {
+                // Fallback: manually open cart modal
+                const cartModal = document.getElementById('cartModal');
+                if (cartModal) {
+                    cartModal.style.display = 'block';
+                    cartModal.classList.add('show');
+                }
+            }
         } catch (error) {
             console.error('Error adding all items to cart:', error);
             showNotification('Error adding items to cart', 'error');
