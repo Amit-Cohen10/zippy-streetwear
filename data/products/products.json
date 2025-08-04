@@ -1,11 +1,11 @@
 [
   {
     "id": "prod-001",
-    "title": "Neon Cyber Hoodie",
-    "description": "Futuristic streetwear hoodie with LED trim and cyberpunk design",
+    "title": "Circuit Board Hoodie",
+    "description": "Electronic circuit board pattern hoodie with cyber aesthetic",
     "price": 129.99,
     "images": [
-      "/images/ChatGPT Image Jul 30, 2025, 07_27_31 PM.png"
+      "/images/products/Circuit Board Hoodie/placeholder.jpg"
     ],
     "category": "hoodies",
     "sizes": ["S", "M", "L", "XL"],
@@ -17,11 +17,11 @@
   },
   {
     "id": "prod-002",
-    "title": "Glitch Art Tee",
-    "description": "Digital distortion graphic t-shirt with glitch effects",
+    "title": "404 Not Found Tee",
+    "description": "Error-themed t-shirt with 404 not found design",
     "price": 49.99,
     "images": [
-      "/images/ChatGPT Image Jul 30, 2025, 07_27_41 PM.png"
+      "/images/products/404 Not Found Tee/placeholder.jpg"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -33,11 +33,11 @@
   },
   {
     "id": "prod-003",
-    "title": "Holographic Cargo Pants",
-    "description": "Reflective cargo pants with utility pockets and holographic finish",
+    "title": "Neon Cargo Pants",
+    "description": "Reflective cargo pants with utility pockets and neon finish",
     "price": 89.99,
     "images": [
-      "/images/ChatGPT Image Jul 30, 2025, 07_32_20 PM.png"
+      "/images/products/Neon Cargo Pants/placeholder.jpg"
     ],
     "category": "pants",
     "sizes": ["28", "30", "32", "34", "36"],
@@ -49,13 +49,13 @@
   },
   {
     "id": "prod-004",
-    "title": "Neon Grid Jacket",
-    "description": "Light-up jacket with programmable LED grid pattern",
+    "title": "Circuit Pattern Hoodie",
+    "description": "Light-up hoodie with programmable circuit pattern",
     "price": 199.99,
     "images": [
-      "/images/ChatGPT Image Jul 30, 2025, 07_34_12 PM.png"
+      "/images/products/Circuit Pattern Hoodie/placeholder.jpg"
     ],
-    "category": "jackets",
+    "category": "hoodies",
     "sizes": ["S", "M", "L", "XL"],
     "stock": {"S": 5, "M": 8, "L": 6, "XL": 4},
     "brand": "Zippy Originals",
@@ -65,13 +65,13 @@
   },
   {
     "id": "prod-005",
-    "title": "Digital Camo Shorts",
-    "description": "Pixelated camouflage shorts with tech fabric",
+    "title": "Circuit Breaker Pants",
+    "description": "Circuit breaker pattern pants with tech fabric",
     "price": 69.99,
     "images": [
-      "/images/ChatGPT Image Jul 30, 2025, 06_59_15 PM.png"
+      "/images/products/Circuit Breaker Pants/placeholder.jpg"
     ],
-    "category": "shorts",
+    "category": "pants",
     "sizes": ["S", "M", "L", "XL"],
     "stock": {"S": 12, "M": 15, "L": 10, "XL": 8},
     "brand": "Street Tech",
@@ -85,7 +85,7 @@
     "description": "AI-inspired hoodie with neural network pattern design",
     "price": 149.99,
     "images": [
-      "/images/ChatGPT Image Jul 30, 2025, 08_56_17 PM.png"
+      "/images/products/Neural Network Hoodie/placeholder.jpg"
     ],
     "category": "hoodies",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -101,7 +101,7 @@
     "description": "Futuristic hoodie with samurai-inspired cyberpunk design",
     "price": 159.99,
     "images": [
-      "/images/ChatGPT Image Jul 30, 2025, 07_27_39 PM.png"
+      "/images/products/Cyber Samurai Hoodie/placeholder.jpg"
     ],
     "category": "hoodies",
     "sizes": ["S", "M", "L", "XL"],
@@ -117,7 +117,7 @@
     "description": "Cryptocurrency-themed t-shirt with punk aesthetic",
     "price": 59.99,
     "images": [
-      "/images/CRYPTO PUNK.png"
+      "/images/products/Crypto Punk Tee/placeholder.jpg"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -129,11 +129,11 @@
   },
   {
     "id": "prod-009",
-    "title": "System Override Tee",
+    "title": "SYSTEM OVERRIDE Tee",
     "description": "Command-line interface inspired t-shirt with tech graphics",
     "price": 54.99,
     "images": [
-      "/images/System Override.png"
+      "/images/products/SYSTEM OVERRIDE Tee/placeholder.jpg"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL"],
@@ -149,7 +149,7 @@
     "description": "Quantum computing inspired hoodie with circuit patterns",
     "price": 169.99,
     "images": [
-      "/images/ChatGPT Image Jul 30, 2025, 08_57_22 PM.png"
+      "/images/products/Quantum Circuit Hoodie/placeholder.jpg"
     ],
     "category": "hoodies",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -161,13 +161,13 @@
   },
   {
     "id": "prod-011",
-    "title": "Neon Street Jacket",
-    "description": "Urban streetwear jacket with neon accents",
+    "title": "Code Cargo Pants",
+    "description": "Urban streetwear pants with code pattern accents",
     "price": 189.99,
     "images": [
-      "/images/ChatGPT Image Jul 30, 2025, 07_20_56 PM.png"
+      "/images/products/Code Cargo Pants/placeholder.jpg"
     ],
-    "category": "jackets",
+    "category": "pants",
     "sizes": ["S", "M", "L", "XL"],
     "stock": {"S": 4, "M": 6, "L": 4, "XL": 3},
     "brand": "Future Wear",
@@ -177,13 +177,13 @@
   },
   {
     "id": "prod-012",
-    "title": "Digital Wave Pants",
-    "description": "Tech-inspired pants with digital wave patterns",
+    "title": "Digital Glitch Tee",
+    "description": "Tech-inspired t-shirt with digital glitch patterns",
     "price": 94.99,
     "images": [
-      "/images/ChatGPT Image Jul 30, 2025, 07_20_53 PM.png"
+      "/images/products/Digital Glitch Tee/placeholder.jpg"
     ],
-    "category": "pants",
+    "category": "t-shirts",
     "sizes": ["28", "30", "32", "34", "36"],
     "stock": {"28": 6, "30": 10, "32": 12, "34": 8, "36": 5},
     "brand": "Future Wear",
@@ -193,11 +193,11 @@
   },
   {
     "id": "prod-013",
-    "title": "Cyber Glitch Tee",
-    "description": "Digital glitch art t-shirt with cyberpunk aesthetic",
+    "title": "Code Warrior Tee",
+    "description": "Code warrior themed t-shirt with programming aesthetic",
     "price": 49.99,
     "images": [
-      "/images/image.png"
+      "/images/products/Code Warrior Tee/placeholder.jpg"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -209,11 +209,11 @@
   },
   {
     "id": "prod-014",
-    "title": "Neon Grid Tee",
-    "description": "Grid pattern t-shirt with neon lighting effects",
+    "title": "Augmented Tee",
+    "description": "Augmented reality themed t-shirt with AR effects",
     "price": 44.99,
     "images": [
-      "/images/image2.png"
+      "/images/products/Augmented Tee/placeholder.jpg"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL"],
@@ -225,11 +225,11 @@
   },
   {
     "id": "prod-015",
-    "title": "Circuit Board Hoodie",
-    "description": "Electronic circuit board pattern hoodie",
+    "title": "Glitch Reality Hoodie",
+    "description": "Glitch reality themed hoodie with digital distortion",
     "price": 139.99,
     "images": [
-      "/images/image3.png"
+      "/images/products/Glitch Reality Hoodie/placeholder.jpg"
     ],
     "category": "hoodies",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -241,13 +241,13 @@
   },
   {
     "id": "prod-016",
-    "title": "Digital Camo Jacket",
-    "description": "Pixelated camouflage jacket with tech fabric",
+    "title": "Quantum Hoodie",
+    "description": "Quantum physics themed hoodie with quantum patterns",
     "price": 179.99,
     "images": [
-      "/images/image5.png"
+      "/images/products/Quantum Hoodie/placeholder.jpg"
     ],
-    "category": "jackets",
+    "category": "hoodies",
     "sizes": ["S", "M", "L", "XL"],
     "stock": {"S": 3, "M": 5, "L": 4, "XL": 2},
     "brand": "Future Wear",
@@ -257,11 +257,11 @@
   },
   {
     "id": "prod-017",
-    "title": "Neon Circuit Pants",
-    "description": "Circuit pattern pants with neon highlights",
+    "title": "Cyber Ninja Pants",
+    "description": "Cyber ninja themed pants with stealth patterns",
     "price": 99.99,
     "images": [
-      "/images/image6.png"
+      "/images/products/Cyber Ninja Pants/placeholder.jpg"
     ],
     "category": "pants",
     "sizes": ["28", "30", "32", "34", "36"],
@@ -273,13 +273,13 @@
   },
   {
     "id": "prod-018",
-    "title": "Cyber Punk Shorts",
-    "description": "Cyberpunk-inspired shorts with neon details",
+    "title": "Data Runner Pants",
+    "description": "Data runner themed pants with information flow patterns",
     "price": 74.99,
     "images": [
-      "/images/ChatGPT Image Jul 30, 2025, 06_55_21 PM.png"
+      "/images/products/Data Runner Pants/placeholder.jpg"
     ],
-    "category": "shorts",
+    "category": "pants",
     "sizes": ["S", "M", "L", "XL"],
     "stock": {"S": 10, "M": 12, "L": 8, "XL": 6},
     "brand": "Street Tech",
@@ -289,11 +289,11 @@
   },
   {
     "id": "prod-019",
-    "title": "Digital Wave Tee",
-    "description": "Wave pattern t-shirt with digital aesthetic",
+    "title": "Cyber Rose Tee",
+    "description": "Cyber rose themed t-shirt with digital flower patterns",
     "price": 39.99,
     "images": [
-      "/images/5088b06f5519e7d077405cfc63d8485071973bfce0f7e4f00c47c6cd10cf1406.png"
+      "/images/products/Cyber Rose Tee/placeholder.jpg"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -305,13 +305,13 @@
   },
   {
     "id": "prod-020",
-    "title": "Neon Grid Hoodie",
-    "description": "Grid pattern hoodie with neon lighting",
+    "title": "CRYPTO PUNK",
+    "description": "Crypto punk themed t-shirt with blockchain patterns",
     "price": 129.99,
     "images": [
-      "/images/69ca4a8c3fe4a7818ec6b930b5831f0df25eef878d78592d30246f217b77a3fe.png"
+      "/images/products/CRYPTO PUNK/placeholder.jpg"
     ],
-    "category": "hoodies",
+    "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL"],
     "stock": {"S": 8, "M": 12, "L": 10, "XL": 7},
     "brand": "Zippy Originals",
@@ -321,13 +321,13 @@
   },
   {
     "id": "prod-021",
-    "title": "Circuit Pattern Jacket",
-    "description": "Electronic circuit pattern jacket",
+    "title": "Electric Night Tee",
+    "description": "Electric night themed t-shirt with lightning patterns",
     "price": 189.99,
     "images": [
-      "/images/e03961348e8874369717a203b70bfa524f6fc8fc0af9699de6b5f0523ef27238.png"
+      "/images/products/Electric Night Tee/placeholder.jpg"
     ],
-    "category": "jackets",
+    "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL"],
     "stock": {"S": 4, "M": 6, "L": 5, "XL": 3},
     "brand": "Future Wear",
@@ -337,11 +337,11 @@
   },
   {
     "id": "prod-022",
-    "title": "Digital Camo Pants",
-    "description": "Pixelated camouflage pants",
+    "title": "Grid Walker Pants",
+    "description": "Grid walker themed pants with matrix patterns",
     "price": 104.99,
     "images": [
-      "/images/e8ecb5d59624d4483b16eca03250b75d5b0fbcf1bf7da4529a114f4212f9e8e8.png"
+      "/images/products/Grid Walker Pants/placeholder.jpg"
     ],
     "category": "pants",
     "sizes": ["28", "30", "32", "34", "36"],
@@ -353,13 +353,13 @@
   },
   {
     "id": "prod-023",
-    "title": "Neon Wave Shorts",
-    "description": "Wave pattern shorts with neon details",
+    "title": "Holo Flex Pants",
+    "description": "Holographic flex pants with holographic details",
     "price": 79.99,
     "images": [
-      "/images/fb73fdcb887759377fac1b99a33b0e4375c4106cb8b908272471d52b227afce5.png"
+      "/images/products/Holo Flex Pants/placeholder.jpg"
     ],
-    "category": "shorts",
+    "category": "pants",
     "sizes": ["S", "M", "L", "XL"],
     "stock": {"S": 9, "M": 11, "L": 8, "XL": 6},
     "brand": "Street Tech",
@@ -369,11 +369,11 @@
   },
   {
     "id": "prod-024",
-    "title": "Cyber Circuit Tee",
-    "description": "Circuit board pattern t-shirt",
+    "title": "Neon Pulse Tee",
+    "description": "Neon pulse themed t-shirt with pulsing light patterns",
     "price": 49.99,
     "images": [
-      "/images/35272452d018d5d54dce8c5f584801e1bd91fc2909b69c74793e4b02d60c2aae.png"
+      "/images/products/Neon Pulse Tee/placeholder.jpg"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -385,13 +385,13 @@
   },
   {
     "id": "prod-025",
-    "title": "Digital Wave Hoodie",
-    "description": "Wave pattern hoodie with digital aesthetic",
+    "title": "Neon Racer Pants",
+    "description": "Neon racer themed pants with racing patterns",
     "price": 119.99,
     "images": [
-      "/images/placeholder-product.jpg"
+      "/images/products/Neon Racer Pants/placeholder.jpg"
     ],
-    "category": "hoodies",
+    "category": "pants",
     "sizes": ["S", "M", "L", "XL"],
     "stock": {"S": 7, "M": 10, "L": 8, "XL": 6},
     "brand": "Zippy Originals",
@@ -401,11 +401,11 @@
   },
   {
     "id": "prod-026",
-    "title": "Neon Grid Pants",
-    "description": "Grid pattern pants with neon highlights",
+    "title": "Shadow Tech Pants",
+    "description": "Shadow tech themed pants with stealth technology",
     "price": 89.99,
     "images": [
-      "/images/placeholder-product.jpg"
+      "/images/products/Shadow Tech Pants/placeholder.jpg"
     ],
     "category": "pants",
     "sizes": ["28", "30", "32", "34", "36"],
@@ -417,13 +417,13 @@
   },
   {
     "id": "prod-027",
-    "title": "Circuit Pattern Shorts",
-    "description": "Circuit board pattern shorts",
+    "title": "Pixel Art Tee",
+    "description": "Pixel art themed t-shirt with retro gaming patterns",
     "price": 64.99,
     "images": [
-      "/images/placeholder-product.jpg"
+      "/images/products/Pixel Art Tee/placeholder.jpg"
     ],
-    "category": "shorts",
+    "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL"],
     "stock": {"S": 8, "M": 10, "L": 7, "XL": 5},
     "brand": "Street Tech",
@@ -433,13 +433,13 @@
   },
   {
     "id": "prod-028",
-    "title": "Digital Camo Jacket",
-    "description": "Pixelated camouflage jacket",
+    "title": "Vapor Dream Tee",
+    "description": "Vapor dream themed t-shirt with dreamy vaporwave patterns",
     "price": 169.99,
     "images": [
-      "/images/placeholder-product.jpg"
+      "/images/products/Vapor Dream Tee/placeholder.jpg"
     ],
-    "category": "jackets",
+    "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL"],
     "stock": {"S": 3, "M": 5, "L": 4, "XL": 2},
     "brand": "Future Wear",
@@ -449,13 +449,13 @@
   },
   {
     "id": "prod-029",
-    "title": "Neon Wave Tee",
-    "description": "Wave pattern t-shirt with neon details",
+    "title": "Neon Cyber Grid Hoodie",
+    "description": "Neon cyber grid hoodie with glowing grid patterns",
     "price": 44.99,
     "images": [
-      "/images/placeholder-product.jpg"
+      "/images/products/Neon Cyber Grid Hoodie/placeholder.jpg"
     ],
-    "category": "t-shirts",
+    "category": "hoodies",
     "sizes": ["S", "M", "L", "XL", "XXL"],
     "stock": {"S": 18, "M": 22, "L": 20, "XL": 16, "XXL": 12},
     "brand": "Street Tech",
@@ -465,13 +465,13 @@
   },
   {
     "id": "prod-030",
-    "title": "Cyber Grid Hoodie",
-    "description": "Grid pattern hoodie with cyber aesthetic",
+    "title": "Urban Operator Pants",
+    "description": "Urban operator themed pants with tactical design",
     "price": 134.99,
     "images": [
-      "/images/placeholder-product.jpg"
+      "/images/products/Urban Operator Pants/placeholder.jpg"
     ],
-    "category": "hoodies",
+    "category": "pants",
     "sizes": ["S", "M", "L", "XL"],
     "stock": {"S": 6, "M": 9, "L": 7, "XL": 5},
     "brand": "Zippy Originals",

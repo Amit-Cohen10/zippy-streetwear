@@ -997,7 +997,7 @@ async function syncCartToServer() {
                     3: 'prod-002', // Glitch Art Tee
                     4: 'prod-003', // Holographic Cargo Pants
                     5: 'prod-004', // Neon Grid Jacket
-                    6: 'prod-005'  // Digital Camo Shorts
+                    6: 'prod-005'  // Digital Camo Pants
                 };
                 const correctId = idMapping[item.id];
                 if (correctId) {
