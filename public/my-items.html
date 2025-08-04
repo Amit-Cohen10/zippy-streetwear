@@ -187,19 +187,19 @@
                 <button class="auth-tab" data-tab="register">Register</button>
             </div>
             <form class="auth-form" id="loginForm">
-                <input type="text" placeholder="Username or Email" required>
-                <input type="password" placeholder="Password" required>
+                <input type="text" name="username" placeholder="Username or Email" required>
+                <input type="password" name="password" placeholder="Password" required>
                 <label class="remember-me">
-                    <input type="checkbox">
+                    <input type="checkbox" name="rememberMe">
                     <span>Remember me</span>
                 </label>
                 <button type="submit">Login</button>
             </form>
             <form class="auth-form hidden" id="registerForm">
-                <input type="text" placeholder="Username" required>
-                <input type="email" placeholder="Email" required>
-                <input type="password" placeholder="Password" required>
-                <input type="password" placeholder="Confirm Password" required>
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
                 <button type="submit">Register</button>
             </form>
         </div>

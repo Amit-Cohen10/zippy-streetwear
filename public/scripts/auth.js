@@ -277,7 +277,7 @@ async function handleLogin(e) {
         const data = await response.json();
         console.log('Login response:', data);
         
-        if (data.success) {
+        if (data.message === 'Login successful' || data.success) {
             console.log('✅ Login successful');
             
             // Store user data
