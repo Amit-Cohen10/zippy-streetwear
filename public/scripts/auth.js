@@ -8,6 +8,17 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Auth system initializing...');
     initAuth();
     updateAuthUI();
+    
+    // Wait a bit before initializing session timeout to avoid conflicts
+    setTimeout(() => {
+        // Initialize global session timeout system
+        initGlobalSessionTimeout();
+        
+        // Initialize session timeout if function exists
+        if (window.initSessionTimeout) {
+            window.initSessionTimeout();
+        }
+    }, 1000);
 
     // --- LocalStorage watcher for login state ---
     let lastUser = localStorage.getItem('currentUser');
@@ -18,8 +29,16 @@ document.addEventListener('DOMContentLoaded', function() {
             if (typeof window.updateAuthUI === 'function') {
                 window.updateAuthUI();
             }
+            // Re-initialize session timeout when user changes
+            if (window.initSessionTimeout) {
+                window.initSessionTimeout();
+            }
+            // Update session start time when user logs in
+            if (currentUser) {
+                updateSessionStartTime();
+            }
         }
-    }, 500);
+    }, 1000); // Check every second instead of 500ms
     // --- End watcher ---
 });
 
@@ -258,23 +277,38 @@ async function handleLogin(e) {
         const data = await response.json();
         console.log('Login response:', data);
         
-        if (response.ok && data.user) {
-            window.currentUser = data.user;
+        if (data.success) {
+            console.log('✅ Login successful');
+            
+            // Store user data
             localStorage.setItem('currentUser', JSON.stringify(data.user));
+            localStorage.setItem('userData', JSON.stringify(data.user));
+            localStorage.setItem('userToken', data.token);
+            localStorage.setItem('authToken', data.token);
             
-            const displayName = data.user.profile?.displayName || data.user.username;
-            alert(`Login successful! Welcome back, ${displayName}`);
+            // Update session start time
+            updateSessionStartTime();
             
-            closeAuthModal();
+            // Update global state
+            window.isLoggedIn = true;
+            window.currentUser = data.user;
+            
+            // Update UI
             updateAuthUI();
             
-            // Refresh the page to ensure UI is properly updated
-            setTimeout(() => {
-                window.location.reload();
-            }, 500);
+            // Close modal
+            closeAuthModal();
             
+            // Show success message
+            showNotification('Login successful!', 'success');
+            
+            // Reload page if needed
+            if (window.location.pathname === '/my-items.html') {
+                window.location.reload();
+            }
         } else {
-            throw new Error(data.error || 'Login failed');
+            console.log('❌ Login failed:', data.message);
+            showNotification(data.message || 'Login failed', 'error');
         }
         
     } catch (error) {
@@ -604,3 +638,166 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Make handleLogout globally available
 window.handleLogout = handleLogout;
+
+// Global session management
+let globalSessionCheckInterval = null;
+
+// Initialize global session timeout system
+function initGlobalSessionTimeout() {
+    console.log('🌐 Initializing global session timeout system...');
+    
+    // Clear any existing global interval
+    if (globalSessionCheckInterval) {
+        clearInterval(globalSessionCheckInterval);
+    }
+    
+    // Start global periodic check (every 30 seconds)
+    globalSessionCheckInterval = setInterval(async () => {
+        const userData = localStorage.getItem('currentUser');
+        if (!userData) {
+            console.log('❌ No user logged in globally');
+            return;
+        }
+        
+        try {
+            const user = JSON.parse(userData);
+            const rememberMe = user.rememberMe || false;
+            const timeoutMs = rememberMe ? 12 * 24 * 60 * 60 * 1000 : 30 * 60 * 1000;
+            
+            // Get session start time from localStorage or use current time
+            const sessionStartStr = localStorage.getItem('sessionStartTime');
+            const sessionStartTime = sessionStartStr ? parseInt(sessionStartStr) : Date.now();
+            
+            // Check if session has expired
+            const currentTime = Date.now();
+            const sessionAge = currentTime - sessionStartTime;
+            
+            if (sessionAge >= timeoutMs) {
+                console.log('⏰ Global session expired, logging out...');
+                forceGlobalLogout();
+                return;
+            }
+            
+            // Also check server session
+            try {
+                const response = await fetch('/api/auth/status', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (!data.loggedIn) {
+                        console.log('🔒 Server session expired globally');
+                        forceGlobalLogout();
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Error checking server session globally:', error);
+            }
+            
+            console.log(`✅ Global session valid (${Math.floor((timeoutMs - sessionAge) / 1000)}s remaining)`);
+            
+        } catch (error) {
+            console.error('❌ Error during global session check:', error);
+        }
+    }, 30000); // 30 seconds
+    
+    console.log('🔄 Global periodic session check started (every 30 seconds)');
+}
+
+// Force global logout
+function forceGlobalLogout() {
+    console.log('🔒 Force logging out globally due to session timeout');
+    
+    // Clear ALL localStorage data
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('zippyCart');
+    localStorage.removeItem('sessionStartTime');
+    localStorage.removeItem('rememberMe');
+    localStorage.removeItem('lastLoginTime');
+    
+    // Clear any other potential auth data
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.includes('user') || key.includes('auth') || key.includes('token') || key.includes('session'))) {
+            localStorage.removeItem(key);
+        }
+    }
+    
+    // Reset global state
+    window.isLoggedIn = false;
+    window.currentUser = null;
+    
+    // Force server logout
+    fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+    }).catch(error => {
+        console.log('Server logout request failed:', error);
+    });
+    
+    // Update UI globally
+    if (typeof window.updateAuthUI === 'function') {
+        window.updateAuthUI();
+    }
+    
+    // Show notification
+    if (typeof window.showNotification === 'function') {
+        window.showNotification('Session expired. Please log in again.', 'warning');
+    } else {
+        // Fallback notification
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,193,7,0.9);
+            color: #000;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border: 2px solid #ffc107;
+            z-index: 999999;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        `;
+        notification.textContent = 'Session expired. Please log in again.';
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 5000);
+    }
+    
+    // Force page reload to ensure complete logout
+    setTimeout(() => {
+        console.log('🔄 Reloading page to ensure complete logout...');
+        window.location.reload();
+    }, 2000);
+}
+
+// Update session start time when user logs in
+function updateSessionStartTime() {
+    localStorage.setItem('sessionStartTime', Date.now().toString());
+    console.log('⏰ Session start time updated');
+}
+
+// Make functions globally available
+window.tryOpenAuth = tryOpenAuth;
+window.closeAuthModal = closeAuthModal;
+window.handleLogin = handleLogin;
+window.handleRegister = handleRegister;
+window.updateAuthUI = updateAuthUI;
+window.checkUserLogin = checkUserLogin;
+window.handleLogout = handleLogout;
+window.initGlobalSessionTimeout = initGlobalSessionTimeout;
+window.forceGlobalLogout = forceGlobalLogout;
+window.updateSessionStartTime = updateSessionStartTime;
+
+console.log('✅ Auth script loaded successfully');

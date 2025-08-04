@@ -7,37 +7,70 @@ document.addEventListener('DOMContentLoaded', function() {
     initMyItems();
 });
 
+// Check user login status with better timing
+function checkUserLoginWithDelay() {
+    return new Promise((resolve) => {
+        let attempts = 0;
+        const maxAttempts = 10;
+        
+        function tryCheck() {
+            attempts++;
+            console.log(`🔍 User check attempt ${attempts}/${maxAttempts}`);
+            
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    console.log('✅ User found:', user.username || user.email);
+                    resolve(user);
+                    return;
+                } catch (e) {
+                    console.log('❌ Error parsing user data:', e);
+                }
+            }
+            
+            if (attempts < maxAttempts) {
+                console.log(`⏳ No user found, trying again in ${attempts * 200}ms...`);
+                setTimeout(tryCheck, attempts * 200);
+            } else {
+                console.log('❌ No user found after all attempts');
+                resolve(null);
+            }
+        }
+        
+        // Start checking after a delay
+        setTimeout(tryCheck, 500);
+    });
+}
+
 // Main initialization
-function initMyItems() {
+async function initMyItems() {
     console.log('⚡ Initializing My Items page...');
     
-    // Multiple attempts to check user login with different delays
-    let attempts = 0;
-    const maxAttempts = 5;
-    
-    function tryCheckUser() {
-        attempts++;
-        console.log(`🔄 Login check attempt ${attempts}/${maxAttempts}`);
+    // Wait a bit for the page to fully load before checking
+    setTimeout(async () => {
+        // Initialize session timeout system
+        initSessionTimeout();
         
-        const currentUser = checkUserLogin();
+        // Check server session first
+        const serverSessionValid = await checkServerSession();
+        if (!serverSessionValid) {
+            console.log('🔒 Server session expired, ensuring complete logout');
+            ensureCompleteLogout();
+            return;
+        }
+        
+        // Check user login with better timing
+        const currentUser = await checkUserLoginWithDelay();
         
         if (currentUser) {
             console.log('✅ User is logged in:', currentUser.username || currentUser.email);
             loadOrders();
-            return;
-        }
-        
-        if (attempts < maxAttempts) {
-            console.log(`⏳ No user found, trying again in ${attempts * 200}ms...`);
-            setTimeout(tryCheckUser, attempts * 200);
         } else {
-            console.log('❌ Max attempts reached, showing login state');
-            showNotLoggedIn();
+            console.log('❌ No user found, ensuring complete logout');
+            ensureCompleteLogout();
         }
-    }
-    
-    // Start checking immediately
-    tryCheckUser();
+    }, 1000);
 }
 
 // Check if user is logged in (improved version)
@@ -79,6 +112,322 @@ function checkUserLogin() {
         // Don't remove user data if there's just a parsing error
         return null;
     }
+}
+
+// Session timeout management
+let sessionTimeoutId = null;
+let sessionStartTime = null;
+let sessionCheckInterval = null;
+
+// Initialize session timeout
+function initSessionTimeout() {
+    const userData = localStorage.getItem('currentUser');
+    if (!userData) {
+        // Clear any existing intervals if no user
+        if (sessionCheckInterval) {
+            clearInterval(sessionCheckInterval);
+            sessionCheckInterval = null;
+        }
+        return;
+    }
+    
+    try {
+        const user = JSON.parse(userData);
+        const rememberMe = user.rememberMe || false;
+        
+        // Set timeout based on remember me
+        const timeoutMs = rememberMe ? 12 * 24 * 60 * 60 * 1000 : 30 * 60 * 1000; // 12 days or 30 minutes
+        sessionStartTime = Date.now();
+        
+        console.log(`⏰ Session timeout set for ${rememberMe ? '12 days' : '30 minutes'}`);
+        
+        // Clear any existing timeout
+        if (sessionTimeoutId) {
+            clearTimeout(sessionTimeoutId);
+        }
+        
+        // Set new timeout
+        sessionTimeoutId = setTimeout(() => {
+            console.log('⏰ Session timeout reached, logging out...');
+            forceLogout();
+        }, timeoutMs);
+        
+        // Start periodic session check (every 30 seconds)
+        startPeriodicSessionCheck();
+        
+    } catch (error) {
+        console.error('❌ Error setting session timeout:', error);
+    }
+}
+
+// Start periodic session check
+function startPeriodicSessionCheck() {
+    // Clear any existing interval
+    if (sessionCheckInterval) {
+        clearInterval(sessionCheckInterval);
+    }
+    
+    // Check every 30 seconds
+    sessionCheckInterval = setInterval(async () => {
+        console.log('🔍 Periodic session check...');
+        
+        const userData = localStorage.getItem('currentUser');
+        if (!userData) {
+            console.log('❌ No user data found, clearing interval');
+            clearInterval(sessionCheckInterval);
+            sessionCheckInterval = null;
+            return;
+        }
+        
+        try {
+            const user = JSON.parse(userData);
+            const rememberMe = user.rememberMe || false;
+            const timeoutMs = rememberMe ? 12 * 24 * 60 * 60 * 1000 : 30 * 60 * 1000;
+            
+            // Check if session has expired
+            const currentTime = Date.now();
+            const sessionAge = currentTime - sessionStartTime;
+            
+            if (sessionAge >= timeoutMs) {
+                console.log('⏰ Session expired during periodic check, logging out...');
+                forceLogout();
+                return;
+            }
+            
+            // Also check server session
+            const serverValid = await checkServerSession();
+            if (!serverValid) {
+                console.log('🔒 Server session expired during periodic check');
+                forceLogout();
+                return;
+            }
+            
+            console.log(`✅ Session still valid (${Math.floor((timeoutMs - sessionAge) / 1000)}s remaining)`);
+            
+        } catch (error) {
+            console.error('❌ Error during periodic session check:', error);
+        }
+    }, 30000); // 30 seconds
+    
+    console.log('🔄 Periodic session check started (every 30 seconds)');
+}
+
+// Force logout function
+function forceLogout() {
+    console.log('🔒 Force logging out due to session timeout');
+    
+    // Clear ALL localStorage data
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('zippyCart');
+    localStorage.removeItem('sessionStartTime');
+    localStorage.removeItem('rememberMe');
+    localStorage.removeItem('lastLoginTime');
+    
+    // Clear any other potential auth data
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.includes('user') || key.includes('auth') || key.includes('token') || key.includes('session'))) {
+            localStorage.removeItem(key);
+        }
+    }
+    
+    // Reset global state
+    window.isLoggedIn = false;
+    window.currentUser = null;
+    
+    // Clear session timeout and interval
+    if (sessionTimeoutId) {
+        clearTimeout(sessionTimeoutId);
+        sessionTimeoutId = null;
+    }
+    
+    if (sessionCheckInterval) {
+        clearInterval(sessionCheckInterval);
+        sessionCheckInterval = null;
+    }
+    
+    // Force server logout
+    fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+    }).catch(error => {
+        console.log('Server logout request failed:', error);
+    });
+    
+    // Update UI to show login button
+    updateAuthUI();
+    
+    // Show notification
+    showNotification('Session expired. Please log in again.', 'warning');
+    
+    // Force page reload to ensure complete logout
+    setTimeout(() => {
+        console.log('🔄 Reloading page to ensure complete logout...');
+        window.location.reload();
+    }, 2000);
+}
+
+// Update auth UI function
+function updateAuthUI() {
+    const authBtn = document.getElementById('authBtn');
+    const userMenu = document.getElementById('userMenu');
+    const usernameDisplay = document.getElementById('usernameDisplay');
+    
+    if (window.isLoggedIn && window.currentUser) {
+        // User is logged in
+        if (authBtn) authBtn.style.display = 'none';
+        if (userMenu) userMenu.style.display = 'inline-block';
+        if (usernameDisplay) {
+            const displayName = window.currentUser.profile?.displayName || window.currentUser.username || 'User';
+            usernameDisplay.textContent = displayName;
+        }
+    } else {
+        // User is not logged in
+        if (authBtn) authBtn.style.display = 'inline-block';
+        if (userMenu) userMenu.style.display = 'none';
+        if (usernameDisplay) usernameDisplay.textContent = 'User';
+    }
+}
+
+// Show notification function
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'warning' ? 'rgba(255,193,7,0.9)' : 'rgba(0,255,255,0.9)'};
+        color: ${type === 'warning' ? '#000' : '#000'};
+        padding: 15px 20px;
+        border-radius: 8px;
+        border: 2px solid ${type === 'warning' ? '#ffc107' : '#00ffff'};
+        z-index: 999999;
+        font-weight: 600;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        animation: slideIn 0.3s ease-out;
+    `;
+    notification.textContent = message;
+    
+    // Add animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease-in';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 5000);
+    
+    // Add slideOut animation
+    const slideOutStyle = document.createElement('style');
+    slideOutStyle.textContent = `
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(slideOutStyle);
+}
+
+// Check server session and clear localStorage if expired
+async function checkServerSession() {
+    try {
+        const response = await fetch('/api/auth/status', {
+            method: 'GET',
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            if (!data.loggedIn) {
+                console.log('🔒 Server says session expired, clearing localStorage');
+                forceLogout();
+                return false;
+            }
+        }
+        return true;
+    } catch (error) {
+        console.error('❌ Error checking server session:', error);
+        return true; // Don't clear on network errors
+    }
+}
+
+// Additional function to ensure complete logout
+function ensureCompleteLogout() {
+    console.log('🔒 Ensuring complete logout...');
+    
+    // Clear ALL possible auth data
+    const authKeys = [
+        'currentUser', 'userData', 'userToken', 'authToken', 'zippyCart',
+        'sessionStartTime', 'rememberMe', 'lastLoginTime', 'user', 'auth',
+        'token', 'session', 'login', 'userInfo', 'profile'
+    ];
+    
+    authKeys.forEach(key => {
+        localStorage.removeItem(key);
+    });
+    
+    // Clear any other potential auth data
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.includes('user') || key.includes('auth') || key.includes('token') || key.includes('session') || key.includes('login'))) {
+            localStorage.removeItem(key);
+        }
+    }
+    
+    // Reset all global variables
+    window.isLoggedIn = false;
+    window.currentUser = null;
+    window.userToken = null;
+    window.authToken = null;
+    
+    // Clear any existing intervals
+    if (sessionTimeoutId) {
+        clearTimeout(sessionTimeoutId);
+        sessionTimeoutId = null;
+    }
+    
+    if (sessionCheckInterval) {
+        clearInterval(sessionCheckInterval);
+        sessionCheckInterval = null;
+    }
+    
+    // Force server logout
+    fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+    }).catch(error => {
+        console.log('Server logout request failed:', error);
+    });
+    
+    // Update UI
+    updateAuthUI();
+    
+    // Show notification
+    showNotification('Session expired. Please log in again.', 'warning');
+    
+    // Force page reload after a short delay
+    setTimeout(() => {
+        console.log('🔄 Reloading page to ensure complete logout...');
+        window.location.reload();
+    }, 2000);
 }
 
 // Show not logged in state
@@ -606,5 +955,12 @@ window.clearSessionAndRetry = clearSessionAndRetry;
 window.safeOpenCart = safeOpenCart;
 window.showOrderDetails = showOrderDetails;
 window.closeOrderModal = closeOrderModal;
+window.initSessionTimeout = initSessionTimeout;
+window.forceLogout = forceLogout;
+window.updateAuthUI = updateAuthUI;
+window.showNotification = showNotification;
+window.startPeriodicSessionCheck = startPeriodicSessionCheck;
+window.ensureCompleteLogout = ensureCompleteLogout;
+window.checkUserLoginWithDelay = checkUserLoginWithDelay;
 
 console.log('✅ My Items script loaded successfully');

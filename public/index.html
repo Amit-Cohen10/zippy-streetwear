@@ -55,48 +55,272 @@
     (function() {
         console.log('⚡ Immediate button state check...');
         
-        // בדיקה מיידית של מצב ההתחברות
-        const savedUser = localStorage.getItem('currentUser');
-        let isLoggedIn = false;
-        let username = '';
-        
-        if (savedUser) {
-            try {
-                const user = JSON.parse(savedUser);
-                isLoggedIn = true;
-                username = user.profile?.displayName || user.username || 'User';
-                console.log('⚡ Found user immediately:', username);
-            } catch (e) {
-                console.log('❌ Error parsing user data:', e);
+        // Wait for page to fully load before checking
+        function updateButtonWithDelay() {
+            // בדיקה מיידית של מצב ההתחברות
+            const savedUser = localStorage.getItem('currentUser');
+            let isLoggedIn = false;
+            let username = '';
+            
+            if (savedUser) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    isLoggedIn = true;
+                    username = user.profile?.displayName || user.username || 'User';
+                    console.log('⚡ Found user immediately:', username);
+                } catch (e) {
+                    console.log('❌ Error parsing user data:', e);
+                }
+            }
+            
+            // עדכון מיידי כשהדף נטען
+            function updateButtonImmediate() {
+                const authBtn = document.getElementById('authBtn');
+                const userMenu = document.getElementById('userMenu');
+                const usernameDisplay = document.getElementById('usernameDisplay');
+                
+                if (isLoggedIn && username) {
+                    // משתמש מחובר - הצג את שם המשתמש מיד
+                    if (authBtn) authBtn.style.display = 'none';
+                    if (userMenu) userMenu.style.display = 'inline-block';
+                    if (usernameDisplay) usernameDisplay.textContent = username;
+                    console.log('⚡ Button set to username immediately:', username);
+                } else {
+                    // משתמש לא מחובר - הצג LOGIN מיד
+                    if (authBtn) authBtn.style.display = 'inline-block';
+                    if (userMenu) userMenu.style.display = 'none';
+                    console.log('⚡ Button set to LOGIN immediately');
+                }
+            }
+            
+            // נסה עכשיו מיד, ואם לא עובד אז כשהדף יסיים לטעון
+            updateButtonImmediate();
+            
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', updateButtonImmediate);
             }
         }
         
-        // עדכון מיידי כשהדף נטען
-        function updateButtonImmediate() {
+        // Wait a bit before checking to avoid false negatives
+        setTimeout(updateButtonWithDelay, 300);
+        
+        // Also check when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(updateButtonWithDelay, 500);
+            });
+        }
+    })();
+    </script>
+
+    <!-- Global Session Timeout System -->
+    <script>
+    (function() {
+        console.log('🌐 Global session timeout system initializing...');
+        
+        let globalSessionCheckInterval = null;
+        
+        // Initialize global session timeout system
+        function initGlobalSessionTimeout() {
+            console.log('🌐 Initializing global session timeout system...');
+            
+            // Clear any existing global interval
+            if (globalSessionCheckInterval) {
+                clearInterval(globalSessionCheckInterval);
+            }
+            
+            // Start global periodic check (every 30 seconds)
+            globalSessionCheckInterval = setInterval(async () => {
+                const userData = localStorage.getItem('currentUser');
+                if (!userData) {
+                    console.log('❌ No user logged in globally');
+                    return;
+                }
+                
+                try {
+                    const user = JSON.parse(userData);
+                    const rememberMe = user.rememberMe || false;
+                    const timeoutMs = rememberMe ? 12 * 24 * 60 * 60 * 1000 : 30 * 60 * 1000;
+                    
+                    // Get session start time from localStorage or use current time
+                    const sessionStartStr = localStorage.getItem('sessionStartTime');
+                    const sessionStartTime = sessionStartStr ? parseInt(sessionStartStr) : Date.now();
+                    
+                    // Check if session has expired
+                    const currentTime = Date.now();
+                    const sessionAge = currentTime - sessionStartTime;
+                    
+                    if (sessionAge >= timeoutMs) {
+                        console.log('⏰ Global session expired, logging out...');
+                        forceGlobalLogout();
+                        return;
+                    }
+                    
+                    // Also check server session
+                    try {
+                        const response = await fetch('/api/auth/status', {
+                            method: 'GET',
+                            credentials: 'include'
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (!data.loggedIn) {
+                                console.log('🔒 Server session expired globally');
+                                forceGlobalLogout();
+                                return;
+                            }
+                        }
+                    } catch (error) {
+                        console.error('❌ Error checking server session globally:', error);
+                    }
+                    
+                    console.log(`✅ Global session valid (${Math.floor((timeoutMs - sessionAge) / 1000)}s remaining)`);
+                    
+                } catch (error) {
+                    console.error('❌ Error during global session check:', error);
+                }
+            }, 30000); // 30 seconds
+            
+            console.log('🔄 Global periodic session check started (every 30 seconds)');
+        }
+        
+        // Force global logout
+        function forceGlobalLogout() {
+            console.log('🔒 Force logging out globally due to session timeout');
+            
+            // Clear ALL localStorage data
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('userData');
+            localStorage.removeItem('userToken');
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('zippyCart');
+            localStorage.removeItem('sessionStartTime');
+            localStorage.removeItem('rememberMe');
+            localStorage.removeItem('lastLoginTime');
+            
+            // Clear any other potential auth data
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && (key.includes('user') || key.includes('auth') || key.includes('token') || key.includes('session'))) {
+                    localStorage.removeItem(key);
+                }
+            }
+            
+            // Reset global state
+            window.isLoggedIn = false;
+            window.currentUser = null;
+            
+            // Force server logout
+            fetch('/api/auth/logout', {
+                method: 'POST',
+                credentials: 'include'
+            }).catch(error => {
+                console.log('Server logout request failed:', error);
+            });
+            
+            // Update UI globally
+            updateGlobalAuthUI();
+            
+            // Show notification
+            showGlobalNotification('Session expired. Please log in again.', 'warning');
+            
+            // Force page reload to ensure complete logout
+            setTimeout(() => {
+                console.log('🔄 Reloading page to ensure complete logout...');
+                window.location.reload();
+            }, 2000);
+        }
+        
+        // Update global auth UI
+        function updateGlobalAuthUI() {
             const authBtn = document.getElementById('authBtn');
             const userMenu = document.getElementById('userMenu');
             const usernameDisplay = document.getElementById('usernameDisplay');
             
-            if (isLoggedIn && username) {
-                // משתמש מחובר - הצג את שם המשתמש מיד
-                if (authBtn) authBtn.style.display = 'none';
-                if (userMenu) userMenu.style.display = 'inline-block';
-                if (usernameDisplay) usernameDisplay.textContent = username;
-                console.log('⚡ Button set to username immediately:', username);
-            } else {
-                // משתמש לא מחובר - הצג LOGIN מיד
-                if (authBtn) authBtn.style.display = 'inline-block';
-                if (userMenu) userMenu.style.display = 'none';
-                console.log('⚡ Button set to LOGIN immediately');
-            }
+            if (authBtn) authBtn.style.display = 'inline-block';
+            if (userMenu) userMenu.style.display = 'none';
+            if (usernameDisplay) usernameDisplay.textContent = 'User';
+            
+            console.log('🔄 Global UI updated to show LOGIN button');
         }
         
-        // נסה עכשיו מיד, ואם לא עובד אז כשהדף יסיים לטעון
-        updateButtonImmediate();
+        // Show global notification
+        function showGlobalNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'warning' ? 'rgba(255,193,7,0.9)' : 'rgba(0,255,255,0.9)'};
+                color: ${type === 'warning' ? '#000' : '#000'};
+                padding: 15px 20px;
+                border-radius: 8px;
+                border: 2px solid ${type === 'warning' ? '#ffc107' : '#00ffff'};
+                z-index: 999999;
+                font-weight: 600;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                animation: slideIn 0.3s ease-out;
+            `;
+            notification.textContent = message;
+            
+            // Add animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-in';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 5000);
+            
+            // Add slideOut animation
+            const slideOutStyle = document.createElement('style');
+            slideOutStyle.textContent = `
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(slideOutStyle);
+        }
         
+        // Update session start time when user logs in
+        function updateSessionStartTime() {
+            localStorage.setItem('sessionStartTime', Date.now().toString());
+            console.log('⏰ Session start time updated');
+        }
+        
+        // Initialize when DOM is ready
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', updateButtonImmediate);
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(initGlobalSessionTimeout, 1500);
+            });
+        } else {
+            setTimeout(initGlobalSessionTimeout, 1500);
         }
+        
+        // Make functions globally available
+        window.initGlobalSessionTimeout = initGlobalSessionTimeout;
+        window.forceGlobalLogout = forceGlobalLogout;
+        window.updateGlobalAuthUI = updateGlobalAuthUI;
+        window.showGlobalNotification = showGlobalNotification;
+        window.updateSessionStartTime = updateSessionStartTime;
+        
+        console.log('✅ Global session timeout system loaded');
     })();
     </script>
 

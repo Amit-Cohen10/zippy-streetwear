@@ -643,5 +643,40 @@
     },
     "timestamp": "2025-08-04T14:08:28.552Z",
     "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754319829440-f9mxs2p4z",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-04T15:03:49.440Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754320274146-3dxdniax0",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "logout",
+    "details": {
+      "username": "amitcohen",
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-04T15:11:14.146Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754320290533-0qnpad5o7",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-04T15:11:30.533Z",
+    "ip": "127.0.0.1"
   }
 ]
