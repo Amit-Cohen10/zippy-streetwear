@@ -5,7 +5,7 @@
     "description": "Electronic circuit board pattern hoodie with cyber aesthetic",
     "price": 129.99,
     "images": [
-      "/images/products/Circuit Board Hoodie/placeholder.jpg"
+      "/images/products/Circuit Board Hoodie/Circuit Board Hoodie.png"
     ],
     "category": "hoodies",
     "sizes": ["S", "M", "L", "XL"],
@@ -21,7 +21,7 @@
     "description": "Error-themed t-shirt with 404 not found design",
     "price": 49.99,
     "images": [
-      "/images/products/404 Not Found Tee/placeholder.jpg"
+      "/images/products/404 Not Found Tee/404 Not Found Tee.png"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -37,7 +37,7 @@
     "description": "Reflective cargo pants with utility pockets and neon finish",
     "price": 89.99,
     "images": [
-      "/images/products/Neon Cargo Pants/placeholder.jpg"
+      "/images/products/Neon Cargo Pants/Neon Cargo Pants.png"
     ],
     "category": "pants",
     "sizes": ["28", "30", "32", "34", "36"],
@@ -53,7 +53,7 @@
     "description": "Light-up hoodie with programmable circuit pattern",
     "price": 199.99,
     "images": [
-      "/images/products/Circuit Pattern Hoodie/placeholder.jpg"
+      "/images/products/Circuit Pattern Hoodie/Circuit Pattern Hoodie.png"
     ],
     "category": "hoodies",
     "sizes": ["S", "M", "L", "XL"],
@@ -69,7 +69,7 @@
     "description": "Circuit breaker pattern pants with tech fabric",
     "price": 69.99,
     "images": [
-      "/images/products/Circuit Breaker Pants/placeholder.jpg"
+      "/images/products/Circuit Breaker Pants/Circuit Breaker Pants.png"
     ],
     "category": "pants",
     "sizes": ["S", "M", "L", "XL"],
@@ -85,7 +85,7 @@
     "description": "AI-inspired hoodie with neural network pattern design",
     "price": 149.99,
     "images": [
-      "/images/products/Neural Network Hoodie/placeholder.jpg"
+      "/images/products/Neural Network Hoodie/Neural Network Hoodie.png"
     ],
     "category": "hoodies",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -101,7 +101,7 @@
     "description": "Futuristic hoodie with samurai-inspired cyberpunk design",
     "price": 159.99,
     "images": [
-      "/images/products/Cyber Samurai Hoodie/placeholder.jpg"
+      "/images/products/Cyber Samurai Hoodie/Cyber Samurai Hoodie.png"
     ],
     "category": "hoodies",
     "sizes": ["S", "M", "L", "XL"],
@@ -117,7 +117,7 @@
     "description": "Cryptocurrency-themed t-shirt with punk aesthetic",
     "price": 59.99,
     "images": [
-      "/images/products/Crypto Punk Tee/placeholder.jpg"
+      "/images/products/Crypto Punk Tee/Crypto Punk Tee.png"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -133,7 +133,7 @@
     "description": "Command-line interface inspired t-shirt with tech graphics",
     "price": 54.99,
     "images": [
-      "/images/products/SYSTEM OVERRIDE Tee/placeholder.jpg"
+      "/images/products/SYSTEM OVERRIDE Tee/SYSTEM OVERRIDE Tee.png"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL"],
@@ -149,7 +149,7 @@
     "description": "Quantum computing inspired hoodie with circuit patterns",
     "price": 169.99,
     "images": [
-      "/images/products/Quantum Circuit Hoodie/placeholder.jpg"
+      "/images/products/Quantum Circuit Hoodie/Quantum Circuit Hoodie.png"
     ],
     "category": "hoodies",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -165,7 +165,7 @@
     "description": "Urban streetwear pants with code pattern accents",
     "price": 189.99,
     "images": [
-      "/images/products/Code Cargo Pants/placeholder.jpg"
+      "/images/products/Code Cargo Pants/Code Cargo Pants.png"
     ],
     "category": "pants",
     "sizes": ["S", "M", "L", "XL"],
@@ -181,7 +181,7 @@
     "description": "Tech-inspired t-shirt with digital glitch patterns",
     "price": 94.99,
     "images": [
-      "/images/products/Digital Glitch Tee/placeholder.jpg"
+      "/images/products/Digital Glitch Tee/Digital Glitch Tee.png"
     ],
     "category": "t-shirts",
     "sizes": ["28", "30", "32", "34", "36"],
@@ -197,7 +197,7 @@
     "description": "Code warrior themed t-shirt with programming aesthetic",
     "price": 49.99,
     "images": [
-      "/images/products/Code Warrior Tee/placeholder.jpg"
+      "/images/products/Code Warrior Tee/Code Warrior Tee.png"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -213,7 +213,7 @@
     "description": "Augmented reality themed t-shirt with AR effects",
     "price": 44.99,
     "images": [
-      "/images/products/Augmented Tee/placeholder.jpg"
+      "/images/products/Augmented Tee/Augmented Tee.png"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL"],
@@ -229,7 +229,7 @@
     "description": "Glitch reality themed hoodie with digital distortion",
     "price": 139.99,
     "images": [
-      "/images/products/Glitch Reality Hoodie/placeholder.jpg"
+      "/images/products/Glitch Reality Hoodie/Glitch Reality Hoodie.png"
     ],
     "category": "hoodies",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -245,7 +245,7 @@
     "description": "Quantum physics themed hoodie with quantum patterns",
     "price": 179.99,
     "images": [
-      "/images/products/Quantum Hoodie/placeholder.jpg"
+      "/images/products/Quantum Hoodie/Quantum Hoodie.png"
     ],
     "category": "hoodies",
     "sizes": ["S", "M", "L", "XL"],
@@ -261,7 +261,7 @@
     "description": "Cyber ninja themed pants with stealth patterns",
     "price": 99.99,
     "images": [
-      "/images/products/Cyber Ninja Pants/placeholder.jpg"
+      "/images/products/Cyber Ninja Pants/Cyber Ninja Pants.png"
     ],
     "category": "pants",
     "sizes": ["28", "30", "32", "34", "36"],
@@ -277,7 +277,7 @@
     "description": "Data runner themed pants with information flow patterns",
     "price": 74.99,
     "images": [
-      "/images/products/Data Runner Pants/placeholder.jpg"
+      "/images/products/Data Runner Pants/Data Runner Pants.png"
     ],
     "category": "pants",
     "sizes": ["S", "M", "L", "XL"],
@@ -293,7 +293,7 @@
     "description": "Cyber rose themed t-shirt with digital flower patterns",
     "price": 39.99,
     "images": [
-      "/images/products/Cyber Rose Tee/placeholder.jpg"
+      "/images/products/Cyber Rose Tee/Cyber Rose Tee.png"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -309,7 +309,7 @@
     "description": "Crypto punk themed t-shirt with blockchain patterns",
     "price": 129.99,
     "images": [
-      "/images/products/CRYPTO PUNK/placeholder.jpg"
+      "/images/products/CRYPTO PUNK/CRYPTO PUNK.png"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL"],
@@ -325,7 +325,7 @@
     "description": "Electric night themed t-shirt with lightning patterns",
     "price": 189.99,
     "images": [
-      "/images/products/Electric Night Tee/placeholder.jpg"
+      "/images/products/Electric Night Tee/Electric Night Tee.png"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL"],
@@ -341,7 +341,7 @@
     "description": "Grid walker themed pants with matrix patterns",
     "price": 104.99,
     "images": [
-      "/images/products/Grid Walker Pants/placeholder.jpg"
+      "/images/products/Grid Walker Pants/Grid Walker Pants.png"
     ],
     "category": "pants",
     "sizes": ["28", "30", "32", "34", "36"],
@@ -357,7 +357,7 @@
     "description": "Holographic flex pants with holographic details",
     "price": 79.99,
     "images": [
-      "/images/products/Holo Flex Pants/placeholder.jpg"
+      "/images/products/Holo Flex Pants/Holo Flex Pants.png"
     ],
     "category": "pants",
     "sizes": ["S", "M", "L", "XL"],
@@ -373,7 +373,7 @@
     "description": "Neon pulse themed t-shirt with pulsing light patterns",
     "price": 49.99,
     "images": [
-      "/images/products/Neon Pulse Tee/placeholder.jpg"
+      "/images/products/Neon Pulse Tee/Neon Pulse Tee.png"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -389,7 +389,7 @@
     "description": "Neon racer themed pants with racing patterns",
     "price": 119.99,
     "images": [
-      "/images/products/Neon Racer Pants/placeholder.jpg"
+      "/images/products/Neon Racer Pants/Neon Racer Pants.png"
     ],
     "category": "pants",
     "sizes": ["S", "M", "L", "XL"],
@@ -405,7 +405,7 @@
     "description": "Shadow tech themed pants with stealth technology",
     "price": 89.99,
     "images": [
-      "/images/products/Shadow Tech Pants/placeholder.jpg"
+      "/images/products/Shadow Tech Pants/Shadow Tech Pants.png"
     ],
     "category": "pants",
     "sizes": ["28", "30", "32", "34", "36"],
@@ -421,7 +421,7 @@
     "description": "Pixel art themed t-shirt with retro gaming patterns",
     "price": 64.99,
     "images": [
-      "/images/products/Pixel Art Tee/placeholder.jpg"
+      "/images/products/Pixel Art Tee/Pixel Art Tee.png"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL"],
@@ -437,7 +437,7 @@
     "description": "Vapor dream themed t-shirt with dreamy vaporwave patterns",
     "price": 169.99,
     "images": [
-      "/images/products/Vapor Dream Tee/placeholder.jpg"
+      "/images/products/Vapor Dream Tee/Vapor Dream Tee.png"
     ],
     "category": "t-shirts",
     "sizes": ["S", "M", "L", "XL"],
@@ -453,7 +453,7 @@
     "description": "Neon cyber grid hoodie with glowing grid patterns",
     "price": 44.99,
     "images": [
-      "/images/products/Neon Cyber Grid Hoodie/placeholder.jpg"
+      "/images/products/Neon Cyber Grid Hoodie/Neon Cyber Grid Hoodie.png"
     ],
     "category": "hoodies",
     "sizes": ["S", "M", "L", "XL", "XXL"],
@@ -469,7 +469,7 @@
     "description": "Urban operator themed pants with tactical design",
     "price": 134.99,
     "images": [
-      "/images/products/Urban Operator Pants/placeholder.jpg"
+      "/images/products/Urban Operator Pants/Urban Operator Pants.png"
     ],
     "category": "pants",
     "sizes": ["S", "M", "L", "XL"],
