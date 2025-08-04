@@ -791,6 +791,18 @@ function updateSessionStartTime() {
     console.log('⏰ Session start time updated');
 }
 
+// Try to open auth modal function
+function tryOpenAuth() {
+    console.log('🔐 tryOpenAuth called');
+    const savedUser = localStorage.getItem('currentUser');
+    if (!savedUser) {
+        console.log('🔐 No user found, opening auth modal');
+        openAuthModal();
+    } else {
+        console.log('🔐 User already logged in');
+    }
+}
+
 // Make functions globally available
 window.tryOpenAuth = tryOpenAuth;
 window.closeAuthModal = closeAuthModal;

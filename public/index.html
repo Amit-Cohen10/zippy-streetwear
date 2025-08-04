@@ -645,7 +645,19 @@
             const loginRequired = urlParams.get('login');
             
             if (loginRequired === 'required') {
-                console.log('🔐 Login required - opening auth modal');
+                console.log('🔐 Login required - checking if user is already logged in');
+                
+                // Check if user is already logged in
+                const savedUser = localStorage.getItem('currentUser');
+                if (savedUser) {
+                    console.log('✅ User already logged in, not opening modal');
+                    // Remove the login=required parameter from URL
+                    const newUrl = window.location.pathname;
+                    window.history.replaceState({}, document.title, newUrl);
+                    return;
+                }
+                
+                console.log('🔐 No user found, opening auth modal');
                 // Wait a bit for auth system to initialize
                 setTimeout(() => {
                     if (typeof openAuthModal === 'function') {
