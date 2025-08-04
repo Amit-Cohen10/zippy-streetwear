@@ -302,10 +302,10 @@ async function handleLogin(e) {
             // Show success message
             showNotification('Login successful!', 'success');
             
-            // Reload page if needed
-            if (window.location.pathname === '/my-items.html') {
+            // Reload page to update UI
+            setTimeout(() => {
                 window.location.reload();
-            }
+            }, 500);
         } else {
             console.log('❌ Login failed:', data.message);
             showNotification(data.message || 'Login failed', 'error');
@@ -363,6 +363,9 @@ async function handleRegister(e) {
             
             closeAuthModal();
             updateAuthUI();
+            
+            // Show success message
+            showNotification('Registration successful!', 'success');
             
             // Refresh the page to ensure UI is properly updated
             setTimeout(() => {
