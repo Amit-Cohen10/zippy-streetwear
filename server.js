@@ -11,6 +11,7 @@ const cartServer = require('./modules/cart-server');
 const exchangeServer = require('./modules/exchange-server');
 const paymentServer = require('./modules/payment-server');
 const adminServer = require('./modules/admin-server');
+const { requireAuth, requireAdmin, optionalAuth } = require('./modules/auth-middleware');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -53,69 +54,9 @@ app.use('/api/exchanges', exchangeServer);
 app.use('/api/payment', paymentServer);
 app.use('/api/admin', adminServer);
 
-// Public routes
+// Public routes (no authentication required)
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-app.get('/products', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'products.html'));
-});
-
-app.get('/product/:id', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'product-detail.html'));
-});
-
-app.get('/exchange', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'exchange.html'));
-});
-
-app.get('/community', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'community.html'));
-});
-
-app.get('/brands', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'brands.html'));
-});
-
-app.get('/style-guide', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'style-guide.html'));
-});
-
-app.get('/sustainability', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'sustainability.html'));
-});
-
-app.get('/fitting-room', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'fitting-room.html'));
-});
-
-app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
-});
-
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
-});
-
-app.get('/cart', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'cart.html'));
-});
-
-app.get('/my-items', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'my-items.html'));
-});
-
-app.get('/checkout', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'checkout.html'));
-});
-
-app.get('/thank-you', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'thank-you.html'));
-});
-
-app.get('/wishlist', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'wishlist.html'));
 });
 
 app.get('/readme.html', (req, res) => {
@@ -124,6 +65,67 @@ app.get('/readme.html', (req, res) => {
 
 app.get('/llm.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'llm.html'));
+});
+
+// Protected routes (authentication required)
+app.get('/products', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'products.html'));
+});
+
+app.get('/product/:id', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'product-detail.html'));
+});
+
+app.get('/exchange', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'exchange.html'));
+});
+
+app.get('/community', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'community.html'));
+});
+
+app.get('/brands', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'brands.html'));
+});
+
+app.get('/style-guide', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'style-guide.html'));
+});
+
+app.get('/sustainability', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'sustainability.html'));
+});
+
+app.get('/fitting-room', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'fitting-room.html'));
+});
+
+app.get('/dashboard', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
+app.get('/admin', requireAdmin, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
+app.get('/cart', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'cart.html'));
+});
+
+app.get('/my-items', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'my-items.html'));
+});
+
+app.get('/checkout', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'checkout.html'));
+});
+
+app.get('/thank-you', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'thank-you.html'));
+});
+
+app.get('/wishlist', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'wishlist.html'));
 });
 
 // Error handling middleware

@@ -34,5 +34,41 @@
       "language": "en",
       "notifications": true
     }
+  },
+  {
+    "id": "user-1754322749057-86esl82s6",
+    "username": "testuser",
+    "password": "$2b$10$y4WF5mvRefN/IoZ2G6HzQudL2354bMHhqdwoX1Iw64CmHxoUsMDGO",
+    "email": "test@example.com",
+    "role": "user",
+    "profile": {
+      "displayName": "testuser",
+      "avatar": "/images/default-avatar.png",
+      "exchangeRating": 0,
+      "joinDate": "2025-08-04T15:52:29.057Z"
+    },
+    "preferences": {
+      "darkMode": true,
+      "language": "en",
+      "notifications": true
+    }
+  },
+  {
+    "id": "user-1754322809080-i0ppe1fs3",
+    "username": "newuser",
+    "password": "$2b$10$4hjfr.qfxYShFaiBlBRb4uO9DMAlXAsJKMG0YZ8Y.D0NnPE/nN3Lq",
+    "email": "newuser@example.com",
+    "role": "user",
+    "profile": {
+      "displayName": "newuser",
+      "avatar": "/images/default-avatar.png",
+      "exchangeRating": 0,
+      "joinDate": "2025-08-04T15:53:29.080Z"
+    },
+    "preferences": {
+      "darkMode": true,
+      "language": "en",
+      "notifications": true
+    }
   }
 ]
