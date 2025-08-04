@@ -55,11 +55,11 @@
     
     // חכה לטעינת הדף ולכל הסקריפטים האחרים
     document.addEventListener('DOMContentLoaded', function() {
+        // Block auth.js from interfering with user menu
+        window.blockGlobalUserMenu = true;
+        
         // ללא עיכוב - כל האתחול כבר קרה
         initUserMenu();
-        
-        // Allow auth system to update UI when needed
-        window.blockGlobalUserMenu = false;
         
         // Listen for session timeout events
         window.addEventListener('sessionTimeout', function() {
