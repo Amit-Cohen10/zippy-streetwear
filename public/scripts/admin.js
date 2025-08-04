@@ -56,6 +56,17 @@ async function checkAdminAccess() {
 
 async function loadAllData() {
     try {
+        // Show loading state for all tables
+        const activityTableBody = document.getElementById('activityTableBody');
+        const userTableBody = document.getElementById('userTableBody');
+        
+        if (activityTableBody) {
+            activityTableBody.innerHTML = '<tr><td colspan="3" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading activities...</td></tr>';
+        }
+        if (userTableBody) {
+            userTableBody.innerHTML = '<tr><td colspan="4" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading users...</td></tr>';
+        }
+        
         // Load all data in parallel
         await Promise.all([
             loadActivityData(),
@@ -71,6 +82,12 @@ async function loadAllData() {
 
 async function loadActivityData() {
     try {
+        // Show loading state
+        const tableBody = document.getElementById('activityTableBody');
+        if (tableBody) {
+            tableBody.innerHTML = '<tr><td colspan="3" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading activities...</td></tr>';
+        }
+        
         const response = await fetch('/api/admin/activity', {
             credentials: 'include'
         });
@@ -117,6 +134,12 @@ function displayActivityTable(activities) {
 
 async function loadUserData() {
     try {
+        // Show loading state
+        const tableBody = document.getElementById('userTableBody');
+        if (tableBody) {
+            tableBody.innerHTML = '<tr><td colspan="4" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading users...</td></tr>';
+        }
+        
         const response = await fetch('/api/admin/users', {
             credentials: 'include'
         });
@@ -232,11 +255,41 @@ function showError(message) {
     }, 5000);
 }
 
+function showSuccess(message) {
+    console.log(message);
+    
+    // Create a success toast notification
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(40, 167, 69, 0.9);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        border: 2px solid #28a745;
+        z-index: 999999;
+        font-weight: 600;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        max-width: 400px;
+        word-wrap: break-word;
+    `;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    // Remove toast after 3 seconds
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 3000);
+}
+
 // Make functions globally available
 window.loadActivityData = loadActivityData;
 window.loadUserData = loadUserData;
 window.loadStatistics = loadStatistics;
-window.loadAllData = loadAllData;
 
 // Initialize when DOM is loaded
 if (document.readyState === 'loading') {
