@@ -104,7 +104,6 @@ function loadCartFromStorage() {
             if (!Array.isArray(loaded)) loaded = [];
             window.cartItems = loaded;
             console.log('🛒 Loaded cart items:', window.cartItems);
-            updateCartDisplay();
         } else {
             console.log('🛒 No saved cart found in localStorage');
             window.cartItems = [];
@@ -112,7 +111,6 @@ function loadCartFromStorage() {
     } catch (error) {
         console.error('Failed to load cart from localStorage:', error);
         window.cartItems = [];
-        updateCartDisplay();
     }
 }
 
@@ -138,9 +136,6 @@ function loadCart() {
     if (!Array.isArray(window.cartItems)) {
         window.cartItems = [];
     }
-    
-    // Update cart count
-    updateCartCount();
     
     if (window.cartItems.length === 0) {
         console.log('🛒 Cart is empty, showing empty cart');
@@ -509,14 +504,17 @@ function closeSearchModal() {
 
 // Open cart modal
 window.openCartModal = function() {
+    console.log('🛒 openCartModal called');
     const cartModal = document.getElementById('cartModal');
     
     if (cartModal) {
+        console.log('🛒 Cart modal found, loading cart data');
         // Load cart data into modal
         loadCartModal();
         
         // Show modal
         cartModal.classList.add('active');
+        console.log('🛒 Modal activated with classList.add("active")');
         
         // Update auth UI to ensure login status is correct
         if (typeof window.updateAuthUI === 'function') {
@@ -542,6 +540,8 @@ window.openCartModal = function() {
             // Ensure modal is visible at top
             cartModal.scrollTop = 0;
         }, 100);
+    } else {
+        console.log('❌ Cart modal not found');
     }
 }
 
@@ -582,7 +582,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Load cart data into modal
 function loadCartModal() {
+    console.log('🛒 loadCartModal called');
     const cartItems = JSON.parse(localStorage.getItem('zippyCart') || '[]');
+    console.log('🛒 Cart items from localStorage:', cartItems);
     const cartItemsContainer = document.getElementById('cartItems');
     const emptyCart = document.getElementById('emptyCart');
     const cartSummary = document.getElementById('cartSummary');

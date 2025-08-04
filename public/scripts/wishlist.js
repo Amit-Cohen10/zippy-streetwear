@@ -269,6 +269,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateCartCount();
             }
             
+            // Update cart display
+            if (typeof window.loadCart === 'function') {
+                window.loadCart();
+            }
+            
             // Show success notification
             if (typeof window.showNotification === 'function') {
                 window.showNotification(`${addedCount} items added to cart!`, 'success');
@@ -276,18 +281,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 showNotification(`${addedCount} items added to cart!`, 'success');
             }
             
-            // Load cart and open modal with delay to ensure everything is updated
-            setTimeout(() => {
-                if (typeof window.loadCart === 'function') {
-                    window.loadCart();
-                }
-                
+            // Open cart modal using the same function as home page
+            if (typeof window.openCartModal === 'function') {
+                window.openCartModal();
+            } else {
+                // Fallback to manual modal opening
                 const cartModal = document.getElementById('cartModal');
                 if (cartModal) {
                     cartModal.style.display = 'flex';
-                    cartModal.classList.add('show');
                 }
                 
+                if (typeof window.loadCart === 'function') {
+                    window.loadCart();
+                }
+            }
+            
+            setTimeout(() => {
                 // Refresh wishlist display to show updated state
                 loadWishlist();
             }, 100);
