@@ -1389,45 +1389,248 @@
                 generateOutfitBtn.disabled = true;
                 
                 setTimeout(() => {
-                    // Mock outfit generation based on style and occasion
+                    // Real products from the website organized by style and occasion
                     const outfits = {
                         cyberpunk: {
-                            casual: {
-                                top: 'Neon Cyber Hoodie',
-                                bottom: 'Holographic Cargo Pants',
-                                shoes: 'LED Sneakers',
-                                accessories: 'Neon Glasses, LED Bracelet'
-                            },
-                            street: {
-                                top: 'Digital Distortion Tee',
-                                bottom: 'Reflective Joggers',
-                                shoes: 'Chunky Tech Sneakers',
-                                accessories: 'Cyber Backpack, Glow Sticks'
-                            },
-                            night: {
-                                top: 'Neon Mesh Top',
-                                bottom: 'Glow-in-the-Dark Pants',
-                                shoes: 'Neon Platform Boots',
-                                accessories: 'LED Necklace, Glow Earrings'
-                            }
+                            casual: [
+                                {
+                                    top: 'Circuit Board Hoodie ($129.99)',
+                                    bottom: 'Neon Cargo Pants ($89.99)',
+                                    shoes: 'LED Tech Sneakers',
+                                    accessories: 'Neon Glasses, LED Bracelet'
+                                },
+                                {
+                                    top: 'Neural Network Hoodie ($149.99)',
+                                    bottom: 'Circuit Breaker Pants ($69.99)',
+                                    shoes: 'Cyber Boots',
+                                    accessories: 'Cyber Visor, LED Rings'
+                                }
+                            ],
+                            street: [
+                                {
+                                    top: '404 Not Found Tee ($49.99)',
+                                    bottom: 'Code Cargo Pants ($189.99)',
+                                    shoes: 'Chunky Tech Sneakers',
+                                    accessories: 'Cyber Backpack, Glow Sticks'
+                                },
+                                {
+                                    top: 'SYSTEM OVERRIDE Tee ($54.99)',
+                                    bottom: 'Cyber Ninja Pants ($99.99)',
+                                    shoes: 'LED Platform Boots',
+                                    accessories: 'Cyber Visor, LED Necklace'
+                                }
+                            ],
+                            night: [
+                                {
+                                    top: 'Digital Glitch Tee ($94.99)',
+                                    bottom: 'Data Runner Pants ($74.99)',
+                                    shoes: 'Neon Platform Boots',
+                                    accessories: 'LED Necklace, Glow Earrings'
+                                },
+                                {
+                                    top: 'Electric Night Tee ($189.99)',
+                                    bottom: 'Grid Walker Pants ($104.99)',
+                                    shoes: 'LED Heels',
+                                    accessories: 'Neon Tiara, Glow Bracelets'
+                                }
+                            ],
+                            formal: [
+                                {
+                                    top: 'Quantum Circuit Hoodie ($169.99)',
+                                    bottom: 'Urban Operator Pants ($134.99)',
+                                    shoes: 'LED Oxfords',
+                                    accessories: 'Cyber Tie, LED Watch'
+                                },
+                                {
+                                    top: 'Glitch Reality Hoodie ($139.99)',
+                                    bottom: 'Shadow Tech Pants ($89.99)',
+                                    shoes: 'Glow Tech Loafers',
+                                    accessories: 'Neon Glasses, LED Cufflinks'
+                                }
+                            ]
                         },
                         streetwear: {
-                            casual: {
-                                top: 'Oversized Graphic Tee',
-                                bottom: 'Baggy Jeans',
-                                shoes: 'Chunky Sneakers',
-                                accessories: 'Baseball Cap, Chain Necklace'
-                            },
-                            street: {
-                                top: 'Hoodie with Graphic',
-                                bottom: 'Cargo Pants',
-                                shoes: 'High-Top Sneakers',
-                                accessories: 'Backpack, Watch'
-                            }
+                            casual: [
+                                {
+                                    top: 'Code Warrior Tee ($49.99)',
+                                    bottom: 'Holo Flex Pants ($79.99)',
+                                    shoes: 'Chunky Sneakers',
+                                    accessories: 'Baseball Cap, Chain Necklace'
+                                },
+                                {
+                                    top: 'Neon Cyber Grid Hoodie ($44.99)',
+                                    bottom: 'Neon Racer Pants ($119.99)',
+                                    shoes: 'High-Top Sneakers',
+                                    accessories: 'Dad Hat, Gold Chain'
+                                }
+                            ],
+                            street: [
+                                {
+                                    top: 'Crypto Punk Tee ($59.99)',
+                                    bottom: 'Code Cargo Pants ($189.99)',
+                                    shoes: 'High-Top Sneakers',
+                                    accessories: 'Backpack, Watch'
+                                },
+                                {
+                                    top: 'Neon Pulse Tee ($49.99)',
+                                    bottom: 'Data Runner Pants ($74.99)',
+                                    shoes: 'Chunky Sneakers',
+                                    accessories: 'Baseball Cap, Chain'
+                                }
+                            ],
+                            night: [
+                                {
+                                    top: 'CRYPTO PUNK ($129.99)',
+                                    bottom: 'Grid Walker Pants ($104.99)',
+                                    shoes: 'Chunky Boots',
+                                    accessories: 'Chain Necklace, Rings'
+                                },
+                                {
+                                    top: 'Vapor Dream Tee ($169.99)',
+                                    bottom: 'Urban Operator Pants ($134.99)',
+                                    shoes: 'High-Top Sneakers',
+                                    accessories: 'Baseball Cap, Gold Chain'
+                                }
+                            ],
+                            formal: [
+                                {
+                                    top: 'Augmented Tee ($44.99)',
+                                    bottom: 'Shadow Tech Pants ($89.99)',
+                                    shoes: 'Clean Sneakers',
+                                    accessories: 'Simple Watch, Chain'
+                                },
+                                {
+                                    top: 'Pixel Art Tee ($64.99)',
+                                    bottom: 'Holo Flex Pants ($79.99)',
+                                    shoes: 'Chunky Loafers',
+                                    accessories: 'Minimal Chain, Watch'
+                                }
+                            ]
+                        },
+                        techwear: {
+                            casual: [
+                                {
+                                    top: 'Circuit Pattern Hoodie ($199.99)',
+                                    bottom: 'Neon Cargo Pants ($89.99)',
+                                    shoes: 'Tech Sneakers',
+                                    accessories: 'Utility Bag, Smart Watch'
+                                },
+                                {
+                                    top: 'Quantum Hoodie ($179.99)',
+                                    bottom: 'Circuit Breaker Pants ($69.99)',
+                                    shoes: 'Running Shoes',
+                                    accessories: 'Fanny Pack, Fitness Tracker'
+                                }
+                            ],
+                            street: [
+                                {
+                                    top: 'Cyber Samurai Hoodie ($159.99)',
+                                    bottom: 'Code Cargo Pants ($189.99)',
+                                    shoes: 'Tech Boots',
+                                    accessories: 'Utility Vest, Smart Glasses'
+                                },
+                                {
+                                    top: 'Glitch Reality Hoodie ($139.99)',
+                                    bottom: 'Cyber Ninja Pants ($99.99)',
+                                    shoes: 'Tech Sneakers',
+                                    accessories: 'Utility Bag, Smart Watch'
+                                }
+                            ],
+                            night: [
+                                {
+                                    top: 'Neural Network Hoodie ($149.99)',
+                                    bottom: 'Data Runner Pants ($74.99)',
+                                    shoes: 'Tech Boots',
+                                    accessories: 'LED Bag, Smart Glasses'
+                                },
+                                {
+                                    top: 'Quantum Circuit Hoodie ($169.99)',
+                                    bottom: 'Grid Walker Pants ($104.99)',
+                                    shoes: 'LED Tech Sneakers',
+                                    accessories: 'Smart Visor, LED Watch'
+                                }
+                            ],
+                            formal: [
+                                {
+                                    top: 'Quantum Hoodie ($179.99)',
+                                    bottom: 'Urban Operator Pants ($134.99)',
+                                    shoes: 'Tech Loafers',
+                                    accessories: 'Smart Watch, Utility Bag'
+                                },
+                                {
+                                    top: 'Circuit Pattern Hoodie ($199.99)',
+                                    bottom: 'Shadow Tech Pants ($89.99)',
+                                    shoes: 'Smart Loafers',
+                                    accessories: 'Tech Glasses, Smart Watch'
+                                }
+                            ]
+                        },
+                        vintage: {
+                            casual: [
+                                {
+                                    top: 'Cyber Rose Tee ($39.99)',
+                                    bottom: 'Holo Flex Pants ($79.99)',
+                                    shoes: 'Retro Sneakers',
+                                    accessories: 'Vintage Cap, Chain Necklace'
+                                },
+                                {
+                                    top: 'Neon Cyber Grid Hoodie ($44.99)',
+                                    bottom: 'Neon Racer Pants ($119.99)',
+                                    shoes: 'Vintage Sneakers',
+                                    accessories: 'Retro Cap, Gold Chain'
+                                }
+                            ],
+                            street: [
+                                {
+                                    top: 'Pixel Art Tee ($64.99)',
+                                    bottom: 'Data Runner Pants ($74.99)',
+                                    shoes: 'Throwback Sneakers',
+                                    accessories: 'Vintage Cap, Chain'
+                                },
+                                {
+                                    top: 'Vapor Dream Tee ($169.99)',
+                                    bottom: 'Urban Operator Pants ($134.99)',
+                                    shoes: 'Retro High-Tops',
+                                    accessories: 'Vintage Backpack, Retro Watch'
+                                }
+                            ],
+                            night: [
+                                {
+                                    top: 'CRYPTO PUNK ($129.99)',
+                                    bottom: 'Grid Walker Pants ($104.99)',
+                                    shoes: 'Retro Boots',
+                                    accessories: 'Vintage Accessories, Chain'
+                                },
+                                {
+                                    top: 'Electric Night Tee ($189.99)',
+                                    bottom: 'Shadow Tech Pants ($89.99)',
+                                    shoes: 'Vintage Heels',
+                                    accessories: 'Retro Tiara, Vintage Jewelry'
+                                }
+                            ],
+                            formal: [
+                                {
+                                    top: 'Augmented Tee ($44.99)',
+                                    bottom: 'Holo Flex Pants ($79.99)',
+                                    shoes: 'Vintage Loafers',
+                                    accessories: 'Retro Watch, Chain'
+                                },
+                                {
+                                    top: 'Code Warrior Tee ($49.99)',
+                                    bottom: 'Neon Racer Pants ($119.99)',
+                                    shoes: 'Retro Oxfords',
+                                    accessories: 'Vintage Tie, Retro Watch'
+                                }
+                            ]
                         }
                     };
 
-                    const outfit = outfits[style]?.[occasion] || outfits.cyberpunk.casual;
+                    // Get available outfits for this combination
+                    const availableOutfits = outfits[style]?.[occasion] || outfits.cyberpunk.casual;
+                    
+                    // Randomly select one outfit from the available options
+                    const randomIndex = Math.floor(Math.random() * availableOutfits.length);
+                    const outfit = availableOutfits[randomIndex];
                     
                     displayOutfit(outfit);
                     
