@@ -7,6 +7,123 @@
     <link rel="stylesheet" href="/styles/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Light theme styles for products page */
+        body.theme-light .products-page {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
+        }
+
+        body.theme-light .page-title {
+            color: #0066cc;
+        }
+
+        body.theme-light .page-subtitle {
+            color: var(--text-gray);
+        }
+
+        body.theme-light .filters-section {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid rgba(0, 102, 204, 0.2);
+        }
+
+        body.theme-light .filter-group label {
+            color: #0066cc;
+        }
+
+        body.theme-light .filter-group select,
+        body.theme-light .filter-group input {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(0, 102, 204, 0.2);
+            color: var(--text-light);
+        }
+
+        body.theme-light .filter-group select:focus,
+        body.theme-light .filter-group input:focus {
+            border-color: #0066cc;
+            box-shadow: 0 0 15px rgba(0, 102, 204, 0.3);
+        }
+
+        body.theme-light .apply-filters-btn {
+            background: linear-gradient(45deg, #0066cc, #cc0066);
+            color: #ffffff;
+        }
+
+        body.theme-light .clear-filters-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(204, 0, 102, 0.2);
+            color: #cc0066;
+        }
+
+        body.theme-light .results-count {
+            color: #0066cc;
+        }
+
+        body.theme-light .view-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(0, 102, 204, 0.2);
+            color: var(--text-light);
+        }
+
+        body.theme-light .view-btn.active {
+            background: #0066cc;
+            color: #ffffff;
+        }
+
+        body.theme-light .product-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 249, 250, 0.8) 100%);
+            border: 2px solid rgba(0, 102, 204, 0.2);
+        }
+
+        body.theme-light .product-card:hover {
+            border-color: #0066cc;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        body.theme-light .product-title {
+            color: #0066cc;
+        }
+
+        body.theme-light .product-price {
+            color: var(--text-light);
+        }
+
+        body.theme-light .product-description {
+            color: var(--text-gray);
+        }
+
+        body.theme-light .add-to-cart-btn {
+            background: linear-gradient(45deg, #0066cc, #cc0066);
+            color: #ffffff;
+        }
+
+        body.theme-light .wishlist-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(204, 0, 102, 0.2);
+            color: #cc0066;
+        }
+
+        body.theme-light .wishlist-btn.active {
+            background: #cc0066;
+            color: #ffffff;
+        }
+
+        body.theme-light .pagination button {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(0, 102, 204, 0.2);
+            color: var(--text-light);
+        }
+
+        body.theme-light .pagination button:hover,
+        body.theme-light .pagination button.active {
+            background: #0066cc;
+            color: #ffffff;
+        }
+
+        body.theme-light .pagination button:disabled {
+            background: rgba(255, 255, 255, 0.5);
+            color: var(--text-gray);
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -99,6 +216,8 @@
         }
     })();
     </script>
+
+
 
     <!-- User Dropdown Menu (Outside navbar to avoid clipping) -->
     <div class="user-dropdown" id="userDropdown" style="
@@ -402,8 +521,8 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/scripts/global.js"></script>
     <script src="/scripts/main.js"></script>
+    <script src="/scripts/global.js"></script>
     <script src="/scripts/auth.js"></script>
     <script src="/scripts/cart.js"></script>
     <script src="/scripts/search.js"></script>

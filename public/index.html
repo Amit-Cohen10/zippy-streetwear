@@ -7,6 +7,100 @@
     <link rel="stylesheet" href="/styles/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Light theme styles for home page */
+        body.theme-light .hero {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
+        }
+
+        body.theme-light .hero-title {
+            background: linear-gradient(45deg, #0066cc, #cc0066, #00cc66);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        body.theme-light .hero-subtitle {
+            color: var(--text-gray);
+        }
+
+        body.theme-light .cta-btn.primary {
+            background: linear-gradient(45deg, #0066cc, #cc0066);
+            color: #ffffff;
+        }
+
+        body.theme-light .cta-btn.secondary {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(0, 102, 204, 0.3);
+            color: #0066cc;
+        }
+
+        body.theme-light .featured-products {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        body.theme-light .section-title {
+            color: #0066cc;
+        }
+
+        body.theme-light .product-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 249, 250, 0.8) 100%);
+            border: 2px solid rgba(0, 102, 204, 0.2);
+        }
+
+        body.theme-light .product-card:hover {
+            border-color: #0066cc;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        body.theme-light .product-title {
+            color: #0066cc;
+        }
+
+        body.theme-light .product-price {
+            color: var(--text-light);
+        }
+
+        body.theme-light .add-to-cart-btn {
+            background: linear-gradient(45deg, #0066cc, #cc0066);
+            color: #ffffff;
+        }
+
+        body.theme-light .exchange-preview {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 249, 250, 0.8) 100%);
+            border: 2px solid rgba(0, 102, 204, 0.2);
+        }
+
+        body.theme-light .preview-text {
+            color: var(--text-light);
+        }
+
+        body.theme-light .stat-number {
+            color: #0066cc;
+        }
+
+        body.theme-light .stat-label {
+            color: var(--text-gray);
+        }
+
+        body.theme-light .category-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 249, 250, 0.8) 100%);
+            border: 2px solid rgba(0, 102, 204, 0.2);
+        }
+
+        body.theme-light .category-card:hover {
+            border-color: #0066cc;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        body.theme-light .category-card h3 {
+            color: #0066cc;
+        }
+
+        body.theme-light .category-card p {
+            color: var(--text-gray);
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -52,6 +146,8 @@
 
     <!-- סקריפט מיידי לעדכון מצב הכפתור ללא עיכוב -->
     <script>
+
+    
     (function() {
         console.log('⚡ Immediate button state check...');
         
@@ -640,8 +736,8 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/scripts/global.js"></script>
     <script src="/scripts/main.js"></script>
+    <script src="/scripts/global.js"></script>
     <script src="/scripts/auth.js"></script>
     <script src="/scripts/cart.js"></script>
     <script src="/scripts/search.js"></script>

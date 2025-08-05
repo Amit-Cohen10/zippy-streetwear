@@ -217,6 +217,17 @@ function toggleTheme() {
     showNotification(`Theme changed to ${newTheme} mode`, 'success');
 }
 
+// Make functions available globally
+window.toggleTheme = toggleTheme;
+window.showNotification = showNotification;
+window.openCartModal = openCartModal;
+window.openSearchModal = openSearchModal;
+window.closeSearchModal = closeSearchModal;
+window.openAuthModal = openAuthModal;
+window.closeAuthModal = closeAuthModal;
+window.closeCartModal = closeCartModal;
+window.logout = logout;
+
 // Global logout function
 async function logout() {
     try {

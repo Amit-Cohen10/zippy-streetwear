@@ -35,6 +35,133 @@
             overflow: hidden;
         }
 
+        /* Light theme styles for brands page */
+        body.theme-light .brands-page {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
+        }
+
+        body.theme-light .brands-page::before {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 102, 204, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(204, 0, 102, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 204, 102, 0.05) 0%, transparent 50%);
+        }
+
+        body.theme-light .cyber-title {
+            background: linear-gradient(45deg, #0066cc, #cc0066, #00cc66);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        body.theme-light .hero-subtitle {
+            color: var(--text-gray);
+        }
+
+        body.theme-light .brand-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 249, 250, 0.8) 100%);
+            border: 2px solid rgba(0, 102, 204, 0.2);
+        }
+
+        body.theme-light .brand-card:hover {
+            border-color: #0066cc;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        body.theme-light .brand-name {
+            color: #0066cc;
+        }
+
+        body.theme-light .brand-description {
+            color: var(--text-gray);
+        }
+
+        body.theme-light .brand-stats {
+            color: var(--text-light);
+        }
+
+        body.theme-light .brand-stat-number {
+            color: #0066cc;
+        }
+
+        body.theme-light .brand-stat-label {
+            color: var(--text-gray);
+        }
+
+        body.theme-light .brand-logo {
+            border: 2px solid rgba(0, 102, 204, 0.2);
+        }
+
+        body.theme-light .brand-logo:hover {
+            border-color: #0066cc;
+        }
+
+        body.theme-light .brand-details {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid rgba(0, 102, 204, 0.2);
+        }
+
+        body.theme-light .brand-details h3 {
+            color: #0066cc;
+        }
+
+        body.theme-light .brand-details p {
+            color: var(--text-gray);
+        }
+
+        body.theme-light .brand-details strong {
+            color: var(--text-light);
+        }
+
+        body.theme-light .brand-story {
+            color: var(--text-gray);
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 102, 204, 0.2);
+        }
+
+        body.theme-light .brand-grid {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        body.theme-light .brand-filters {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(0, 102, 204, 0.2);
+        }
+
+        body.theme-light .filter-btn {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(0, 102, 204, 0.2);
+            color: var(--text-light);
+        }
+
+        body.theme-light .filter-btn:hover,
+        body.theme-light .filter-btn.active {
+            background: #0066cc;
+            color: #ffffff;
+            border-color: #0066cc;
+        }
+
+        body.theme-light .search-box {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(0, 102, 204, 0.2);
+        }
+
+        body.theme-light .search-input {
+            color: var(--text-light);
+        }
+
+        body.theme-light .search-input::placeholder {
+            color: var(--text-gray);
+        }
+
+        body.theme-light .brand-count {
+            color: #0066cc;
+        }
+
+        body.theme-light .brand-count-label {
+            color: var(--text-gray);
+        }
+
         /* Hero Section */
         .hero-section {
             text-align: center;
@@ -1824,16 +1951,64 @@
     // Theme toggle functionality
     function toggleTheme() {
         const body = document.body;
-        const themeIcon = document.getElementById('themeIcon');
+        const currentTheme = body.classList.contains('theme-light') ? 'light' : 'dark';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         
-        if (body.classList.contains('theme-light')) {
-            body.classList.remove('theme-light');
-            if (themeIcon) themeIcon.className = 'fas fa-sun';
-        } else {
-            body.classList.add('theme-light');
-            if (themeIcon) themeIcon.className = 'fas fa-moon';
+        // Remove old theme class and add new one
+        body.classList.remove(`theme-${currentTheme}`);
+        body.classList.add(`theme-${newTheme}`);
+        
+        // Save preference
+        localStorage.setItem('theme', newTheme);
+        
+        // Update toggle button
+        const themeIcon = document.getElementById('themeIcon');
+        if (themeIcon) {
+            themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        
+        // Update user preferences if logged in
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+            try {
+                const user = JSON.parse(currentUser);
+                if (user.preferences) {
+                    user.preferences.darkMode = newTheme === 'dark';
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                }
+            } catch (error) {
+                console.error('Error updating user preferences:', error);
+            }
+        }
+        
+        // Show notification
+        if (typeof showNotification === 'function') {
+            showNotification(`Theme changed to ${newTheme} mode`, 'success');
         }
     }
+
+    // Make toggleTheme available globally
+    window.toggleTheme = toggleTheme;
+
+    // Show notification function
+    function showNotification(message, type = 'info') {
+        console.log(`🔔 Showing notification: ${message} (type: ${type})`);
+        
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        console.log('✅ Notification added to DOM');
+        
+        setTimeout(() => {
+            notification.remove();
+            console.log('🗑️ Notification removed from DOM');
+        }, 3000);
+    }
+
+    // Make showNotification available globally
+    window.showNotification = showNotification;
 
     // Clear cart functionality
     function clearCart() {
