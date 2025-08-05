@@ -156,8 +156,8 @@ function selectSearchResult(productId) {
     // Close search modal
     document.getElementById('searchModal').style.display = 'none';
     
-    // Navigate to product page
-    window.location.href = `/product/${productId}`;
+    // Navigate to product detail page with correct URL structure
+    window.location.href = `/product-detail.html?id=${productId}`;
 }
 
 // Advanced search functionality

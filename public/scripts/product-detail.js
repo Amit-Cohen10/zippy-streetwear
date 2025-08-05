@@ -29,9 +29,50 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load product data from server
     async function loadProductFromServer(productId) {
         try {
-            const response = await fetch('/api/products?limit=50&page=1');
+            // First try to get the specific product by ID
+            const response = await fetch(`/api/products/${productId}`);
             if (response.ok) {
                 const data = await response.json();
+                const product = data.product;
+                
+                if (product) {
+                    return {
+                        id: product.id,
+                        name: product.title,
+                        price: product.price,
+                        category: product.category,
+                        status: "available",
+                        description: product.description,
+                        images: product.images || ["/images/placeholder.jpg"],
+                        sizes: product.sizes || ["S", "M", "L", "XL"],
+                        specifications: {
+                            "Material": "Premium Cotton Blend",
+                            "Weight": "320g",
+                            "Fit": "Regular",
+                            "Care": "Machine wash cold",
+                            "Features": "Premium quality, comfortable fit",
+                            "Origin": "Designed in Israel"
+                        },
+                        reviews: [
+                            {
+                                author: "User_1",
+                                rating: 5,
+                                comment: "Great quality and comfortable fit!"
+                            },
+                            {
+                                author: "User_2",
+                                rating: 4,
+                                comment: "Love the design and material."
+                            }
+                        ]
+                    };
+                }
+            }
+            
+            // Fallback: try to find the product in the full list
+            const fallbackResponse = await fetch('/api/products?limit=50&page=1');
+            if (fallbackResponse.ok) {
+                const data = await fallbackResponse.json();
                 const product = (data.products || []).find(p => p.id === productId);
                 
                 if (product) {
