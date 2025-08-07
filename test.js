@@ -14,7 +14,10 @@ const tests = {
     payment: [],
     admin: [],
     search: [],
-    userPreferences: []
+    userPreferences: [],
+    fileSystem: [],
+    security: [],
+    ui: []
 };
 
 // Helper functions
