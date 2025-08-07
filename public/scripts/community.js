@@ -342,6 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const div = document.createElement('div');
         div.className = 'trending-item';
         div.innerHTML = `
+            ${item.image ? `<div class="trending-item-image"><img src="${item.image}" alt="${item.title}" onerror="this.style.display='none'"></div>` : ''}
             <div class="trending-item-header">
                 <span class="trending-item-title">${item.title}</span>
                 <span class="trending-item-category">${item.category}</span>

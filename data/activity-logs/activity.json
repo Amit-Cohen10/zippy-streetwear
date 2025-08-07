@@ -1347,5 +1347,28 @@
     },
     "timestamp": "2025-08-07T15:30:41.246Z",
     "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754581754107-babsjms4m",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "logout",
+    "details": {
+      "username": "amitcohen",
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-07T15:49:14.107Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754581763152-knquzz0l6",
+    "userId": "admin-001",
+    "action": "login",
+    "details": {
+      "username": "admin",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-07T15:49:23.153Z",
+    "ip": "127.0.0.1"
   }
 ]
