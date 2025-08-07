@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zippy - Futuristic Streetwear Platform</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="stylesheet" href="/styles/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -215,9 +216,16 @@
         console.log('🌐 Global session timeout system initializing...');
         
         let globalSessionCheckInterval = null;
+        let globalSessionInitialized = false;
         
         // Initialize global session timeout system
         function initGlobalSessionTimeout() {
+            // Prevent multiple initializations
+            if (globalSessionInitialized) {
+                console.log('🚫 Global session timeout already initialized, skipping...');
+                return;
+            }
+            
             console.log('🌐 Initializing global session timeout system...');
             
             // Clear any existing global interval
@@ -279,6 +287,7 @@
             }, 30000); // 30 seconds
             
             console.log('🔄 Global periodic session check started (every 30 seconds)');
+            globalSessionInitialized = true;
         }
         
         // Force global logout
@@ -403,10 +412,16 @@
         // Initialize when DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
-                setTimeout(initGlobalSessionTimeout, 1500);
+                if (!window.globalSessionSystemInitialized) {
+                    setTimeout(initGlobalSessionTimeout, 1500);
+                    window.globalSessionSystemInitialized = true;
+                }
             });
         } else {
-            setTimeout(initGlobalSessionTimeout, 1500);
+            if (!window.globalSessionSystemInitialized) {
+                setTimeout(initGlobalSessionTimeout, 1500);
+                window.globalSessionSystemInitialized = true;
+            }
         }
         
         // Make functions globally available

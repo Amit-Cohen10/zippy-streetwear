@@ -6,9 +6,12 @@
     
     // מונה לחיצות לבדיקה
     let clickCount = 0;
+    let isInitialized = false;
     
     // עדכון מיידי של מצב הכפתור ללא עיכוב
     function setInitialButtonState() {
+        if (isInitialized) return; // Prevent multiple initializations
+        
         console.log('⚡ Setting initial button state immediately...');
         
         // בדיקה מיידית של מצב ההתחברות (אותו מקום כמו initUserMenu)
@@ -44,6 +47,8 @@
             if (userMenu) userMenu.style.display = 'none';
             console.log('⚡ Set button to LOGIN immediately');
         }
+        
+        isInitialized = true;
     }
     
     // קריאה מיידית לעדכון מצב הכפתור
@@ -61,15 +66,17 @@
         // ללא עיכוב - כל האתחול כבר קרה
         initUserMenu();
         
-        // קריאה לפונקציות auth אחרי שהדף נטען
+        // קריאה לפונקציות auth אחרי שהדף נטען (רק פעם אחת)
         setTimeout(() => {
-            if (typeof forceUpdateAuthButton === 'function') {
+            if (typeof forceUpdateAuthButton === 'function' && !window.authButtonUpdated) {
                 console.log('🔧 Calling forceUpdateAuthButton from simple-user-menu.js...');
                 forceUpdateAuthButton();
+                window.authButtonUpdated = true;
             }
-            if (typeof checkSessionStatus === 'function') {
+            if (typeof checkSessionStatus === 'function' && !window.sessionChecked) {
                 console.log('🔍 Calling checkSessionStatus from simple-user-menu.js...');
                 checkSessionStatus();
+                window.sessionChecked = true;
             }
         }, 1000);
         
@@ -96,12 +103,13 @@
             }
         });
         
-        // Setup admin access checks
+        // Setup admin access checks (only once)
         setTimeout(() => {
-            if (typeof setupAdminAccessChecks === 'function') {
+            if (!window.adminChecksSetup) {
                 setupAdminAccessChecks();
+                window.adminChecksSetup = true;
             }
-        }, 1000);
+        }, 2000);
     });
     
     function initUserMenu() {

@@ -479,7 +479,10 @@ function updateAuthUI() {
     if (window.blockGlobalUserMenu) {
         console.log('🚫 Auth UI update blocked by simple-user-menu.js');
         // אבל עדיין ננסה לעדכן את הכפתור אם הוא לא מעודכן
-        forceUpdateAuthButton();
+        if (!window.authButtonUpdated) {
+            forceUpdateAuthButton();
+            window.authButtonUpdated = true;
+        }
         return;
     }
     
@@ -1185,63 +1188,72 @@ function checkAdminAccess(event) {
 
 // Add admin access check to all admin activity links
 function setupAdminAccessChecks() {
+    // Prevent multiple setups
+    if (window.adminChecksSetup) {
+        console.log('🚫 Admin checks already setup, skipping...');
+        return;
+    }
+    
     console.log('🔐 Setting up admin access checks...');
     
-    // Find all admin activity links by text content
-    const allLinks = document.querySelectorAll('a');
-    const adminLinks = Array.from(allLinks).filter(link => 
-        link.textContent.includes('Admin Activity') || 
-        link.href.includes('admin') ||
-        link.getAttribute('href')?.includes('admin')
-    );
-    
+    // Find all admin links
+    const adminLinks = document.querySelectorAll('a[href*="/admin"]');
     console.log('🔍 Found admin links:', adminLinks.length);
     
     adminLinks.forEach((link, index) => {
-        console.log(`🔗 Admin link ${index + 1}:`, {
-            href: link.href,
-            text: link.textContent.trim(),
-            id: link.id
-        });
-        
-        // Remove existing event listeners by cloning the element
-        const newLink = link.cloneNode(true);
-        link.parentNode.replaceChild(newLink, link);
+        console.log(`🔗 Admin link ${index + 1}:`, { href: link.href, text: link.textContent, id: link.id });
         
         // Add click event listener
-        newLink.addEventListener('click', function(event) {
-            console.log(`🔐 Admin link clicked: ${newLink.href}`);
+        link.addEventListener('click', function(e) {
+            const savedUser = localStorage.getItem('currentUser');
+            if (!savedUser) {
+                e.preventDefault();
+                alert('Please login to access admin features');
+                return;
+            }
             
-            // Check admin access
-            if (!checkAdminAccess(event)) {
-                console.log('❌ Admin access denied');
-            } else {
-                console.log('✅ Admin access granted');
+            try {
+                const user = JSON.parse(savedUser);
+                if (user.role !== 'admin') {
+                    e.preventDefault();
+                    alert('Admin access required');
+                    return;
+                }
+            } catch (error) {
+                e.preventDefault();
+                alert('Invalid user session');
+                return;
             }
         });
         
         console.log(`✅ Added admin access check to link ${index + 1}`);
     });
     
-    // Also check for admin activity links in dropdown menus
-    const dropdownLinks = document.querySelectorAll('.dropdown-item a, .user-dropdown a');
-    dropdownLinks.forEach((link, index) => {
-        if (link.textContent.includes('Admin Activity')) {
-            console.log(`🔗 Found admin activity link in dropdown ${index + 1}:`, link.textContent.trim());
+    // Also check for admin links in dropdown menus
+    const dropdowns = document.querySelectorAll('.dropdown-menu a');
+    dropdowns.forEach((link, index) => {
+        if (link.textContent.includes('Admin') || link.href.includes('/admin')) {
+            console.log(`🔗 Found admin activity link in dropdown ${index + 1}:`, link.textContent);
             
-            // Remove existing event listeners by cloning the element
-            const newLink = link.cloneNode(true);
-            link.parentNode.replaceChild(newLink, link);
-            
-            // Add click event listener
-            newLink.addEventListener('click', function(event) {
-                console.log(`🔐 Admin activity link clicked: ${newLink.textContent.trim()}`);
+            link.addEventListener('click', function(e) {
+                const savedUser = localStorage.getItem('currentUser');
+                if (!savedUser) {
+                    e.preventDefault();
+                    alert('Please login to access admin features');
+                    return;
+                }
                 
-                // Check admin access
-                if (!checkAdminAccess(event)) {
-                    console.log('❌ Admin access denied');
-                } else {
-                    console.log('✅ Admin access granted');
+                try {
+                    const user = JSON.parse(savedUser);
+                    if (user.role !== 'admin') {
+                        e.preventDefault();
+                        alert('Admin access required');
+                        return;
+                    }
+                } catch (error) {
+                    e.preventDefault();
+                    alert('Invalid user session');
+                    return;
                 }
             });
             
@@ -1250,4 +1262,5 @@ function setupAdminAccessChecks() {
     });
     
     console.log('✅ Admin access checks setup complete');
+    window.adminChecksSetup = true;
 }

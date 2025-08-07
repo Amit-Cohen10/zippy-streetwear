@@ -842,7 +842,7 @@ function testCartFunctionality() {
         console.log('Cart data status:', {
             cartItems: window.cartItems ? window.cartItems.length : 0,
             isLoggedIn: window.isLoggedIn,
-            localStorage: localStorage.getItem('zippyCart') ? 'Available' : 'Not available'
+            localStorage: typeof localStorage !== 'undefined' ? 'Available' : 'Not available'
         });
         
         console.log('Cart functionality test completed');
@@ -857,7 +857,7 @@ function getCartStatus() {
         const status = {
             cartItems: window.cartItems ? window.cartItems.length : 0,
             isLoggedIn: window.isLoggedIn,
-            localStorage: localStorage.getItem('zippyCart') ? 'Available' : 'Not available',
+            localStorage: typeof localStorage !== 'undefined' ? 'Available' : 'Not available',
             totalItems: 0,
             totalValue: 0
         };

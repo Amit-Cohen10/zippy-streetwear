@@ -335,4 +335,27 @@ router.put('/profile', async (req, res) => {
   }
 });
 
+// Get all users (for exchange stats)
+router.get('/users', async (req, res) => {
+  try {
+    const users = await persist.readData(persist.usersFile);
+    
+    // Return only public user data (no passwords, tokens, etc.)
+    const publicUsers = users.map(user => ({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      profile: user.profile,
+      preferences: user.preferences
+    }));
+    
+    res.json({ users: publicUsers });
+    
+  } catch (error) {
+    console.error('Users fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
 module.exports = router; 
