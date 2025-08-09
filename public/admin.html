@@ -749,7 +749,14 @@
                             <i class="fas fa-sync-alt"></i> Refresh
                         </button>
                     </div>
-                    <div class="table-container">
+                    <div style="display:flex; align-items:center; gap:12px; margin: 10px 0 0 0; flex-wrap: wrap;">
+                        <input id="usernamePrefixFilter" type="text" placeholder="Filter by username prefix (e.g. abc)" style="
+                            padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(0,255,255,0.3);
+                            background: rgba(0,255,255,0.05); color: #fff; min-width: 260px;">
+                        <button class="refresh-btn" onclick="applyActivityFilter()"><i class="fas fa-filter"></i> Apply Filter</button>
+                        <button class="refresh-btn" onclick="clearActivityFilter()"><i class="fas fa-times"></i> Clear</button>
+                    </div>
+                    <div class="table-container" style="margin-top: 10px;">
                         <table class="activity-table">
                             <thead>
                                 <tr>
@@ -796,6 +803,59 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Products Section -->
+            <div class="section-card" style="margin-top: 30px;">
+                <div class="section-header">
+                    <div class="section-icon">🧰</div>
+                    <div class="section-title">Manage Products</div>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <form id="createProductForm" style="display:flex; flex-direction:column; gap:10px;">
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                            <input required name="title" placeholder="Title" style="padding:10px; border-radius:8px; border:1px solid rgba(0,255,255,0.3); background: rgba(0,255,255,0.05); color:#fff;">
+                            <input required name="price" type="number" min="0" step="0.01" placeholder="Price" style="padding:10px; border-radius:8px; border:1px solid rgba(0,255,255,0.3); background: rgba(0,255,255,0.05); color:#fff;">
+                        </div>
+                        <textarea required name="description" placeholder="Description" rows="3" style="padding:10px; border-radius:8px; border:1px solid rgba(0,255,255,0.3); background: rgba(0,255,255,0.05); color:#fff;"></textarea>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                            <select required name="category" id="adminCategorySelect" style="padding:10px; border-radius:8px; border:1px solid rgba(0,255,255,0.3); background: rgba(0,255,255,0.05); color:#fff;"></select>
+                            <select required name="brand" id="adminBrandSelect" style="padding:10px; border-radius:8px; border:1px solid rgba(0,255,255,0.3); background: rgba(0,255,255,0.05); color:#fff;"></select>
+                        </div>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                            <input name="sizes" placeholder="Sizes (comma-separated, e.g. S,M,L)" value="S,M,L,XL" style="padding:10px; border-radius:8px; border:1px solid rgba(0,255,255,0.3); background: rgba(0,255,255,0.05); color:#fff;">
+                            <input name="defaultStock" type="number" min="0" step="1" value="10" placeholder="Default stock per size" style="padding:10px; border-radius:8px; border:1px solid rgba(0,255,255,0.3); background: rgba(0,255,255,0.05); color:#fff;">
+                        </div>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; align-items:center;">
+                            <input name="imageUrl" placeholder="Image URL (optional)" style="padding:10px; border-radius:8px; border:1px solid rgba(0,255,255,0.3); background: rgba(0,255,255,0.05); color:#fff;">
+                            <input name="imageFile" type="file" accept="image/*" style="padding:8px; border-radius:8px; border:1px solid rgba(0,255,255,0.3); background: rgba(0,255,255,0.05); color:#fff;">
+                        </div>
+                        <button class="refresh-btn" type="submit" style="padding: 12px; font-weight:600;">
+                            <i class="fas fa-plus"></i> Create Product
+                        </button>
+                    </form>
+
+                    <div>
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                            <h3 style="color:#00ffff; font-size:1.1rem;">Existing Products</h3>
+                            <button class="refresh-btn" onclick="loadProductsForAdmin()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                        </div>
+                        <div class="table-container" style="max-height: 360px;">
+                            <table class="user-table">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Price</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminProductsTableBody">
+                                    <tr><td colspan="3" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading products...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

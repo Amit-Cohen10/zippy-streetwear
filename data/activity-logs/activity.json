@@ -1393,5 +1393,63 @@
     },
     "timestamp": "2025-08-08T09:25:18.245Z",
     "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754645347215-ecwsdzfzu",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-08T09:29:07.215Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754770949801-jlgfwl762",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-09T20:22:29.801Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754770952316-1uv1zinn3",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "logout",
+    "details": {
+      "username": "amitcohen",
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-09T20:22:32.316Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754770960069-7lyhl8prj",
+    "userId": "admin-001",
+    "action": "login",
+    "details": {
+      "username": "admin",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-09T20:22:40.069Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754771538063-wrqolrw8f",
+    "userId": "admin-001",
+    "action": "product_create",
+    "details": {
+      "productId": "prod-1754771538062-eql88rnzq",
+      "title": "NeoMatrix Flux Hoodie"
+    },
+    "timestamp": "2025-08-09T20:32:18.063Z",
+    "ip": "unknown"
   }
 ]

@@ -1,6 +1,7 @@
 // Admin panel functionality
 let activityData = [];
 let userData = [];
+let adminProducts = [];
 
 document.addEventListener('DOMContentLoaded', function() {
     initAdmin();
@@ -137,6 +138,28 @@ function displayActivityTable(activities) {
     }).join('');
     
     tableBody.innerHTML = html;
+}
+
+// Filter activity by username prefix
+function applyActivityFilter() {
+  const input = document.getElementById('usernamePrefixFilter');
+  if (!input) return;
+  const prefix = (input.value || '').trim().toLowerCase();
+  if (!prefix) {
+    displayActivityTable(activityData);
+    return;
+  }
+  const filtered = activityData.filter(a => {
+    const uname = (a.user?.username || a.details?.username || '').toLowerCase();
+    return uname.startsWith(prefix);
+  });
+  displayActivityTable(filtered);
+}
+
+function clearActivityFilter() {
+  const input = document.getElementById('usernamePrefixFilter');
+  if (input) input.value = '';
+  displayActivityTable(activityData);
 }
 
 async function loadUserData() {
@@ -298,6 +321,168 @@ window.loadActivityData = loadActivityData;
 window.loadUserData = loadUserData;
 window.loadStatistics = loadStatistics;
 window.loadAllData = loadAllData;
+window.applyActivityFilter = applyActivityFilter;
+window.clearActivityFilter = clearActivityFilter;
+
+// ---------------
+// Manage products
+// ---------------
+
+async function loadProductsForAdmin() {
+  try {
+    const tbody = document.getElementById('adminProductsTableBody');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="3" class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading products...</td></tr>';
+    const res = await fetch('/api/products?limit=500&page=1', { credentials: 'include' });
+    const data = await res.json();
+    adminProducts = data.products || [];
+    renderAdminProducts();
+  } catch (e) {
+    showError('Failed to load products');
+  }
+}
+
+function renderAdminProducts() {
+  const tbody = document.getElementById('adminProductsTableBody');
+  if (!tbody) return;
+  if (!adminProducts.length) {
+    tbody.innerHTML = '<tr><td colspan="3" class="no-data">No products yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = adminProducts.map(p => `
+    <tr>
+      <td>${p.title}</td>
+      <td>$${Number(p.price).toFixed(2)}</td>
+      <td>
+        <button class="refresh-btn" onclick="deleteAdminProduct('${p.id}')"><i class="fas fa-trash"></i> Remove</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function deleteAdminProduct(id) {
+  if (!confirm('Delete this product?')) return;
+  try {
+    const res = await fetch(`/api/products/${id}`, { method: 'DELETE', credentials: 'include' });
+    if (!res.ok) throw new Error('Delete failed');
+    showSuccess('Product deleted');
+    await loadProductsForAdmin();
+  } catch (e) {
+    showError('Failed to delete product');
+  }
+}
+
+async function handleCreateProductSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const title = form.title.value.trim();
+  const description = form.description.value.trim();
+  const price = parseFloat(form.price.value);
+  const category = form.category.value.trim();
+  const brand = form.brand.value.trim();
+  const sizesCsv = (form.sizes.value || '').trim();
+  const defaultStock = parseInt(form.defaultStock.value || '0', 10);
+  const imageUrl = (form.imageUrl.value || '').trim();
+  const fileInput = form.imageFile;
+
+  const sizes = sizesCsv ? sizesCsv.split(',').map(s => s.trim()).filter(Boolean) : [];
+  const stock = sizes.reduce((acc, size) => { acc[size] = defaultStock; return acc; }, {});
+
+  // Upload image first (file takes precedence, else URL)
+  const images = [];
+  try {
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+      const fd = new FormData();
+      fd.append('productTitle', title);
+      fd.append('image', fileInput.files[0]);
+      fd.append('fileName', title);
+      const up = await fetch('/api/admin/upload-image', { method: 'POST', body: fd, credentials: 'include' });
+      if (!up.ok) throw new Error('Upload failed');
+      const upJson = await up.json();
+      if (upJson.path) images.push(upJson.path);
+    } else if (imageUrl) {
+      const up = await fetch('/api/admin/upload-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productTitle: title, imageUrl, fileName: title }),
+        credentials: 'include'
+      });
+      if (!up.ok) throw new Error('Upload failed');
+      const upJson = await up.json();
+      if (upJson.path) images.push(upJson.path);
+    }
+  } catch (error) {
+    showError('Image upload failed');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ title, description, price, category, brand, sizes, stock, images })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Create failed');
+    }
+    showSuccess('Product created');
+    form.reset();
+    await loadProductsForAdmin();
+  } catch (e) {
+    showError(e.message || 'Failed to create product');
+  }
+}
+
+// Attach listeners after DOM load
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('createProductForm');
+  if (form) form.addEventListener('submit', handleCreateProductSubmit);
+  loadProductsForAdmin();
+  populateAdminCategoryBrandOptions();
+});
+
+// Expose for inline handlers
+window.deleteAdminProduct = deleteAdminProduct;
+window.loadProductsForAdmin = loadProductsForAdmin;
+
+async function populateAdminCategoryBrandOptions() {
+  try {
+    const [catsRes, brandsRes] = await Promise.all([
+      fetch('/api/products/categories/list', { credentials: 'include' }),
+      fetch('/api/products/brands/list', { credentials: 'include' })
+    ]);
+    const cats = await catsRes.json().catch(() => ({ categories: [] }));
+    const brands = await brandsRes.json().catch(() => ({ brands: [] }));
+    const catSel = document.getElementById('adminCategorySelect');
+    const brandSel = document.getElementById('adminBrandSelect');
+
+    // Only allow known categories: exactly the existing ones in the catalog
+    const knownCats = (cats.categories || []).filter(Boolean);
+    const knownBrands = (brands.brands || []).filter(Boolean);
+
+    if (catSel) {
+      catSel.innerHTML = '';
+      knownCats.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        catSel.appendChild(opt);
+      });
+    }
+    if (brandSel) {
+      brandSel.innerHTML = '';
+      knownBrands.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b;
+        opt.textContent = b;
+        brandSel.appendChild(opt);
+      });
+    }
+  } catch (e) {
+    console.warn('Failed to populate categories/brands:', e);
+  }
+}
 
 // Initialize when DOM is loaded
 if (document.readyState === 'loading') {

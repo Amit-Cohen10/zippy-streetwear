@@ -1,4 +1,12 @@
 const express = require('express');
+const path = require('path');
+const fs = require('fs').promises;
+const multer = require('multer');
+// node-fetch v3 is ESM; use global fetch if available, otherwise dynamic import
+const dynamicFetch = (...args) => (typeof fetch !== 'undefined'
+  ? fetch(...args)
+  : import('node-fetch').then(({ default: f }) => f(...args))
+);
 const persist = require('./persist_module');
 
 const router = express.Router();
@@ -628,3 +636,70 @@ router.get('/users', requireAdmin, async (req, res) => {
 });
 
 module.exports = router; 
+
+// --------------------
+// Admin assets upload
+// --------------------
+
+// Storage is computed dynamically based on productTitle; we'll save manually
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
+
+function sanitizeFileName(name) {
+  // Keep spaces for consistency with existing structure; strip path separators
+  return name.replace(/[\\/:*?"<>|]/g, '').trim();
+}
+
+async function ensureDir(dirPath) {
+  await fs.mkdir(dirPath, { recursive: true });
+}
+
+// Upload a product image via multipart file or remote URL
+router.post('/upload-image', requireAdmin, upload.single('image'), async (req, res) => {
+  try {
+    const { productTitle, imageUrl, fileName } = req.body;
+    if (!productTitle || productTitle.trim().length < 1) {
+      return res.status(400).json({ error: 'productTitle is required' });
+    }
+
+    const safeTitle = sanitizeFileName(productTitle);
+    const baseDir = path.join(__dirname, '..', 'public', 'images', 'products', safeTitle);
+    await ensureDir(baseDir);
+
+    let finalFileName = sanitizeFileName(fileName || `${safeTitle}`);
+    let buffer = null;
+    let inferredExt = 'png';
+
+    if (req.file) {
+      buffer = req.file.buffer;
+      const original = req.file.originalname || '';
+      const ext = original.split('.').pop();
+      if (ext && ext.length <= 4) inferredExt = ext.toLowerCase();
+    } else if (imageUrl) {
+      const response = await dynamicFetch(imageUrl);
+      if (!response.ok) {
+        return res.status(400).json({ error: 'Failed to download image from URL' });
+      }
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('jpeg')) inferredExt = 'jpg';
+      else if (contentType.includes('png')) inferredExt = 'png';
+      else if (contentType.includes('webp')) inferredExt = 'webp';
+      else if (contentType.includes('gif')) inferredExt = 'gif';
+      buffer = Buffer.from(await response.arrayBuffer());
+    } else {
+      return res.status(400).json({ error: 'Provide either a file (image) or imageUrl' });
+    }
+
+    if (!finalFileName.toLowerCase().endsWith(`.${inferredExt}`)) {
+      finalFileName = `${finalFileName}.${inferredExt}`;
+    }
+
+    const absolutePath = path.join(baseDir, finalFileName);
+    await fs.writeFile(absolutePath, buffer);
+
+    const publicPath = `/images/products/${safeTitle}/${finalFileName}`;
+    return res.status(201).json({ message: 'Image uploaded', path: publicPath });
+  } catch (error) {
+    console.error('Upload image error:', error);
+    return res.status(500).json({ error: 'Failed to upload image' });
+  }
+});

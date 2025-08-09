@@ -44,6 +44,33 @@ const validateProduct = (req, res, next) => {
   next();
 };
 
+// Enforce category and brand to be from existing catalog
+const enforceKnownCategoryBrand = async (req, res, next) => {
+  try {
+    const products = await persist.readData(persist.productsFile);
+    const categories = [...new Set(products.map(p => p.category))]
+      .filter(Boolean)
+      .map(v => String(v).toLowerCase());
+    const brands = [...new Set(products.map(p => p.brand))]
+      .filter(Boolean)
+      .map(v => String(v).toLowerCase());
+
+    const inputCategory = String(req.body.category || '').trim().toLowerCase();
+    const inputBrand = String(req.body.brand || '').trim().toLowerCase();
+
+    if (!categories.includes(inputCategory)) {
+      return res.status(400).json({ error: 'Category must be one of existing categories', allowedCategories: categories });
+    }
+    if (!brands.includes(inputBrand)) {
+      return res.status(400).json({ error: 'Brand must be one of existing brands', allowedBrands: brands });
+    }
+    next();
+  } catch (error) {
+    console.error('Category/Brand enforcement error:', error);
+    res.status(500).json({ error: 'Failed to validate category/brand' });
+  }
+};
+
 // Get all products with optional filtering
 router.get('/', async (req, res) => {
   try {
@@ -486,7 +513,7 @@ router.get('/admin/stats', requireAuth, async (req, res) => {
 });
 
 // Create new product (admin only)
-router.post('/', requireAuth, validateProduct, async (req, res) => {
+router.post('/', requireAuth, validateProduct, enforceKnownCategoryBrand, async (req, res) => {
   try {
     const { title, description, price, category, brand, sizes, stock, exchangeable, condition, images } = req.body;
     
@@ -528,7 +555,7 @@ router.post('/', requireAuth, validateProduct, async (req, res) => {
 });
 
 // Update product (admin only)
-router.put('/:id', requireAuth, validateProduct, async (req, res) => {
+router.put('/:id', requireAuth, validateProduct, enforceKnownCategoryBrand, async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;

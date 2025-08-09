@@ -8,8 +8,18 @@
       "/images/products/Circuit Board Hoodie/Circuit Board Hoodie.png"
     ],
     "category": "hoodies",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 10, "M": 15, "L": 12, "XL": 8},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 10,
+      "M": 15,
+      "L": 12,
+      "XL": 8
+    },
     "brand": "Zippy Originals",
     "exchangeable": true,
     "condition": "new",
@@ -24,8 +34,20 @@
       "/images/products/404 Not Found Tee/404 Not Found Tee.png"
     ],
     "category": "t-shirts",
-    "sizes": ["S", "M", "L", "XL", "XXL"],
-    "stock": {"S": 20, "M": 25, "L": 20, "XL": 15, "XXL": 10},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "stock": {
+      "S": 20,
+      "M": 25,
+      "L": 20,
+      "XL": 15,
+      "XXL": 10
+    },
     "brand": "Street Tech",
     "exchangeable": true,
     "condition": "new",
@@ -40,8 +62,20 @@
       "/images/products/Neon Cargo Pants/Neon Cargo Pants.png"
     ],
     "category": "pants",
-    "sizes": ["28", "30", "32", "34", "36"],
-    "stock": {"28": 8, "30": 12, "32": 15, "34": 10, "36": 6},
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "stock": {
+      "28": 8,
+      "30": 12,
+      "32": 15,
+      "34": 10,
+      "36": 6
+    },
     "brand": "Future Wear",
     "exchangeable": true,
     "condition": "new",
@@ -56,8 +90,18 @@
       "/images/products/Circuit Pattern Hoodie/Circuit Pattern Hoodie.png"
     ],
     "category": "hoodies",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 5, "M": 8, "L": 6, "XL": 4},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 5,
+      "M": 8,
+      "L": 6,
+      "XL": 4
+    },
     "brand": "Zippy Originals",
     "exchangeable": true,
     "condition": "new",
@@ -72,8 +116,18 @@
       "/images/products/Circuit Breaker Pants/Circuit Breaker Pants.png"
     ],
     "category": "pants",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 12, "M": 15, "L": 10, "XL": 8},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 12,
+      "M": 15,
+      "L": 10,
+      "XL": 8
+    },
     "brand": "Street Tech",
     "exchangeable": true,
     "condition": "new",
@@ -88,8 +142,20 @@
       "/images/products/Neural Network Hoodie/Neural Network Hoodie.png"
     ],
     "category": "hoodies",
-    "sizes": ["S", "M", "L", "XL", "XXL"],
-    "stock": {"S": 4, "M": 6, "L": 3, "XL": 10, "XXL": 6},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "stock": {
+      "S": 4,
+      "M": 6,
+      "L": 3,
+      "XL": 10,
+      "XXL": 6
+    },
     "brand": "Zippy Originals",
     "exchangeable": true,
     "condition": "new",
@@ -104,8 +170,18 @@
       "/images/products/Cyber Samurai Hoodie/Cyber Samurai Hoodie.png"
     ],
     "category": "hoodies",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 8, "M": 12, "L": 10, "XL": 6},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 8,
+      "M": 12,
+      "L": 10,
+      "XL": 6
+    },
     "brand": "Zippy Originals",
     "exchangeable": true,
     "condition": "new",
@@ -120,8 +196,20 @@
       "/images/products/Crypto Punk Tee/Crypto Punk Tee.png"
     ],
     "category": "t-shirts",
-    "sizes": ["S", "M", "L", "XL", "XXL"],
-    "stock": {"S": 15, "M": 20, "L": 18, "XL": 12, "XXL": 8},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "stock": {
+      "S": 15,
+      "M": 20,
+      "L": 18,
+      "XL": 12,
+      "XXL": 8
+    },
     "brand": "Street Tech",
     "exchangeable": true,
     "condition": "new",
@@ -136,8 +224,18 @@
       "/images/products/SYSTEM OVERRIDE Tee/SYSTEM OVERRIDE Tee.png"
     ],
     "category": "t-shirts",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 10, "M": 15, "L": 12, "XL": 8},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 10,
+      "M": 15,
+      "L": 12,
+      "XL": 8
+    },
     "brand": "Street Tech",
     "exchangeable": true,
     "condition": "new",
@@ -152,8 +250,20 @@
       "/images/products/Quantum Circuit Hoodie/Quantum Circuit Hoodie.png"
     ],
     "category": "hoodies",
-    "sizes": ["S", "M", "L", "XL", "XXL"],
-    "stock": {"S": 6, "M": 8, "L": 5, "XL": 7, "XXL": 4},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "stock": {
+      "S": 6,
+      "M": 8,
+      "L": 5,
+      "XL": 7,
+      "XXL": 4
+    },
     "brand": "Zippy Originals",
     "exchangeable": true,
     "condition": "new",
@@ -168,8 +278,18 @@
       "/images/products/Code Cargo Pants/Code Cargo Pants.png"
     ],
     "category": "pants",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 4, "M": 6, "L": 4, "XL": 3},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 4,
+      "M": 6,
+      "L": 4,
+      "XL": 3
+    },
     "brand": "Future Wear",
     "exchangeable": true,
     "condition": "new",
@@ -184,8 +304,20 @@
       "/images/products/Digital Glitch Tee/Digital Glitch Tee.png"
     ],
     "category": "t-shirts",
-    "sizes": ["28", "30", "32", "34", "36"],
-    "stock": {"28": 6, "30": 10, "32": 12, "34": 8, "36": 5},
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "stock": {
+      "28": 6,
+      "30": 10,
+      "32": 12,
+      "34": 8,
+      "36": 5
+    },
     "brand": "Future Wear",
     "exchangeable": true,
     "condition": "new",
@@ -200,8 +332,20 @@
       "/images/products/Code Warrior Tee/Code Warrior Tee.png"
     ],
     "category": "t-shirts",
-    "sizes": ["S", "M", "L", "XL", "XXL"],
-    "stock": {"S": 18, "M": 22, "L": 20, "XL": 15, "XXL": 10},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "stock": {
+      "S": 18,
+      "M": 22,
+      "L": 20,
+      "XL": 15,
+      "XXL": 10
+    },
     "brand": "Street Tech",
     "exchangeable": true,
     "condition": "new",
@@ -216,8 +360,18 @@
       "/images/products/Augmented Tee/Augmented Tee.png"
     ],
     "category": "t-shirts",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 12, "M": 16, "L": 14, "XL": 10},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 12,
+      "M": 16,
+      "L": 14,
+      "XL": 10
+    },
     "brand": "Street Tech",
     "exchangeable": true,
     "condition": "new",
@@ -232,8 +386,20 @@
       "/images/products/Glitch Reality Hoodie/Glitch Reality Hoodie.png"
     ],
     "category": "hoodies",
-    "sizes": ["S", "M", "L", "XL", "XXL"],
-    "stock": {"S": 7, "M": 10, "L": 8, "XL": 6, "XXL": 4},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "stock": {
+      "S": 7,
+      "M": 10,
+      "L": 8,
+      "XL": 6,
+      "XXL": 4
+    },
     "brand": "Zippy Originals",
     "exchangeable": true,
     "condition": "new",
@@ -248,8 +414,18 @@
       "/images/products/Quantum Hoodie/Quantum Hoodie.png"
     ],
     "category": "hoodies",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 3, "M": 5, "L": 4, "XL": 2},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 3,
+      "M": 5,
+      "L": 4,
+      "XL": 2
+    },
     "brand": "Future Wear",
     "exchangeable": true,
     "condition": "new",
@@ -264,8 +440,20 @@
       "/images/products/Cyber Ninja Pants/Cyber Ninja Pants.png"
     ],
     "category": "pants",
-    "sizes": ["28", "30", "32", "34", "36"],
-    "stock": {"28": 5, "30": 8, "32": 10, "34": 7, "36": 4},
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "stock": {
+      "28": 5,
+      "30": 8,
+      "32": 10,
+      "34": 7,
+      "36": 4
+    },
     "brand": "Future Wear",
     "exchangeable": true,
     "condition": "new",
@@ -280,8 +468,18 @@
       "/images/products/Data Runner Pants/Data Runner Pants.png"
     ],
     "category": "pants",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 10, "M": 12, "L": 8, "XL": 6},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 10,
+      "M": 12,
+      "L": 8,
+      "XL": 6
+    },
     "brand": "Street Tech",
     "exchangeable": true,
     "condition": "new",
@@ -296,8 +494,20 @@
       "/images/products/Cyber Rose Tee/Cyber Rose Tee.png"
     ],
     "category": "t-shirts",
-    "sizes": ["S", "M", "L", "XL", "XXL"],
-    "stock": {"S": 20, "M": 25, "L": 22, "XL": 18, "XXL": 12},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "stock": {
+      "S": 20,
+      "M": 25,
+      "L": 22,
+      "XL": 18,
+      "XXL": 12
+    },
     "brand": "Street Tech",
     "exchangeable": true,
     "condition": "new",
@@ -312,8 +522,18 @@
       "/images/products/CRYPTO PUNK/CRYPTO PUNK.png"
     ],
     "category": "t-shirts",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 8, "M": 12, "L": 10, "XL": 7},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 8,
+      "M": 12,
+      "L": 10,
+      "XL": 7
+    },
     "brand": "Zippy Originals",
     "exchangeable": true,
     "condition": "new",
@@ -328,8 +548,18 @@
       "/images/products/Electric Night Tee/Electric Night Tee.png"
     ],
     "category": "t-shirts",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 4, "M": 6, "L": 5, "XL": 3},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 4,
+      "M": 6,
+      "L": 5,
+      "XL": 3
+    },
     "brand": "Future Wear",
     "exchangeable": true,
     "condition": "new",
@@ -344,8 +574,20 @@
       "/images/products/Grid Walker Pants/Grid Walker Pants.png"
     ],
     "category": "pants",
-    "sizes": ["28", "30", "32", "34", "36"],
-    "stock": {"28": 6, "30": 9, "32": 11, "34": 8, "36": 5},
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "stock": {
+      "28": 6,
+      "30": 9,
+      "32": 11,
+      "34": 8,
+      "36": 5
+    },
     "brand": "Future Wear",
     "exchangeable": true,
     "condition": "new",
@@ -360,8 +602,18 @@
       "/images/products/Holo Flex Pants/Holo Flex Pants.png"
     ],
     "category": "pants",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 9, "M": 11, "L": 8, "XL": 6},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 9,
+      "M": 11,
+      "L": 8,
+      "XL": 6
+    },
     "brand": "Street Tech",
     "exchangeable": true,
     "condition": "new",
@@ -376,8 +628,20 @@
       "/images/products/Neon Pulse Tee/Neon Pulse Tee.png"
     ],
     "category": "t-shirts",
-    "sizes": ["S", "M", "L", "XL", "XXL"],
-    "stock": {"S": 16, "M": 20, "L": 18, "XL": 14, "XXL": 10},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "stock": {
+      "S": 16,
+      "M": 20,
+      "L": 18,
+      "XL": 14,
+      "XXL": 10
+    },
     "brand": "Street Tech",
     "exchangeable": true,
     "condition": "new",
@@ -392,8 +656,18 @@
       "/images/products/Neon Racer Pants/Neon Racer Pants.png"
     ],
     "category": "pants",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 7, "M": 10, "L": 8, "XL": 6},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 7,
+      "M": 10,
+      "L": 8,
+      "XL": 6
+    },
     "brand": "Zippy Originals",
     "exchangeable": true,
     "condition": "new",
@@ -408,8 +682,20 @@
       "/images/products/Shadow Tech Pants/Shadow Tech Pants.png"
     ],
     "category": "pants",
-    "sizes": ["28", "30", "32", "34", "36"],
-    "stock": {"28": 5, "30": 8, "32": 10, "34": 7, "36": 4},
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "stock": {
+      "28": 5,
+      "30": 8,
+      "32": 10,
+      "34": 7,
+      "36": 4
+    },
     "brand": "Future Wear",
     "exchangeable": true,
     "condition": "new",
@@ -424,8 +710,18 @@
       "/images/products/Pixel Art Tee/Pixel Art Tee.png"
     ],
     "category": "t-shirts",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 8, "M": 10, "L": 7, "XL": 5},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 8,
+      "M": 10,
+      "L": 7,
+      "XL": 5
+    },
     "brand": "Street Tech",
     "exchangeable": true,
     "condition": "new",
@@ -440,8 +736,18 @@
       "/images/products/Vapor Dream Tee/Vapor Dream Tee.png"
     ],
     "category": "t-shirts",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 3, "M": 5, "L": 4, "XL": 2},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 3,
+      "M": 5,
+      "L": 4,
+      "XL": 2
+    },
     "brand": "Future Wear",
     "exchangeable": true,
     "condition": "new",
@@ -456,8 +762,20 @@
       "/images/products/Neon Cyber Grid Hoodie/Neon Cyber Grid Hoodie.png"
     ],
     "category": "hoodies",
-    "sizes": ["S", "M", "L", "XL", "XXL"],
-    "stock": {"S": 18, "M": 22, "L": 20, "XL": 16, "XXL": 12},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "stock": {
+      "S": 18,
+      "M": 22,
+      "L": 20,
+      "XL": 16,
+      "XXL": 12
+    },
     "brand": "Street Tech",
     "exchangeable": true,
     "condition": "new",
@@ -472,11 +790,47 @@
       "/images/products/Urban Operator Pants/Urban Operator Pants.png"
     ],
     "category": "pants",
-    "sizes": ["S", "M", "L", "XL"],
-    "stock": {"S": 6, "M": 9, "L": 7, "XL": 5},
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 6,
+      "M": 9,
+      "L": 7,
+      "XL": 5
+    },
     "brand": "Zippy Originals",
     "exchangeable": true,
     "condition": "new",
     "createdAt": "2025-07-30T13:53:39.225Z"
+  },
+  {
+    "id": "prod-1754771538062-eql88rnzq",
+    "title": "NeoMatrix Flux Hoodie",
+    "description": "New shirt arrive",
+    "price": 100,
+    "images": [
+      "/images/products/NeoMatrix Flux Hoodie/NeoMatrix Flux Hoodie.png"
+    ],
+    "category": "hoodies",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "stock": {
+      "S": 10,
+      "M": 10,
+      "L": 10,
+      "XL": 10
+    },
+    "brand": "Zippy Originals",
+    "exchangeable": true,
+    "condition": "new",
+    "createdAt": "2025-08-09T20:32:18.062Z"
   }
 ]
