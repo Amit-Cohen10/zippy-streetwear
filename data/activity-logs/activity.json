@@ -1533,5 +1533,16 @@
     },
     "timestamp": "2025-08-15T09:14:10.839Z",
     "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1755951905998-7up9ypqpo",
+    "userId": "admin-001",
+    "action": "logout",
+    "details": {
+      "username": "admin",
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-23T12:25:05.998Z",
+    "ip": "127.0.0.1"
   }
 ]
