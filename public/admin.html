@@ -278,65 +278,52 @@
         </div>
     </nav>
 
-    <!-- סקריפט מיידי לעדכון מצב הכפתור ללא עיכוב -->
+    <!-- Immediate script to update button state without delay -->
     <script>
     (function() {
-        console.log('⚡ Immediate button state check...');
+        console.log("⚡ Immediate button state check...");
         
-        // Wait for page to fully load before checking
-        function updateButtonWithDelay() {
-            // בדיקה מיידית של מצב ההתחברות
-            const savedUser = localStorage.getItem('currentUser');
-            let isLoggedIn = false;
-            let username = '';
-            
-            if (savedUser) {
-                try {
-                    const user = JSON.parse(savedUser);
-                    isLoggedIn = true;
-                    username = user.profile?.displayName || user.username || 'User';
-                    console.log('⚡ Found user immediately:', username);
-                } catch (e) {
-                    console.log('❌ Error parsing user data:', e);
-                }
-            }
-            
-            // עדכון מיידי כשהדף נטען
-            function updateButtonImmediate() {
-                const authBtn = document.getElementById('authBtn');
-                const userMenu = document.getElementById('userMenu');
-                const usernameDisplay = document.getElementById('usernameDisplay');
-                
-                if (isLoggedIn && username) {
-                    // משתמש מחובר - הצג את שם המשתמש מיד
-                    if (authBtn) authBtn.style.display = 'none';
-                    if (userMenu) userMenu.style.display = 'inline-block';
-                    if (usernameDisplay) usernameDisplay.textContent = username;
-                    console.log('⚡ Button set to username immediately:', username);
-                } else {
-                    // משתמש לא מחובר - הצג LOGIN מיד
-                    if (authBtn) authBtn.style.display = 'inline-block';
-                    if (userMenu) userMenu.style.display = 'none';
-                    console.log('⚡ Button set to LOGIN immediately');
-                }
-            }
-            
-            // נסה עכשיו מיד, ואם לא עובד אז כשהדף יסיים לטעון
-            updateButtonImmediate();
-            
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', updateButtonImmediate);
+        // Immediate check of login status
+        const savedUser = localStorage.getItem("currentUser");
+        let isLoggedIn = false;
+        let username = "";
+        
+        if (savedUser) {
+            try {
+                const user = JSON.parse(savedUser);
+                isLoggedIn = true;
+                username = user.profile?.displayName || user.username || "User";
+                console.log("⚡ Found user immediately:", username);
+            } catch (e) {
+                console.log("❌ Error parsing user data:", e);
             }
         }
         
-        // Wait a bit before checking to avoid false negatives
-        setTimeout(updateButtonWithDelay, 300);
+        // Immediate update when page loads
+        function updateButtonImmediate() {
+            const authBtn = document.getElementById("authBtn");
+            const userMenu = document.getElementById("userMenu");
+            const usernameDisplay = document.getElementById("usernameDisplay");
+            
+            if (isLoggedIn && username) {
+                // User logged in - show username immediately
+                if (authBtn) authBtn.style.display = "none";
+                if (userMenu) userMenu.style.display = "inline-block";
+                if (usernameDisplay) usernameDisplay.textContent = username;
+                console.log("⚡ Button set to username immediately:", username);
+            } else {
+                // User not logged in - show LOGIN immediately
+                if (authBtn) authBtn.style.display = "inline-block";
+                if (userMenu) userMenu.style.display = "none";
+                console.log("⚡ Button set to LOGIN immediately");
+            }
+        }
         
-        // Also check when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                setTimeout(updateButtonWithDelay, 500);
-            });
+        // Try now immediately, and if it doesn't work then when the page finishes loading
+        updateButtonImmediate();
+        
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", updateButtonImmediate);
         }
     })();
     </script>
@@ -825,7 +812,7 @@
                             <select required name="brand" id="adminBrandSelect" style="padding:10px; border-radius:8px; border:1px solid rgba(0,255,255,0.3); background: rgba(0,255,255,0.05); color:#fff;"></select>
                         </div>
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                            <input name="sizes" placeholder="Sizes (comma-separated, e.g. S,M,L)" value="S,M,L,XL" style="padding:10px; border-radius:8px; border:1px solid rgba(0,255,255,0.3); background: rgba(0,255,255,0.05); color:#fff;">
+                            <input name="sizes" placeholder="Sizes (comma-separated, e.g. S,M,L,XL)" value="S,M,L,XL" style="padding:10px; border-radius:8px; border:1px solid rgba(0,255,255,0.3); background: rgba(0,255,255,0.05); color:#fff;">
                             <input name="defaultStock" type="number" min="0" step="1" value="10" placeholder="Default stock per size" style="padding:10px; border-radius:8px; border:1px solid rgba(0,255,255,0.3); background: rgba(0,255,255,0.05); color:#fff;">
                         </div>
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; align-items:center;">

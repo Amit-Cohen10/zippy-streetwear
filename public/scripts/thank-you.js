@@ -1,4 +1,4 @@
-// Thank you page functionality
+// Thank you page functionality - Project requirement: Upon payment, show "Thank you page" indicating payment was successful
 document.addEventListener('DOMContentLoaded', function() {
     initThankYouPage();
     

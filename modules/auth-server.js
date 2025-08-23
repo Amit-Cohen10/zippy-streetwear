@@ -5,7 +5,8 @@ const persist = require('./persist_module');
 
 const router = express.Router();
 
-// Middleware to validate input
+// This middleware checks if the user input is valid before processing registration
+// Project requirement: validate user input for security
 const validateRegistration = (req, res, next) => {
   const { username, email, password } = req.body;
   
@@ -29,7 +30,8 @@ const validateRegistration = (req, res, next) => {
   next();
 };
 
-// Register new user
+// Register new user - this is one of the main project requirements
+// Project requirement: Register screen - user must login to see other pages
 router.post('/register', validateRegistration, async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -46,10 +48,10 @@ router.post('/register', validateRegistration, async (req, res) => {
       return res.status(400).json({ error: 'Username or email already exists' });
     }
     
-    // Hash password
+    // Hash password for security - this is important for protecting user data
     const hashedPassword = await bcrypt.hash(password, 10);
     
-    // Create new user
+    // Create new user with all required fields
     const newUser = {
       id: persist.generateId('user'),
       username: username.toLowerCase(),
@@ -72,21 +74,22 @@ router.post('/register', validateRegistration, async (req, res) => {
     users.push(newUser);
     await persist.writeData(persist.usersFile, users);
     
-    // Log activity
+    // Log activity for admin panel - project requirement: track user activity
     await persist.logActivity(newUser.id, 'register', { 
       username, 
       email, 
       ip: req.ip 
     });
     
-    // Generate token
+    // Generate JWT token for authentication
     const token = jwt.sign(
       { userId: newUser.id, username: newUser.username },
       process.env.JWT_SECRET || 'zippy-secret-key',
       { expiresIn: '30m' }
     );
     
-    // Set cookie
+    // Set cookie - project requirement: use cookies for user management
+    // Cookie expires after 30 minutes as per project specs
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -111,7 +114,9 @@ router.post('/register', validateRegistration, async (req, res) => {
   }
 });
 
-// Login user
+// Login user - another main project requirement
+// Project requirement: Login screen + "remember me" checkbox
+// If "remember me" is checked, cookie expires after 12 days, otherwise after 30 minutes
 router.post('/login', async (req, res) => {
   try {
     const { username, password, rememberMe } = req.body;
@@ -130,13 +135,14 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
-    // Verify password
+    // Verify password using bcrypt for security
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
     // Generate token with different expiration based on rememberMe
+    // Project requirement: remember me checkbox affects cookie expiration
     const expiresIn = rememberMe ? '12d' : '30m';
     const token = jwt.sign(
       { userId: user.id, username: user.username },
@@ -144,7 +150,7 @@ router.post('/login', async (req, res) => {
       { expiresIn }
     );
     
-    // Set cookie
+    // Set cookie with appropriate expiration time
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -152,7 +158,7 @@ router.post('/login', async (req, res) => {
       maxAge: rememberMe ? 12 * 24 * 60 * 60 * 1000 : 30 * 60 * 1000 // 12 days or 30 minutes
     });
     
-    // Log activity
+    // Log activity for admin panel tracking
     await persist.logActivity(user.id, 'login', { 
       username: user.username, 
       rememberMe, 
@@ -177,19 +183,20 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Logout user
+// Logout user - project requirement: menu should include logout button
 router.post('/logout', async (req, res) => {
   try {
     const user = await persist.getUserFromToken(req);
     
     if (user) {
+      // Log logout activity for admin panel
       await persist.logActivity(user.id, 'logout', { 
         username: user.username, 
         ip: req.ip 
       });
     }
     
-    // Clear cookie
+    // Clear cookie to end user session
     res.clearCookie('token');
     res.json({ message: 'Logout successful' });
     
@@ -199,7 +206,7 @@ router.post('/logout', async (req, res) => {
   }
 });
 
-// Verify token
+// Verify token - used to check if user is still logged in
 router.get('/verify-token', async (req, res) => {
   try {
     const user = await persist.getUserFromToken(req);
@@ -226,7 +233,7 @@ router.get('/verify-token', async (req, res) => {
   }
 });
 
-// Check login status
+// Check login status - used by frontend to know if user is logged in
 router.get('/status', async (req, res) => {
   try {
     const user = await persist.getUserFromToken(req);
@@ -251,7 +258,7 @@ router.get('/status', async (req, res) => {
   }
 });
 
-// Get user profile
+// Get user profile - project requirement: user customization features
 router.get('/profile', async (req, res) => {
   try {
     const user = await persist.getUserFromToken(req);
@@ -277,7 +284,8 @@ router.get('/profile', async (req, res) => {
   }
 });
 
-// Update user profile
+// Update user profile - project requirement: user should be able to customize UI
+// This includes dark mode and other preferences that get saved to localStorage
 router.put('/profile', async (req, res) => {
   try {
     const user = await persist.getUserFromToken(req);
@@ -295,7 +303,7 @@ router.put('/profile', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
     
-    // Update profile
+    // Update profile fields
     if (displayName) {
       users[userIndex].profile.displayName = displayName;
     }
@@ -310,7 +318,7 @@ router.put('/profile', async (req, res) => {
     
     await persist.writeData(persist.usersFile, users);
     
-    // Log activity
+    // Log activity for admin tracking
     await persist.logActivity(user.id, 'profile_update', { 
       displayName, 
       avatar, 
@@ -335,12 +343,13 @@ router.put('/profile', async (req, res) => {
   }
 });
 
-// Get all users (for exchange stats)
+// Get all users - used for exchange stats and community features
+// Project requirement: additional pages with functionality that communicates with server
 router.get('/users', async (req, res) => {
   try {
     const users = await persist.readData(persist.usersFile);
     
-    // Return only public user data (no passwords, tokens, etc.)
+    // Return only public user data (no passwords, tokens, etc.) for security
     const publicUsers = users.map(user => ({
       id: user.id,
       username: user.username,

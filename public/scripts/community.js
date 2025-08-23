@@ -1,4 +1,5 @@
-// Community Feed JavaScript
+// Community Feed JavaScript - Project requirement: Additional pages with functionality that communicates with server
+// Project requirement: Each page functionality must communicate with the server
 console.log('Community Feed script loaded');
 
 document.addEventListener('DOMContentLoaded', function() {

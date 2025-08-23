@@ -1451,5 +1451,87 @@
     },
     "timestamp": "2025-08-09T20:32:18.063Z",
     "ip": "unknown"
+  },
+  {
+    "id": "act-1754812983906-4ochtw8vh",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-10T08:03:03.906Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754813616449-z6zm5y1s1",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "logout",
+    "details": {
+      "username": "amitcohen",
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-10T08:13:36.449Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754813624046-ym3u7vxcr",
+    "userId": "admin-001",
+    "action": "login",
+    "details": {
+      "username": "admin",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-10T08:13:44.046Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754989037318-37w9grcxu",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-12T08:57:17.319Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754989196930-erifi93m1",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "logout",
+    "details": {
+      "username": "amitcohen",
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-12T08:59:56.930Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1754989203805-q600i2fdy",
+    "userId": "admin-001",
+    "action": "login",
+    "details": {
+      "username": "admin",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-12T09:00:03.805Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1755249250839-wm6ba7470",
+    "userId": "admin-001",
+    "action": "login",
+    "details": {
+      "username": "admin",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-15T09:14:10.839Z",
+    "ip": "127.0.0.1"
   }
 ]

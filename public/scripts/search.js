@@ -1,4 +1,4 @@
-// Search functionality
+// Search functionality - Project requirement: Textual prefix search (support searching products by their name or description)
 document.addEventListener('DOMContentLoaded', function() {
     initSearch();
     

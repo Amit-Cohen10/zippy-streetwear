@@ -3,8 +3,12 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+// This is the main data persistence module - project requirement: implement data persistence in separate module
+// Project requirement: all data about users must be kept in files in the file system
+// On server startup, application loads existing data from disk
 class PersistModule {
   constructor() {
+    // Define file paths for different types of data
     this.dataDir = path.join(__dirname, '..', 'data');
     this.usersFile = path.join(this.dataDir, 'users', 'users.json');
     this.productsFile = path.join(this.dataDir, 'products', 'products.json');
@@ -19,16 +23,16 @@ class PersistModule {
 
   async initializeData() {
     try {
-      // Ensure directories exist
+      // Ensure directories exist for organizing data files
       await fs.mkdir(path.join(this.dataDir, 'users'), { recursive: true });
       await fs.mkdir(path.join(this.dataDir, 'products'), { recursive: true });
       await fs.mkdir(path.join(this.dataDir, 'exchanges'), { recursive: true });
       await fs.mkdir(path.join(this.dataDir, 'activity-logs'), { recursive: true });
 
-      // Initialize default admin user
+      // Initialize default admin user - project requirement: one user should already exist: "admin"/"admin"
       await this.initializeAdminUser();
       
-      // Initialize sample products
+      // Initialize sample products for the store
       await this.initializeSampleProducts();
       
       // Initialize empty data files if they don't exist
@@ -59,6 +63,7 @@ class PersistModule {
       const adminExists = users.find(user => user.username === 'admin');
       
       if (!adminExists) {
+        // Create default admin user as required by project specifications
         const hashedPassword = await bcrypt.hash('admin', 10);
         const adminUser = {
           id: 'admin-001',
@@ -193,6 +198,8 @@ class PersistModule {
     }
   }
 
+  // Log user activity - project requirement: track login/logout/add-to-cart for admin panel
+  // This data must be persisted: login activity
   async logActivity(userId, action, details = {}) {
     try {
       const activities = await this.readData(this.activityFile);
@@ -212,10 +219,12 @@ class PersistModule {
     }
   }
 
+  // Generate unique IDs for new items
   generateId(prefix = 'id') {
     return `${prefix}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 
+  // Validate JWT token for authentication
   async validateToken(token) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'zippy-secret-key');
@@ -227,6 +236,8 @@ class PersistModule {
     }
   }
 
+  // Get user from token or header - handles both cookie and header authentication
+  // Project requirement: use cookies to implement user management
   async getUserFromToken(req) {
     // Check for X-User-ID header first (for development/testing)
     const userId = req.headers['x-user-id'];
@@ -249,7 +260,7 @@ class PersistModule {
       }
     }
     
-    // Fallback to token-based authentication
+    // Fallback to token-based authentication using cookies
     const token = req.cookies.token || req.headers.authorization?.replace('Bearer ', '');
     if (!token) {
       console.log('❌ No token found in request');

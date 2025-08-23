@@ -1,4 +1,5 @@
-// Payment functionality
+// Payment functionality - Project requirement: Pay screen - fill payment details and click pay
+// Project requirement: Note that it's a fake payment
 console.log('Payment system loaded');
 
 // Initialize payment system

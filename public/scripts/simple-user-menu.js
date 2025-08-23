@@ -1,20 +1,20 @@
-// פתרון פשוט ונקי לתפריט המשתמש
-// ללא קונפליקטים עם קוד קיים
+// Simple and clean solution for user menu - Project requirement: menu should include logout button
+// No conflicts with existing code
 
 (function() {
     'use strict';
     
-    // מונה לחיצות לבדיקה
+    // Click counter for testing
     let clickCount = 0;
     let isInitialized = false;
     
-    // עדכון מיידי של מצב הכפתור ללא עיכוב
+    // Immediate button state update without delay
     function setInitialButtonState() {
         if (isInitialized) return; // Prevent multiple initializations
         
         console.log('⚡ Setting initial button state immediately...');
         
-        // בדיקה מיידית של מצב ההתחברות (אותו מקום כמו initUserMenu)
+        // Immediate check of login status (same place as initUserMenu)
         const savedUser = localStorage.getItem('currentUser');
         let isLoggedIn = false;
         let username = '';
@@ -30,19 +30,19 @@
             }
         }
         
-        // עדכון מיידי של הכפתור אם הוא קיים
+        // Immediate button update if it exists
         const authBtn = document.getElementById('authBtn');
         const userMenu = document.getElementById('userMenu');
         const usernameDisplay = document.getElementById('usernameDisplay');
         
         if (isLoggedIn && username) {
-            // משתמש מחובר - הצג את שם המשתמש מיד
+            // User logged in - show username immediately
             if (authBtn) authBtn.style.display = 'none';
             if (userMenu) userMenu.style.display = 'inline-block';
             if (usernameDisplay) usernameDisplay.textContent = username;
             console.log('⚡ Set button to username immediately:', username);
         } else {
-            // משתמש לא מחובר - הצג LOGIN מיד
+            // User not logged in - show LOGIN immediately
             if (authBtn) authBtn.style.display = 'inline-block';
             if (userMenu) userMenu.style.display = 'none';
             console.log('⚡ Set button to LOGIN immediately');
@@ -51,22 +51,22 @@
         isInitialized = true;
     }
     
-    // קריאה מיידית לעדכון מצב הכפתור
+    // Immediate call to update button state
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', setInitialButtonState);
     } else {
         setInitialButtonState();
     }
     
-    // חכה לטעינת הדף ולכל הסקריפטים האחרים
+    // Wait for page load and all other scripts
     document.addEventListener('DOMContentLoaded', function() {
         // Block auth.js from interfering with user menu
         window.blockGlobalUserMenu = true;
         
-        // ללא עיכוב - כל האתחול כבר קרה
+        // No delay - all initialization already happened
         initUserMenu();
         
-        // קריאה לפונקציות auth אחרי שהדף נטען (רק פעם אחת)
+        // Call auth functions after page loads (only once)
         setTimeout(() => {
             if (typeof forceUpdateAuthButton === 'function' && !window.authButtonUpdated) {
                 console.log('🔧 Calling forceUpdateAuthButton from simple-user-menu.js...');
@@ -115,10 +115,10 @@
     function initUserMenu() {
         console.log('🚀 Initializing simple user menu...');
         
-        // ביטול כל event listeners קיימים על הכפתור כדי למנוע קונפליקטים
+        // Cancel all existing event listeners on the button to prevent conflicts
         const existingToggle = document.getElementById('userMenuToggle');
         if (existingToggle) {
-            // שכפול הכפתור כדי להסיר כל listeners קיימים
+            // Clone the button to remove all existing listeners
             const newToggle = existingToggle.cloneNode(true);
             existingToggle.parentNode.replaceChild(newToggle, existingToggle);
             console.log('🔄 Cleared all existing event listeners from user menu toggle');
@@ -130,7 +130,7 @@
         const userDropdown = document.getElementById('userDropdown');
         const usernameDisplay = document.getElementById('usernameDisplay');
         
-        // בדיקה אם יש משתמש מחובר
+        // Check if user is logged in
         const savedUser = localStorage.getItem('currentUser');
         let isLoggedIn = false;
         let username = '';
@@ -149,14 +149,14 @@
             }
         }
         
-        // הגדרת תצוגה בהתאם למצב
+        // Set display based on state
         if (isLoggedIn) {
-            // משתמש מחובר - הצג תפריט משתמש
+            // User logged in - show user menu
             authBtn.style.display = 'none';
             userMenu.style.display = 'block';
             usernameDisplay.textContent = username;
             
-            // הצג/הסתר קישור פעילות admin בהתאם לתפקיד המשתמש
+            // Show/hide admin activity link based on user role
             const adminActivityLink = document.getElementById('adminActivityLink');
             if (adminActivityLink) {
                 if (isAdmin) {
@@ -168,7 +168,7 @@
                 }
             }
             
-            // הוסף לחיצה לכפתור המשתמש עם עדיפות גבוהה
+            // Add click handler to the user menu button with high priority
             userMenuToggle.addEventListener('click', function(e) {
                 clickCount++;
                 console.log(`🔢 CLICK COUNT: ${clickCount}`);
@@ -182,27 +182,27 @@
                 
                 e.preventDefault();
                 e.stopPropagation();
-                e.stopImmediatePropagation(); // מונע מ-listeners אחרים לרוץ
+                e.stopImmediatePropagation(); // Prevent other listeners from running
                 
                 toggleDropdown();
-            }, true); // capture phase - רץ לפני כל האחרים
+            }, true); // capture phase - runs before others
             
             console.log('✅ User menu setup completed');
         } else {
-            // משתמש לא מחובר - הצג LOGIN
+            // User not logged in - show LOGIN
             authBtn.style.display = 'inline-block';
             userMenu.style.display = 'none';
             console.log('✅ Login button setup completed');
         }
         
-        // סגירת תפריט בלחיצה מחוץ לו
+        // Close dropdown on outside click
         document.addEventListener('click', function(e) {
             if (userDropdown && !userMenu.contains(e.target)) {
                 userDropdown.style.display = 'none';
             }
         });
         
-        // עדכון מיקום תפריט בשינוי גודל חלון
+        // Update dropdown position on window resize
         window.addEventListener('resize', function() {
             const userDropdown = document.getElementById('userDropdown');
             if (userDropdown && getComputedStyle(userDropdown).display === 'block') {
@@ -211,7 +211,7 @@
             }
         });
         
-        // עדכון מיקום תפריט בגלילה
+        // Update dropdown position on scroll
         window.addEventListener('scroll', function() {
             const userDropdown = document.getElementById('userDropdown');
             if (userDropdown && getComputedStyle(userDropdown).display === 'block') {
@@ -229,9 +229,9 @@
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
             
-            // חישוב מיקום מתחת לכפתור
-            const top = buttonRect.bottom + scrollTop + 5; // 5px מרווח
-            const left = buttonRect.right + scrollLeft - 220; // יישור לצד ימין של הכפתור
+            // Calculate position below the button
+            const top = buttonRect.bottom + scrollTop + 5; // 5px spacing
+            const left = buttonRect.right + scrollLeft - 220; // Align to the right of the button
             
             console.log('📍 Positioning dropdown:', {
                 buttonRect: buttonRect,
@@ -241,7 +241,7 @@
                 scrollLeft: scrollLeft
             });
             
-            // עדכון מיקום התפריט
+            // Update dropdown position
             userDropdown.style.setProperty('position', 'absolute', 'important');
             userDropdown.style.setProperty('top', top + 'px', 'important');
             userDropdown.style.setProperty('left', left + 'px', 'important');
@@ -267,7 +267,7 @@
                 computedDisplay: getComputedStyle(userDropdown).display
             });
             
-            // השתמש ב-computedDisplay במקום style.display כי CSS עלול לדרוס
+            // Use computedDisplay instead of style.display as CSS might override
             const computedDisplay = getComputedStyle(userDropdown).display;
             const isVisible = computedDisplay === 'block';
             
@@ -275,10 +275,10 @@
                 userDropdown.style.setProperty('display', 'none', 'important');
                 console.log('🔒 Dropdown closed - set display: none !important');
             } else {
-                // מקם את התפריט מתחת לכפתור
+                // Position the dropdown below the button
                 positionDropdownBelowButton();
                 
-                // פתח את התפריט
+                // Open the dropdown
                 userDropdown.style.setProperty('display', 'block', 'important');
                 userDropdown.style.setProperty('visibility', 'visible', 'important');
                 userDropdown.style.setProperty('opacity', '1', 'important');
@@ -286,7 +286,7 @@
                 console.log('🔓 Dropdown opened and positioned below button');
             }
             
-            // בדיקה אחרי השינוי
+            // Check after the change
             setTimeout(() => {
                 console.log('📊 State after change:', {
                     display: userDropdown.style.display,
@@ -303,13 +303,13 @@
         }
     }
     
-    // עדכון התפריט אחרי התחברות/התנתקות
+    // Update menu after login/logout
     window.updateUserMenu = function() {
         console.log('🔄 Updating user menu...');
         initUserMenu();
     };
     
-    // חסימת global.js מלטפל בכפתור המשתמש
+    // Block global.js from handling the user button
     window.blockGlobalUserMenu = true;
     
 })();

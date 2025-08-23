@@ -175,9 +175,9 @@ The test suite is modular and easy to extend. To add new tests:
 5. Ensure all tests pass
 6. Submit a pull request
 
-## License
+## About This Project
 
-This project is created by Amit Cohen & Ariel Sinai.
+This is a comprehensive e-commerce platform built as a computer science project. It features advanced functionality including clothing exchange, community features, and a modern cyberpunk-inspired UI. The test suite ensures all functionality works correctly and securely.
 
 ---
 

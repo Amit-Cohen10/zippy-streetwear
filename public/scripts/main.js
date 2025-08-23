@@ -1,4 +1,5 @@
-// Global state
+// Global state - Project requirement: user must login to see any other page
+// Project requirement: use cookies to implement user management
 let currentUser = null;
 let cartItems = [];
 let featuredProducts = [];

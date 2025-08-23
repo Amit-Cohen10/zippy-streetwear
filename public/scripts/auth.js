@@ -1,4 +1,5 @@
-// Simple Authentication System
+// Authentication System - Project requirement: Login screen + "remember me" checkbox
+// Project requirement: user must login to see any other page (excluding readme, products and login/register screens)
 if (!window.currentUser) {
     window.currentUser = null;
 }
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 1000);
 
-    // --- LocalStorage watcher for login state ---
+    // LocalStorage watcher for login state changes
     let lastUser = localStorage.getItem('currentUser');
     setInterval(() => {
         const currentUser = localStorage.getItem('currentUser');
@@ -38,8 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateSessionStartTime();
             }
         }
-    }, 1000); // Check every second instead of 500ms
-    // --- End watcher ---
+    }, 1000);
 });
 
 function initAuth() {
@@ -66,7 +66,7 @@ function initAuth() {
         return;
     }
     
-    // Auth button click handler
+    // Auth button click handler - project requirement: menu should include logout button
     if (authBtn) {
         authBtn.onclick = function() {
             console.log('🔘 Auth button clicked');

@@ -1,4 +1,6 @@
-// Products Page JavaScript
+// Products Page JavaScript - Project requirement: Store screen presents items which the store sells
+// Project requirement: Textual prefix search (support searching products by their name or description)
+// Project requirement: Add to cart button - if not logged in, redirect to login screen
 
 let products = [];
 let filteredProducts = [];

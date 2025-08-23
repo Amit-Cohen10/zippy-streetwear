@@ -1,4 +1,6 @@
-// Checkout functionality
+// Checkout functionality - Project requirement: Checkout screen (choose from cart and "pay")
+// Project requirement: Pay screen - fill payment details and click pay
+// Project requirement: Upon payment, show "Thank you page" indicating payment was successful
 // ===== CHECKOUT STEP MANAGEMENT =====
 let currentStep = 1;
 

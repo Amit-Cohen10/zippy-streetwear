@@ -1,4 +1,4 @@
-// Simple My Items Page - Clean Implementation
+// My Items Page - Project requirement: My items screen should show all the items you have bought
 console.log('🚀 My Items page loading...');
 
 // Wait for page to load

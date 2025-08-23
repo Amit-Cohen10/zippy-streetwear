@@ -1,4 +1,5 @@
-// Global functionality for all pages
+// Global functionality for all pages - Project requirement: user should be able to customize view of UI
+// Project requirement: persist/load customization using localStorage
 document.addEventListener('DOMContentLoaded', function() {
     updateCartCount();
     initializeViewPreferences();

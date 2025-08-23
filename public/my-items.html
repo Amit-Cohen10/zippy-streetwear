@@ -49,12 +49,12 @@
         </div>
     </nav>
 
-    <!-- סקריפט מיידי לעדכון מצב הכפתור ללא עיכוב -->
+    <!-- Immediate script to update button state without delay -->
     <script>
     (function() {
         console.log('⚡ Immediate button state check...');
         
-        // בדיקה מיידית של מצב ההתחברות
+        // Immediate check of login status
         const savedUser = localStorage.getItem('currentUser');
         const lastLoginTime = localStorage.getItem('lastLoginTime');
         let isLoggedIn = false;
@@ -67,7 +67,7 @@
                 const currentTime = Date.now();
                 const sessionTimeout = user.rememberMe ? 12 * 24 * 60 * 60 * 1000 : 30 * 60 * 1000; // 12 hours or 30 minutes
                 
-                // בדוק אם הסשן עדיין תקף
+                // Check if session is still valid
                 if (currentTime - loginTime < sessionTimeout) {
                     isLoggedIn = true;
                     username = user.profile?.displayName || user.username || 'User';
@@ -84,34 +84,34 @@
             }
         }
         
-        // עדכון מיידי כשהדף נטען
+        // Immediate update when page loads
         function updateButtonImmediate() {
             const authBtn = document.getElementById('authBtn');
             const userMenu = document.getElementById('userMenu');
             const usernameDisplay = document.getElementById('usernameDisplay');
             
             if (isLoggedIn && username) {
-                // משתמש מחובר - הצג את שם המשתמש מיד
+                // User logged in - show username immediately
                 if (authBtn) authBtn.style.display = 'none';
                 if (userMenu) userMenu.style.display = 'inline-block';
                 if (usernameDisplay) usernameDisplay.textContent = username;
                 console.log('⚡ Button set to username immediately:', username);
             } else {
-                // משתמש לא מחובר - הצג LOGIN מיד
+                // User not logged in - show LOGIN immediately
                 if (authBtn) authBtn.style.display = 'inline-block';
                 if (userMenu) userMenu.style.display = 'none';
                 console.log('⚡ Button set to LOGIN immediately');
             }
         }
         
-        // נסה עכשיו מיד, ואם לא עובד אז כשהדף יסיים לטעון
+        // Try now immediately, and if it doesn't work then when the page finishes loading
         updateButtonImmediate();
         
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', updateButtonImmediate);
         }
         
-        // פונקציה נוספת עם השהייה לבדיקה חוזרת
+        // Additional function with delay for repeated checking
         function updateButtonWithDelay() {
             console.log('🔄 Delayed button state check...');
             

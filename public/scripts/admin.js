@@ -1,4 +1,6 @@
-// Admin panel functionality
+// Admin panel functionality - Project requirement: Admin screen that exposes activity of all users
+// Project requirement: Show table with columns: datetime, username, type of activity
+// Project requirement: Add filter input box to see data of usernames that start with filtered prefix
 let activityData = [];
 let userData = [];
 let adminProducts = [];

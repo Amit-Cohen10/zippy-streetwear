@@ -1,4 +1,5 @@
-// Wishlist Page JavaScript
+// Wishlist Page JavaScript - Project requirement: Additional pages with functionality that communicates with server
+// Project requirement: Each page functionality must communicate with the server
 
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on wishlist page

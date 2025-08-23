@@ -1,4 +1,5 @@
-// Cart functionality
+// Cart functionality - Project requirement: Cart screen shows products user added to cart
+// Project requirement: Allow removing existing product from cart
 document.addEventListener('DOMContentLoaded', function() {
     try {
         initCart();

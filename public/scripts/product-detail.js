@@ -1,4 +1,4 @@
-// Product Detail Page JavaScript
+// Product Detail Page JavaScript - Project requirement: Add to cart button - if not logged in, redirect to login screen
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on product detail page
     if (!window.location.pathname.includes('product-detail')) {
