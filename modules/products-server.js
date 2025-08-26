@@ -1,10 +1,11 @@
 const express = require('express');
 const persist = require('./persist_module');
+const { requireAuth } = require('./auth-middleware');
 
 const router = express.Router();
 
-// Middleware to require authentication
-const requireAuth = async (req, res, next) => {
+// Middleware to require admin authentication (renamed to avoid confusion)
+const requireAdmin = async (req, res, next) => {
   try {
     const user = await persist.getUserFromToken(req);
     if (!user || user.role !== 'admin') {
@@ -202,6 +203,100 @@ router.get('/', async (req, res) => {
   }
 });
 
+// User wishlist endpoints (must be declared BEFORE generic ":id" routes)
+router.get('/wishlist', requireAuth, async (req, res) => {
+  try {
+    const wishlist = await persist.readData(persist.wishlistFile);
+    const userWishlist = wishlist[req.user.id] || [];
+    const products = await persist.readData(persist.productsFile);
+    const wishlistWithDetails = userWishlist.map(item => {
+      const product = products.find(p => p.id === item.productId);
+      return product ? {
+        id: item.id,
+        productId: item.productId,
+        addedAt: item.addedAt,
+        title: product.title,
+        price: product.price,
+        image: product.images[0] || '/images/placeholder.jpg',
+        brand: product.brand,
+        description: product.description
+      } : null;
+    }).filter(Boolean);
+    res.json({ items: wishlistWithDetails, count: wishlistWithDetails.length });
+  } catch (error) {
+    console.error('Wishlist fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch wishlist' });
+  }
+});
+
+router.post('/wishlist', requireAuth, async (req, res) => {
+  try {
+    const { productId } = req.body;
+    if (!productId) {
+      return res.status(400).json({ error: 'Product ID is required' });
+    }
+    const products = await persist.readData(persist.productsFile);
+    const product = products.find(p => p.id === productId);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    const wishlist = await persist.readData(persist.wishlistFile);
+    const userWishlist = wishlist[req.user.id] || [];
+    const existingItem = userWishlist.find(item => item.productId === productId);
+    if (existingItem) {
+      return res.status(400).json({ error: 'Item already in wishlist' });
+    }
+    const wishlistItem = { id: persist.generateId('wishlist'), productId, addedAt: new Date().toISOString() };
+    userWishlist.push(wishlistItem);
+    wishlist[req.user.id] = userWishlist;
+    await persist.writeData(persist.wishlistFile, wishlist);
+    await persist.logActivity(req.user.id, 'wishlist_add', { productId, title: product.title });
+    res.json({ message: 'Item added to wishlist', item: wishlistItem });
+  } catch (error) {
+    console.error('Wishlist add error:', error);
+    res.status(500).json({ error: 'Failed to add item to wishlist' });
+  }
+});
+
+router.delete('/wishlist/:productId', requireAuth, async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const wishlist = await persist.readData(persist.wishlistFile);
+    const userWishlist = wishlist[req.user.id] || [];
+    const itemIndex = userWishlist.findIndex(item => item.productId === productId);
+    if (itemIndex === -1) {
+      return res.status(404).json({ error: 'Item not found in wishlist' });
+    }
+    const removedItem = userWishlist[itemIndex];
+    userWishlist.splice(itemIndex, 1);
+    wishlist[req.user.id] = userWishlist;
+    await persist.writeData(persist.wishlistFile, wishlist);
+    await persist.logActivity(req.user.id, 'wishlist_remove', { productId });
+    res.json({ message: 'Item removed from wishlist', item: removedItem });
+  } catch (error) {
+    console.error('Wishlist remove error:', error);
+    res.status(500).json({ error: 'Failed to remove item from wishlist' });
+  }
+});
+
+router.delete('/wishlist', requireAuth, async (req, res) => {
+  try {
+    const wishlist = await persist.readData(persist.wishlistFile);
+    const userWishlist = wishlist[req.user.id] || [];
+    if (userWishlist.length === 0) {
+      return res.status(400).json({ error: 'Wishlist is already empty' });
+    }
+    const removedCount = userWishlist.length;
+    wishlist[req.user.id] = [];
+    await persist.writeData(persist.wishlistFile, wishlist);
+    await persist.logActivity(req.user.id, 'wishlist_clear', { removedCount });
+    res.json({ message: 'Wishlist cleared', removed: removedCount });
+  } catch (error) {
+    console.error('Wishlist clear error:', error);
+    res.status(500).json({ error: 'Failed to clear wishlist' });
+  }
+});
+
 // Get product by ID
 router.get('/:id', async (req, res) => {
   try {
@@ -350,7 +445,7 @@ router.get('/:id/stock', async (req, res) => {
 });
 
 // Update product stock (admin only)
-router.put('/:id/stock', requireAuth, async (req, res) => {
+router.put('/:id/stock', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { stock } = req.body;
@@ -391,7 +486,7 @@ router.put('/:id/stock', requireAuth, async (req, res) => {
 });
 
 // Bulk update products (admin only)
-router.put('/bulk', requireAuth, async (req, res) => {
+router.put('/bulk', requireAdmin, async (req, res) => {
   try {
     const { products: updates } = req.body;
     
@@ -443,7 +538,7 @@ router.put('/bulk', requireAuth, async (req, res) => {
 });
 
 // Get low stock products (admin only)
-router.get('/admin/low-stock', requireAuth, async (req, res) => {
+router.get('/admin/low-stock', requireAdmin, async (req, res) => {
   try {
     const { threshold = 5 } = req.query;
     const products = await persist.readData(persist.productsFile);
@@ -466,7 +561,7 @@ router.get('/admin/low-stock', requireAuth, async (req, res) => {
 });
 
 // Get product statistics (admin only)
-router.get('/admin/stats', requireAuth, async (req, res) => {
+router.get('/admin/stats', requireAdmin, async (req, res) => {
   try {
     const products = await persist.readData(persist.productsFile);
     
@@ -513,7 +608,7 @@ router.get('/admin/stats', requireAuth, async (req, res) => {
 });
 
 // Create new product (admin only)
-router.post('/', requireAuth, validateProduct, enforceKnownCategoryBrand, async (req, res) => {
+router.post('/', requireAdmin, validateProduct, enforceKnownCategoryBrand, async (req, res) => {
   try {
     const { title, description, price, category, brand, sizes, stock, exchangeable, condition, images } = req.body;
     
@@ -555,7 +650,7 @@ router.post('/', requireAuth, validateProduct, enforceKnownCategoryBrand, async 
 });
 
 // Update product (admin only)
-router.put('/:id', requireAuth, validateProduct, enforceKnownCategoryBrand, async (req, res) => {
+router.put('/:id', requireAdmin, validateProduct, enforceKnownCategoryBrand, async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
@@ -594,7 +689,7 @@ router.put('/:id', requireAuth, validateProduct, enforceKnownCategoryBrand, asyn
 });
 
 // Delete product (admin only)
-router.delete('/:id', requireAuth, async (req, res) => {
+router.delete('/:id', requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     
@@ -628,7 +723,7 @@ router.delete('/:id', requireAuth, async (req, res) => {
 });
 
 // Bulk delete products (admin only)
-router.delete('/bulk', requireAuth, async (req, res) => {
+router.delete('/bulk', requireAdmin, async (req, res) => {
   try {
     const { ids } = req.body;
     
@@ -674,6 +769,7 @@ router.delete('/bulk', requireAuth, async (req, res) => {
 });
 
 // Get user's wishlist
+// Wishlist endpoints are for any authenticated user (not admin-only)
 router.get('/wishlist', requireAuth, async (req, res) => {
   try {
     const wishlist = await persist.readData(persist.wishlistFile);

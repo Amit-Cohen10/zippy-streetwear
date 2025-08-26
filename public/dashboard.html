@@ -1447,14 +1447,37 @@
 
         async function loadWishlist() {
             try {
+                // First try server API
                 const headers = {};
                 const saved = localStorage.getItem('currentUser');
                 if (saved) { try { const u = JSON.parse(saved); if (u && u.id) headers['X-User-ID'] = u.id; } catch(_){} }
-                const resp = await fetch('/api/products/wishlist', { credentials: 'include', headers });
-                if (!resp.ok) throw new Error('wishlist fetch failed');
-                const data = await resp.json();
-                const items = Array.isArray(data.items) ? data.items : [];
-                if (items.length > 0) {
+                let items = [];
+                try {
+                    const resp = await fetch('/api/products/wishlist', { credentials: 'include', headers });
+                    if (resp.ok) {
+                        const data = await resp.json();
+                        items = Array.isArray(data.items) ? data.items : [];
+                    }
+                } catch (e) {
+                    // ignore and fallback to localStorage
+                }
+
+                // Fallback: use same localStorage source as wishlist.js
+                if (!items || items.length === 0) {
+                    try {
+                        const savedWishlist = localStorage.getItem('wishlist');
+                        const localItems = savedWishlist ? JSON.parse(savedWishlist) : [];
+                        // Map to dashboard display shape
+                        items = localItems.map(it => ({
+                            id: it.id,
+                            title: it.name || it.title || 'Wishlist Item',
+                            price: it.price || 0,
+                            image: it.image || '/images/placeholder.jpg'
+                        }));
+                    } catch (_) {}
+                }
+
+                if (items && items.length > 0) {
                     displayWishlist(items.slice(0,8));
                 } else {
                     document.getElementById('wishlistGrid').innerHTML = '<div class="empty-state"><i class="fas fa-heart"></i><p>Wishlist is empty</p></div>';
