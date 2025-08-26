@@ -912,7 +912,7 @@
             <section class="dashboard-header">
                 <div class="user-info">
                     <div class="user-avatar">
-                        <img src="/images/avatar.jpg" alt="User Avatar" id="userAvatar" onerror="this.src='/images/default-avatar.jpg'">
+                        <img src="/images/default-avatar.png" alt="User Avatar" id="userAvatar" onerror="this.src='/images/default-avatar.jpg'">
                     </div>
                     <div class="user-details">
                         <h1 class="user-name" id="userName">Loading...</h1>
@@ -1323,20 +1323,19 @@
                     const exd = await exResp.json();
                     exchanges = Array.isArray(exd.exchanges) ? exd.exchanges : (Array.isArray(exd) ? exd : []);
                 }
-                // Wishlist
-                const wlResp = await fetch('/api/products/wishlist', { credentials: 'include', headers });
+                // Wishlist (use same source as wishlist.js to avoid 404 noise)
                 let wishlist = [];
-                if (wlResp.ok) {
-                    const wld = await wlResp.json();
-                    wishlist = Array.isArray(wld.items) ? wld.items : [];
-                }
+                try {
+                    const savedWishlist = localStorage.getItem('wishlist');
+                    wishlist = savedWishlist ? JSON.parse(savedWishlist) : [];
+                } catch(_) { wishlist = []; }
                 const totalSpent = orders.reduce((sum, o) => sum + (o.total || 0), 0);
                 const avgOrderValue = orders.length > 0 ? totalSpent / orders.length : 0;
                 const lastOrder = orders.length > 0 ? formatDate(orders[0].createdAt) : '-';
                 return {
                     totalOrders: orders.length,
                     totalExchanges: exchanges.length,
-                    wishlistItems: wishlist.length,
+                    wishlistItems: (Array.isArray(wishlist) ? wishlist.length : 0),
                     totalSpent,
                     avgOrderValue,
                     lastOrder
@@ -1412,19 +1411,24 @@
                 if (!resp.ok) throw new Error('exchanges fetch failed');
                 const data = await resp.json();
                 const exchanges = Array.isArray(data.exchanges) ? data.exchanges : (Array.isArray(data) ? data : []);
+                const container = document.getElementById('exchangesGrid');
+                if (!container) return; // Section not present; skip silently
                 if (exchanges.length > 0) {
                     displayExchanges(exchanges.slice(0,6));
                 } else {
-                    document.getElementById('exchangesGrid').innerHTML = '<div class="empty-state"><i class="fas fa-exchange-alt"></i><p>No exchanges yet</p></div>';
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-exchange-alt"></i><p>No exchanges yet</p></div>';
                 }
             } catch (error) {
-                console.error('Error loading exchanges:', error);
-                document.getElementById('exchangesGrid').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Unable to load exchanges</p></div>';
+                const container = document.getElementById('exchangesGrid');
+                if (container) {
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Unable to load exchanges</p></div>';
+                }
             }
         }
 
         function displayExchanges(exchanges) {
             const exchangesGrid = document.getElementById('exchangesGrid');
+            if (!exchangesGrid) return;
             
             if (exchanges.length === 0) {
                 exchangesGrid.innerHTML = '<div class="empty-state"><i class="fas fa-exchange-alt"></i><p>No exchanges yet</p></div>';
@@ -1447,44 +1451,24 @@
 
         async function loadWishlist() {
             try {
-                // First try server API
-                const headers = {};
-                const saved = localStorage.getItem('currentUser');
-                if (saved) { try { const u = JSON.parse(saved); if (u && u.id) headers['X-User-ID'] = u.id; } catch(_){} }
-                let items = [];
-                try {
-                    const resp = await fetch('/api/products/wishlist', { credentials: 'include', headers });
-                    if (resp.ok) {
-                        const data = await resp.json();
-                        items = Array.isArray(data.items) ? data.items : [];
-                    }
-                } catch (e) {
-                    // ignore and fallback to localStorage
-                }
-
-                // Fallback: use same localStorage source as wishlist.js
-                if (!items || items.length === 0) {
-                    try {
-                        const savedWishlist = localStorage.getItem('wishlist');
-                        const localItems = savedWishlist ? JSON.parse(savedWishlist) : [];
-                        // Map to dashboard display shape
-                        items = localItems.map(it => ({
-                            id: it.id,
-                            title: it.name || it.title || 'Wishlist Item',
-                            price: it.price || 0,
-                            image: it.image || '/images/placeholder.jpg'
-                        }));
-                    } catch (_) {}
-                }
-
-                if (items && items.length > 0) {
+                // Source: localStorage, same as wishlist.js
+                const savedWishlist = localStorage.getItem('wishlist');
+                const localItems = savedWishlist ? JSON.parse(savedWishlist) : [];
+                const items = localItems.map(it => ({
+                    id: it.id,
+                    title: it.name || it.title || 'Wishlist Item',
+                    price: it.price || 0,
+                    image: it.image || '/images/placeholder.jpg'
+                }));
+                if (items.length > 0) {
                     displayWishlist(items.slice(0,8));
                 } else {
                     document.getElementById('wishlistGrid').innerHTML = '<div class="empty-state"><i class="fas fa-heart"></i><p>Wishlist is empty</p></div>';
                 }
             } catch (error) {
-                console.error('Error loading wishlist:', error);
-                document.getElementById('wishlistGrid').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Unable to load wishlist</p></div>';
+                // Keep console clean if wishlist unavailable
+                const grid = document.getElementById('wishlistGrid');
+                if (grid) grid.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Unable to load wishlist</p></div>';
             }
         }
 
