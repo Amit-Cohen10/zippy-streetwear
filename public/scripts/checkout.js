@@ -1033,12 +1033,21 @@ async function syncCartToServer() {
             }
             
             try {
+                // Build headers dynamically based on the logged-in user
+                const addHeaders = { 'Content-Type': 'application/json' };
+                try {
+                    const userStr = localStorage.getItem('currentUser');
+                    if (userStr) {
+                        const user = JSON.parse(userStr);
+                        if (user && user.id) {
+                            addHeaders['X-User-ID'] = user.id;
+                        }
+                    }
+                } catch (_) {}
+
                 const response = await fetch('/api/cart/add', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-User-ID': 'user-1753901439175-sl80wbwx7' // User ID from the problem description
-                    },
+                    headers: addHeaders,
                     credentials: 'include',
                     body: JSON.stringify({
                         productId: productId,
@@ -1079,10 +1088,20 @@ async function placeOrder() {
         }
         
         // Get cart data from server after sync
+        // Build headers dynamically for fetching the cart
+        const cartHeaders = {};
+        try {
+            const userStr = localStorage.getItem('currentUser');
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                if (user && user.id) {
+                    cartHeaders['X-User-ID'] = user.id;
+                }
+            }
+        } catch (_) {}
+
         const cartResponse = await fetch('/api/cart', {
-            headers: {
-                'X-User-ID': 'user-1753901439175-sl80wbwx7'
-            },
+            headers: cartHeaders,
             credentials: 'include'
         });
         
@@ -1119,12 +1138,21 @@ async function placeOrder() {
             shippingAddress: orderPayload.shippingAddress
         });
         
+        // Build headers dynamically for checkout
+        const checkoutHeaders = { 'Content-Type': 'application/json' };
+        try {
+            const userStr = localStorage.getItem('currentUser');
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                if (user && user.id) {
+                    checkoutHeaders['X-User-ID'] = user.id;
+                }
+            }
+        } catch (_) {}
+
         const response = await fetch('/api/payment/checkout', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-User-ID': 'user-1753901439175-sl80wbwx7' // User ID from the problem description
-            },
+            headers: checkoutHeaders,
             credentials: 'include',
             body: JSON.stringify(orderPayload)
         });
@@ -1149,7 +1177,7 @@ async function placeOrder() {
         
         // Redirect to thank you page
         console.log('🔄 Redirecting to thank you page...');
-        window.location.href = `/thank-you?orderId=${result.orderId}`;
+        window.location.href = `/thank-you?orderId=${result.order?.id || ''}`;
         
     } catch (error) {
         hideLoadingModal();

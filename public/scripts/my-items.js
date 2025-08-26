@@ -562,31 +562,22 @@ async function loadOrders() {
         
         console.log('📋 Processing orders:', orders.length);
         
-        // Load exchange items from localStorage and enhance with product data
-        const exchangeItems = await loadExchangeItemsWithProductData();
-        console.log('🔄 Processing exchange items:', exchangeItems.length);
-        
-        // Combine orders and exchange items
-        const allItems = [...orders, ...exchangeItems];
-        
-        if (allItems.length === 0) {
+        // Check if user has any orders
+        if (orders.length === 0) {
+            console.log('📦 No orders found for user');
             showEmpty();
-        } else {
-            displayOrders(allItems);
-            showOrders();
+            return;
         }
+        
+        // Display the actual orders from the server
+        displayOrders(orders);
+        showOrders();
         
     } catch (error) {
         console.error('❌ Failed to load orders:', error);
         
-        // If API fails, try to load only exchange items
-        const exchangeItems = await loadExchangeItemsWithProductData();
-        if (exchangeItems.length > 0) {
-            displayOrders(exchangeItems);
-            showOrders();
-        } else {
-            showError();
-        }
+        // Show error state instead of trying to load mock data
+        showError();
     }
 }
 
@@ -893,6 +884,9 @@ function loadExchangeItems() {
 function displayOrders(orders) {
     console.log('🖥️ Displaying orders:', orders.length);
     
+    // Store orders globally for order details modal
+    window.currentOrders = orders;
+    
     const ordersGrid = document.getElementById('ordersGrid');
     
     ordersGrid.innerHTML = orders.map(order => {
@@ -948,7 +942,7 @@ function displayOrders(orders) {
 function showOrderDetails(orderId) {
     console.log('📋 Showing order details for:', orderId);
     
-    const order = window.currentOrders.find(o => o.id === orderId);
+    const order = window.currentOrders ? window.currentOrders.find(o => o.id === orderId) : null;
     if (!order) {
         console.error('Order not found:', orderId);
         return;
