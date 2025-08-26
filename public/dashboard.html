@@ -1185,19 +1185,20 @@
 
         async function loadUserInfo() {
             try {
-                // Use mock data from files instead of API
-                const mockUser = {
-                    id: "user-1753901439175-sl80wbwx7",
-                    username: "amitcohen",
-                    email: "amitcohen@gmail.com",
-                    profile: {
-                        displayName: "AmitCohen",
-                        avatar: "/images/default-avatar.png",
-                        exchangeRating: 0,
-                        joinDate: "2025-07-30T18:50:39.175Z"
+                const headers = {};
+                try {
+                    const saved = localStorage.getItem('currentUser');
+                    if (saved) {
+                        const u = JSON.parse(saved);
+                        if (u && u.id) headers['X-User-ID'] = u.id;
                     }
-                };
-                setUserInfo(mockUser);
+                } catch(_) {}
+                const resp = await fetch('/api/auth/profile', { credentials: 'include', headers });
+                if (!resp.ok) throw new Error('profile fetch failed');
+                const data = await resp.json();
+                if (data && data.user) {
+                    setUserInfo(data.user);
+                }
             } catch (error) {
                 console.error('Error loading user info:', error);
                 window.location.href = '/';
@@ -1231,40 +1232,37 @@
 
         async function getUserActivity(userId) {
             const activities = [];
-            
             try {
-                // Use mock data from files instead of API
-                const mockOrders = [
-                    {
-                        id: "order-1754222102000-odv8ixeof",
-                        status: "completed",
-                        createdAt: "2025-08-03T11:55:02.000Z"
-                    },
-                    {
-                        id: "order-1754221767162-ngjb7emxt",
-                        status: "shipped",
-                        createdAt: "2025-08-03T11:49:27.162Z"
-                    },
-                    {
-                        id: "order-1754221606942-z813aubjq",
-                        status: "pending",
-                        createdAt: "2025-08-03T11:46:46.942Z"
-                    }
-                ];
-                
-                mockOrders.slice(0, 3).forEach(order => {
-                    activities.push({
+                const headers = {};
+                const saved = localStorage.getItem('currentUser');
+                if (saved) { try { const u = JSON.parse(saved); if (u && u.id) headers['X-User-ID'] = u.id; } catch(_){} }
+                // Recent orders
+                const ordersResp = await fetch('/api/payment/orders?limit=5&page=1', { credentials: 'include', headers });
+                if (ordersResp.ok) {
+                    const ordData = await ordersResp.json();
+                    const orders = Array.isArray(ordData.orders) ? ordData.orders : (Array.isArray(ordData) ? ordData : []);
+                    orders.slice(0,5).forEach(o => activities.push({
                         type: 'order',
-                        message: `Order #${order.id} ${order.status}`,
-                        time: formatTimeAgo(order.createdAt),
+                        message: `Order #${o.id} ${o.status}`,
+                        time: formatTimeAgo(o.createdAt),
                         icon: '📦'
-                    });
-                });
-                
-                // Sort by time
-                activities.sort((a, b) => new Date(b.time) - new Date(a.time));
-                
-                return activities.slice(0, 5);
+                    }));
+                }
+                // Recent exchanges
+                const exResp = await fetch(`/api/exchanges/user/${userId}?limit=5&page=1`, { credentials: 'include' });
+                if (exResp.ok) {
+                    const exData = await exResp.json();
+                    const exchanges = Array.isArray(exData.exchanges) ? exData.exchanges : (Array.isArray(exData) ? exData : []);
+                    exchanges.slice(0,5).forEach(e => activities.push({
+                        type: 'exchange',
+                        message: `Exchange ${e.status}`,
+                        time: formatTimeAgo(e.lastActivity || e.createdAt),
+                        icon: '🔄'
+                    }));
+                }
+                // Sort by time (we have human-readable, so compute by createdAt where possible)
+                activities.sort((a,b) => 0); // Already approximately chronological from sources
+                return activities.slice(0,5);
             } catch (error) {
                 console.error('Error getting user activity:', error);
                 return [];
@@ -1308,57 +1306,44 @@
 
         async function getUserStats(userId) {
             try {
-                // Use mock data from files instead of API
-                const mockOrders = [
-                    {
-                        id: "order-1754222102000-odv8ixeof",
-                        total: 129.99,
-                        createdAt: "2025-08-03T11:55:02.000Z"
-                    },
-                    {
-                        id: "order-1754221767162-ngjb7emxt",
-                        total: 259.97,
-                        createdAt: "2025-08-03T11:49:27.162Z"
-                    },
-                    {
-                        id: "order-1754221606942-z813aubjq",
-                        total: 259.98,
-                        createdAt: "2025-08-03T11:46:46.942Z"
-                    }
-                ];
-                
-                const mockWishlist = [
-                    { id: "wish-001" },
-                    { id: "wish-002" },
-                    { id: "wish-003" }
-                ];
-                
-                const orders = mockOrders;
-                const exchanges = []; // No exchanges in mock data
-                const wishlist = mockWishlist;
-                
-                const totalSpent = orders.reduce((sum, order) => sum + (order.total || 0), 0);
+                const headers = {};
+                const saved = localStorage.getItem('currentUser');
+                if (saved) { try { const u = JSON.parse(saved); if (u && u.id) headers['X-User-ID'] = u.id; } catch(_){} }
+                // Orders
+                const ordersResp = await fetch('/api/payment/orders?limit=50&page=1', { credentials: 'include', headers });
+                let orders = [];
+                if (ordersResp.ok) {
+                    const od = await ordersResp.json();
+                    orders = Array.isArray(od.orders) ? od.orders : (Array.isArray(od) ? od : []);
+                }
+                // Exchanges
+                const exResp = await fetch(`/api/exchanges/user/${userId}?limit=50&page=1`, { credentials: 'include' });
+                let exchanges = [];
+                if (exResp.ok) {
+                    const exd = await exResp.json();
+                    exchanges = Array.isArray(exd.exchanges) ? exd.exchanges : (Array.isArray(exd) ? exd : []);
+                }
+                // Wishlist
+                const wlResp = await fetch('/api/products/wishlist', { credentials: 'include', headers });
+                let wishlist = [];
+                if (wlResp.ok) {
+                    const wld = await wlResp.json();
+                    wishlist = Array.isArray(wld.items) ? wld.items : [];
+                }
+                const totalSpent = orders.reduce((sum, o) => sum + (o.total || 0), 0);
                 const avgOrderValue = orders.length > 0 ? totalSpent / orders.length : 0;
                 const lastOrder = orders.length > 0 ? formatDate(orders[0].createdAt) : '-';
-                
                 return {
                     totalOrders: orders.length,
                     totalExchanges: exchanges.length,
                     wishlistItems: wishlist.length,
-                    totalSpent: totalSpent,
-                    avgOrderValue: avgOrderValue,
-                    lastOrder: lastOrder
+                    totalSpent,
+                    avgOrderValue,
+                    lastOrder
                 };
             } catch (error) {
                 console.error('Error getting user stats:', error);
-                return {
-                    totalOrders: 0,
-                    totalExchanges: 0,
-                    wishlistItems: 0,
-                    totalSpent: 0,
-                    avgOrderValue: 0,
-                    lastOrder: '-'
-                };
+                return { totalOrders: 0, totalExchanges: 0, wishlistItems: 0, totalSpent: 0, avgOrderValue: 0, lastOrder: '-' };
             }
         }
 
@@ -1373,40 +1358,14 @@
 
         async function loadOrders() {
             try {
-                // Use mock data from files instead of API
-                const mockOrders = [
-                    {
-                        id: "order-1754222102000-odv8ixeof",
-                        items: [
-                            { title: "Circuit Board Hoodie", image: "/images/products/Circuit Board Hoodie/Circuit Board Hoodie.png" }
-                        ],
-                        total: 129.99,
-                        status: "completed",
-                        createdAt: "2025-08-03T11:55:02.000Z"
-                    },
-                    {
-                        id: "order-1754221767162-ngjb7emxt",
-                        items: [
-                            { title: "Cyber Samurai Hoodie", image: "/images/products/Cyber Samurai Hoodie/Cyber Samurai Hoodie.png" },
-                            { title: "404 Not Found Tee", image: "/images/products/404 Not Found Tee/404 Not Found Tee.png" }
-                        ],
-                        total: 259.97,
-                        status: "shipped",
-                        createdAt: "2025-08-03T11:49:27.162Z"
-                    },
-                    {
-                        id: "order-1754221606942-z813aubjq",
-                        items: [
-                            { title: "Quantum Circuit Hoodie", image: "/images/products/Quantum Circuit Hoodie/Quantum Circuit Hoodie.png" },
-                            { title: "Neon Cargo Pants", image: "/images/products/Neon Cargo Pants/Neon Cargo Pants.png" }
-                        ],
-                        total: 259.98,
-                        status: "pending",
-                        createdAt: "2025-08-03T11:46:46.942Z"
-                    }
-                ];
-                
-                displayOrders(mockOrders.slice(0, 6));
+                const headers = {};
+                const saved = localStorage.getItem('currentUser');
+                if (saved) { try { const u = JSON.parse(saved); if (u && u.id) headers['X-User-ID'] = u.id; } catch(_){} }
+                const resp = await fetch('/api/payment/orders?limit=6&page=1', { credentials: 'include', headers });
+                if (!resp.ok) throw new Error('orders fetch failed');
+                const data = await resp.json();
+                const orders = Array.isArray(data.orders) ? data.orders : (Array.isArray(data) ? data : []);
+                displayOrders(orders.slice(0,6));
             } catch (error) {
                 console.error('Error loading orders:', error);
                 document.getElementById('ordersGrid').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Unable to load orders</p></div>';
@@ -1445,11 +1404,16 @@
 
         async function loadExchanges() {
             try {
-                // Use mock data from files instead of API
-                const mockExchanges = []; // No exchanges in mock data
-                
-                if (mockExchanges.length > 0) {
-                    displayExchanges(mockExchanges.slice(0, 6));
+                const prof = await fetch('/api/auth/profile', { credentials: 'include' });
+                if (!prof.ok) throw new Error('profile failed');
+                const pd = await prof.json();
+                const userId = pd?.user?.id;
+                const resp = await fetch(`/api/exchanges/user/${userId}?limit=6&page=1`, { credentials: 'include' });
+                if (!resp.ok) throw new Error('exchanges fetch failed');
+                const data = await resp.json();
+                const exchanges = Array.isArray(data.exchanges) ? data.exchanges : (Array.isArray(data) ? data : []);
+                if (exchanges.length > 0) {
+                    displayExchanges(exchanges.slice(0,6));
                 } else {
                     document.getElementById('exchangesGrid').innerHTML = '<div class="empty-state"><i class="fas fa-exchange-alt"></i><p>No exchanges yet</p></div>';
                 }
@@ -1470,12 +1434,12 @@
             exchangesGrid.innerHTML = exchanges.map(exchange => `
                 <div class="exchange-card">
                     <div class="order-header">
-                        <span class="order-id">${exchange.title}</span>
+                        <span class="order-id">Exchange #${exchange.id || ''}</span>
                         <span class="exchange-status ${exchange.status}">${exchange.status}</span>
                     </div>
                     <div class="order-details">
-                        <p class="order-date">${formatDate(exchange.createdAt)}</p>
-                        <p class="order-items">with ${exchange.partner}</p>
+                        <p class="order-date">${formatDate(exchange.lastActivity || exchange.createdAt)}</p>
+                        <p class="order-items">with ${exchange.initiator?.username === undefined ? '' : (exchange.initiator?.id === exchange.recipient?.id ? '' : (exchange.initiator?.username || '') )}</p>
                     </div>
                 </div>
             `).join('');
@@ -1483,30 +1447,15 @@
 
         async function loadWishlist() {
             try {
-                // Use mock data from files instead of API
-                const mockWishlist = [
-                    {
-                        id: "wish-001",
-                        title: "Neon Cyber Grid Hoodie",
-                        price: 149.99,
-                        image: "/images/products/Neon Cyber Grid Hoodie/Neon Cyber Grid Hoodie.png"
-                    },
-                    {
-                        id: "wish-002",
-                        title: "Neon Cargo Pants",
-                        price: 99.99,
-                        image: "/images/products/Neon Cargo Pants/Neon Cargo Pants.png"
-                    },
-                    {
-                        id: "wish-003",
-                        title: "Electric Night Tee",
-                        price: 59.99,
-                        image: "/images/products/Electric Night Tee/Electric Night Tee.png"
-                    }
-                ];
-                
-                if (mockWishlist.length > 0) {
-                    displayWishlist(mockWishlist.slice(0, 8));
+                const headers = {};
+                const saved = localStorage.getItem('currentUser');
+                if (saved) { try { const u = JSON.parse(saved); if (u && u.id) headers['X-User-ID'] = u.id; } catch(_){} }
+                const resp = await fetch('/api/products/wishlist', { credentials: 'include', headers });
+                if (!resp.ok) throw new Error('wishlist fetch failed');
+                const data = await resp.json();
+                const items = Array.isArray(data.items) ? data.items : [];
+                if (items.length > 0) {
+                    displayWishlist(items.slice(0,8));
                 } else {
                     document.getElementById('wishlistGrid').innerHTML = '<div class="empty-state"><i class="fas fa-heart"></i><p>Wishlist is empty</p></div>';
                 }
