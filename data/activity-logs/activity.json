@@ -1544,5 +1544,210 @@
     },
     "timestamp": "2025-08-23T12:25:05.998Z",
     "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1756238575033-q77t1wdxw",
+    "userId": "user-1756238575030-qts8mqn3c",
+    "action": "register",
+    "details": {
+      "username": "aamm",
+      "email": "amit@gmail.com",
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-26T20:02:55.033Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1756238675410-ro4vurcrw",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-1754771538062-eql88rnzq",
+      "quantity": 1,
+      "size": "M",
+      "productTitle": "NeoMatrix Flux Hoodie"
+    },
+    "timestamp": "2025-08-26T20:04:35.410Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1756238676431-6cvn85xpl",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "order_placed",
+    "details": {
+      "orderId": "order-1756238676424-wlrg9yrmy",
+      "total": 100,
+      "itemCount": 1
+    },
+    "timestamp": "2025-08-26T20:04:36.431Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1756239465125-vn89jxrn5",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-030",
+      "quantity": 2,
+      "size": "M",
+      "productTitle": "Urban Operator Pants"
+    },
+    "timestamp": "2025-08-26T20:17:45.125Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1756239466142-v934oy08z",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "order_placed",
+    "details": {
+      "orderId": "order-1756239466137-u4bewucqw",
+      "total": 269.98,
+      "itemCount": 1
+    },
+    "timestamp": "2025-08-26T20:17:46.142Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1756241393748-qbrgrip00",
+    "userId": "user-1756238575030-qts8mqn3c",
+    "action": "login",
+    "details": {
+      "username": "aamm",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-26T20:49:53.748Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1756241438846-k70zj1itj",
+    "userId": "user-1756238575030-qts8mqn3c",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-030",
+      "quantity": 1,
+      "size": "M",
+      "productTitle": "Urban Operator Pants"
+    },
+    "timestamp": "2025-08-26T20:50:38.846Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1756241439862-eegnhdlec",
+    "userId": "user-1756238575030-qts8mqn3c",
+    "action": "order_placed",
+    "details": {
+      "orderId": "order-1756241439857-rzqkj701r",
+      "total": 134.99,
+      "itemCount": 1
+    },
+    "timestamp": "2025-08-26T20:50:39.862Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1756241604189-44b5kt3ua",
+    "userId": "user-1756238575030-qts8mqn3c",
+    "action": "logout",
+    "details": {
+      "username": "aamm",
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-26T20:53:24.189Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1756241611689-i3zy1hsjo",
+    "userId": "admin-001",
+    "action": "login",
+    "details": {
+      "username": "admin",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-26T20:53:31.689Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1756241615180-9l73jyr3m",
+    "userId": "admin-001",
+    "action": "logout",
+    "details": {
+      "username": "admin",
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-26T20:53:35.180Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1756241622469-6c13i1sor",
+    "userId": "admin-001",
+    "action": "login",
+    "details": {
+      "username": "admin",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-26T20:53:42.469Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1756242335822-5lpei0oqz",
+    "userId": "admin-001",
+    "action": "logout",
+    "details": {
+      "username": "admin",
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-26T21:05:35.822Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1756242345013-o2gkuu1t9",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "login",
+    "details": {
+      "username": "amitcohen",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-26T21:05:45.013Z",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "act-1756242396761-az9o4ylaz",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "cart_add",
+    "details": {
+      "productId": "prod-1754771538062-eql88rnzq",
+      "quantity": 1,
+      "size": "M",
+      "productTitle": "NeoMatrix Flux Hoodie"
+    },
+    "timestamp": "2025-08-26T21:06:36.761Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1756242397780-gdlppe019",
+    "userId": "user-1753901439175-sl80wbwx7",
+    "action": "order_placed",
+    "details": {
+      "orderId": "order-1756242397776-yh2pt8y6w",
+      "total": 100,
+      "itemCount": 1
+    },
+    "timestamp": "2025-08-26T21:06:37.780Z",
+    "ip": "unknown"
+  },
+  {
+    "id": "act-1756244551156-2d2hhn3ee",
+    "userId": "admin-001",
+    "action": "login",
+    "details": {
+      "username": "admin",
+      "rememberMe": false,
+      "ip": "127.0.0.1"
+    },
+    "timestamp": "2025-08-26T21:42:31.156Z",
+    "ip": "127.0.0.1"
   }
 ]

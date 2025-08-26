@@ -70,5 +70,23 @@
       "language": "en",
       "notifications": true
     }
+  },
+  {
+    "id": "user-1756238575030-qts8mqn3c",
+    "username": "aamm",
+    "password": "$2b$10$sU0Uq2P.W3rVEbyKbsRP2e.cUZj8pLyWj4tJysU3h9KM603vkwSSe",
+    "email": "amit@gmail.com",
+    "role": "user",
+    "profile": {
+      "displayName": "aamm",
+      "avatar": "/images/default-avatar.png",
+      "exchangeRating": 0,
+      "joinDate": "2025-08-26T20:02:55.030Z"
+    },
+    "preferences": {
+      "darkMode": true,
+      "language": "en",
+      "notifications": true
+    }
   }
 ]
