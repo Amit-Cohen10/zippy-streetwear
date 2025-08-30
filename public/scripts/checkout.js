@@ -156,6 +156,8 @@ async function loadCheckoutData() {
             // Convert to expected format for checkout
             cartData = {
                 items: cartItems.map(item => ({
+                    // Preserve original cart item id so we can modify/remove items from checkout
+                    id: item.id,
                     product: {
                         title: item.name || item.title,
                         brand: item.brand || 'Zippy Streetwear',
@@ -208,7 +210,7 @@ function displayOrderItems() {
     if (!orderItemsContainer || !cartData.items) return;
     
     const itemsHTML = cartData.items.map(item => `
-        <div class="order-item">
+        <div class="order-item" data-item-id="${item.id}">
             <div class="item-image">
                 <img src="${item.product.images[0] || '/images/placeholder.jpg'}" alt="${item.product.title}">
             </div>
@@ -221,11 +223,14 @@ function displayOrderItems() {
                 </div>
             </div>
             <div class="item-quantity">
-                <span>Qty: ${item.quantity}</span>
+                <button class="quantity-btn" onclick="updateCheckoutQuantity('${item.id}', -1)">-</button>
+                <span class="quantity" id="checkout-qty-${item.id}">${item.quantity}</span>
+                <button class="quantity-btn" onclick="updateCheckoutQuantity('${item.id}', 1)">+</button>
             </div>
             <div class="item-price">
                 <span>$${(item.product.price * item.quantity).toFixed(2)}</span>
             </div>
+            <button class="remove-btn" onclick="removeCheckoutItem('${item.id}')">×</button>
         </div>
     `).join('');
     
@@ -235,7 +240,9 @@ function displayOrderItems() {
 function updateOrderSummary() {
     if (!cartData) return;
     
-    const subtotal = cartData.total || 0;
+    // Recalculate subtotal from items to reflect live quantity/removal changes
+    const subtotal = (cartData.items || []).reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+    cartData.total = subtotal;
     const shipping = subtotal > 100 ? 0 : 9.99; // Free shipping over $100
     const tax = subtotal * 0.08; // 8% tax
     const total = subtotal + shipping + tax;
@@ -253,6 +260,76 @@ function updateOrderSummary() {
         total
     };
 }
+
+// ===== Checkout item actions (quantity + remove) =====
+function updateCheckoutQuantity(itemId, change) {
+    try {
+        const saved = JSON.parse(localStorage.getItem('zippyCart') || '[]');
+        const index = saved.findIndex(it => String(it.id) === String(itemId));
+        if (index === -1) return;
+        saved[index].quantity = (saved[index].quantity || 1) + change;
+        if (saved[index].quantity <= 0) {
+            saved.splice(index, 1);
+        }
+        localStorage.setItem('zippyCart', JSON.stringify(saved));
+
+        // Update in-memory checkout data
+        if (cartData && Array.isArray(cartData.items)) {
+            const inMemIndex = cartData.items.findIndex(it => String(it.id) === String(itemId));
+            if (inMemIndex !== -1) {
+                const updated = saved.find(it => String(it.id) === String(itemId));
+                if (updated) {
+                    cartData.items[inMemIndex].quantity = updated.quantity || 1;
+                } else {
+                    // Item removed
+                    cartData.items.splice(inMemIndex, 1);
+                }
+            }
+        }
+
+        // Re-render UI and totals
+        displayOrderItems();
+        updateOrderSummary();
+        if (typeof updateCartCount === 'function') updateCartCount();
+
+        // If cart is empty now, redirect back to cart page
+        if (!cartData.items || cartData.items.length === 0) {
+            showNotification('Your cart is empty', 'info');
+            setTimeout(() => { window.location.href = '/cart'; }, 600);
+            return;
+        }
+    } catch (e) {
+        console.error('Failed to update quantity in checkout:', e);
+    }
+}
+
+function removeCheckoutItem(itemId) {
+    try {
+        const saved = JSON.parse(localStorage.getItem('zippyCart') || '[]');
+        const filtered = saved.filter(it => String(it.id) !== String(itemId));
+        localStorage.setItem('zippyCart', JSON.stringify(filtered));
+
+        // Update in-memory data
+        if (cartData && Array.isArray(cartData.items)) {
+            cartData.items = cartData.items.filter(it => String(it.id) !== String(itemId));
+        }
+
+        displayOrderItems();
+        updateOrderSummary();
+        if (typeof updateCartCount === 'function') updateCartCount();
+        showNotification('Item removed from cart', 'success');
+
+        if (!cartData.items || cartData.items.length === 0) {
+            setTimeout(() => { window.location.href = '/cart'; }, 600);
+        }
+    } catch (e) {
+        console.error('Failed to remove item in checkout:', e);
+    }
+}
+
+// Expose for inline handlers
+window.updateCheckoutQuantity = updateCheckoutQuantity;
+window.removeCheckoutItem = removeCheckoutItem;
 
 function initFormHandlers() {
     console.log('Initializing form handlers with validation...');
