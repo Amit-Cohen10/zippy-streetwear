@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
             lastFilterState = filterState;
             filteredProducts = products.filter(product => {
                 if (category && product.category !== category) return false;
-                if (brand && brand !== 'Zippy Originals') return false;
+                if (brand && product.brand !== brand) return false;
                 if (minPrice && product.price < parseInt(minPrice)) return false;
                 if (maxPrice && product.price > parseInt(maxPrice)) return false;
                 return true;
@@ -316,6 +316,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             await loadProducts();
             filteredProducts = [...products];
+            // Preselect brand from URL parameter if provided
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const brandParam = urlParams.get('brand');
+                if (brandParam) {
+                    const brandFilterEl = document.getElementById('brandFilter');
+                    if (brandFilterEl) {
+                        brandFilterEl.value = brandParam;
+                        // Narrow initial dataset to selected brand
+                        filteredProducts = products.filter(p => p.brand === brandParam);
+                    }
+                }
+            } catch (e) {}
             requestAnimationFrame(() => {
                 try {
                     renderProducts();

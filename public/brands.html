@@ -166,7 +166,7 @@
         /* Hero Section */
         .hero-section {
             text-align: center;
-            padding: 80px 0 60px;
+            padding: 100px 0 80px;
             position: relative;
         }
 
@@ -311,7 +311,7 @@
 
         /* Featured Brands Section */
         .featured-brands {
-            padding: 60px 0;
+            padding: 80px 0;
         }
 
         .section-title {
@@ -319,12 +319,24 @@
             font-size: 2.5rem;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 28px;
             color: #ffffff;
             text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
             position: relative;
             cursor: pointer;
             transition: all 0.3s ease;
+        }
+
+        .brands-toolbar {
+            display: flex;
+            justify-content: flex-end;
+            margin: 0 0 24px;
+        }
+
+        .mini-btn {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            line-height: 1;
         }
 
         .section-title:hover {
@@ -355,7 +367,7 @@
         .brands-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            gap: 40px;
             margin-bottom: 60px;
             width: 100%;
             max-width: 100%;
@@ -365,8 +377,8 @@
         .brand-card {
             background: rgba(26, 26, 26, 0.8);
             border: 2px solid transparent;
-            border-radius: 15px;
-            padding: 30px;
+            border-radius: 18px;
+            padding: 36px;
             position: relative;
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -409,7 +421,7 @@
         .brand-header {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .brand-logo {
@@ -452,9 +464,9 @@
 
         .brand-description {
             color: #cccccc;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin-bottom: 15px;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 18px;
             transition: all 0.3s ease;
         }
 
@@ -465,7 +477,7 @@
 
         .brand-meta {
             display: flex;
-            gap: 15px;
+            gap: 18px;
             font-size: 0.85rem;
             color: #888888;
         }
@@ -599,7 +611,7 @@
         .categories-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
+            gap: 30px;
             width: 100%;
             max-width: 100%;
             overflow: hidden;
@@ -608,8 +620,8 @@
         .category-card {
             background: rgba(26, 26, 26, 0.8);
             border: 2px solid transparent;
-            border-radius: 15px;
-            padding: 30px;
+            border-radius: 18px;
+            padding: 36px;
             text-align: center;
             cursor: pointer;
             transition: all 0.4s ease;
@@ -728,7 +740,7 @@
         .stories-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            gap: 36px;
             width: 100%;
             max-width: 100%;
             overflow: hidden;
@@ -737,7 +749,7 @@
         .story-card {
             background: rgba(26, 26, 26, 0.8);
             border: 2px solid transparent;
-            border-radius: 15px;
+            border-radius: 18px;
             overflow: hidden;
             transition: all 0.4s ease;
             position: relative;
@@ -1439,6 +1451,9 @@
             <!-- Featured Brands -->
             <section class="featured-brands">
                 <h2 class="section-title">🔥 Featured Collections</h2>
+                <div class="brands-toolbar">
+                    <button class="cyber-btn mini-btn" id="refreshBrandsBtn" title="Refresh brands">↻ Refresh</button>
+                </div>
                 <div class="brands-grid" id="brandsGrid">
                     <!-- Brand cards will be populated here -->
                 </div>
@@ -1660,9 +1675,36 @@
             const brandModal = document.getElementById('brandModal');
             const closeBrandModal = document.getElementById('closeBrandModal');
             const categoryCards = document.querySelectorAll('.category-card');
+            let brandDetails = {};
 
             // Load brands data
             loadBrandsData();
+
+            // Auto-refresh on visibility/focus
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) {
+                    loadBrandsData();
+                }
+            });
+            window.addEventListener('focus', () => {
+                loadBrandsData();
+            });
+
+            // Periodic refresh every 60s
+            setInterval(() => {
+                loadBrandsData();
+            }, 60000);
+
+            // Manual refresh button
+            const refreshBtn = document.getElementById('refreshBrandsBtn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', () => {
+                    loadBrandsData();
+                    if (typeof showNotification === 'function') {
+                        showNotification('Brands refreshed', 'success');
+                    }
+                });
+            }
 
             // Event listeners
             closeBrandModal.addEventListener('click', () => {
@@ -1681,77 +1723,77 @@
                 loadBrandStories();
             }
 
-            function loadFeaturedBrands() {
-                const brands = [
-                    {
-                        id: 1,
-                        name: 'Zippy Originals',
-                        logo: '/images/brands/zippy-logo.jpg',
-                        description: 'Futuristic streetwear with neon accents and cyberpunk aesthetics',
-                        founded: '2020',
-                        location: 'Tel Aviv, Israel',
-                        style: 'Cyberpunk',
-                        collections: ['Neon Dreams', 'Digital Distortion', 'Holographic Future'],
-                        story: 'נולד מהמהפכה הדיגיטלית, Zippy Originals משלב טכנולוגיה מתקדמת עם תרבות הסטריטוור...'
-                    },
-                    {
-                        id: 2,
-                        name: 'Street Tech',
-                        logo: '/images/brands/street-tech-logo.jpg',
-                        description: 'Urban techwear for the modern digital nomad',
-                        founded: '2019',
-                        location: 'New York, USA',
-                        style: 'Techwear',
-                        collections: ['Urban Nomad', 'Digital Nomad', 'Tech Essentials'],
-                        story: 'Street Tech נולד מהצטלבות הטכנולוגיה עם תרבות הרחוב...'
-                    },
-                    {
-                        id: 3,
-                        name: 'Future Wear',
-                        logo: '/images/brands/future-wear-logo.jpg',
-                        description: 'Sustainable fashion meets futuristic design',
-                        founded: '2021',
-                        location: 'Berlin, Germany',
-                        style: 'Sustainable',
-                        collections: ['Eco Future', 'Green Tech', 'Sustainable Style'],
-                        story: 'Future Wear חלוץ באופנה בת-קיימא עם טוויסט עתידני...'
-                    },
-                    {
-                        id: 4,
-                        name: 'Neon Nights',
-                        logo: '/images/brands/neon-nights-logo.jpg',
-                        description: 'Bold neon designs for the nightlife scene',
-                        founded: '2018',
-                        location: 'Los Angeles, USA',
-                        style: 'Neon',
-                        collections: ['Neon Nights', 'Glow Up', 'Electric Dreams'],
-                        story: 'Neon Nights לוכד את האנרגיה של העיר אחרי החשיכה...'
-                    },
-                    {
-                        id: 5,
-                        name: 'Cyber Street',
-                        logo: '/images/brands/cyber-street-logo.jpg',
-                        description: 'Cyberpunk streetwear with Japanese influences',
-                        founded: '2022',
-                        location: 'Tokyo, Japan',
-                        style: 'Cyberpunk',
-                        collections: ['Tokyo Nights', 'Cyber Samurai', 'Digital Zen'],
-                        story: 'Cyber Street משלב אסתטיקה יפנית מסורתית עם עיצוב עתידני...'
-                    },
-                    {
-                        id: 6,
-                        name: 'Urban Hologram',
-                        logo: '/images/brands/urban-hologram-logo.jpg',
-                        description: 'Holographic fashion for the future city',
-                        founded: '2023',
-                        location: 'London, UK',
-                        style: 'Holographic',
-                        collections: ['Holo Dreams', 'Urban Glow', 'Future City'],
-                        story: 'Urban Hologram מביא את העתיד לאופנה העירונית...'
+            async function loadFeaturedBrands() {
+                try {
+                    const res = await fetch('/api/products?limit=200&page=1');
+                    if (!res.ok) {
+                        displayBrands([]);
+                        return;
                     }
-                ];
+                    const data = await res.json();
+                    const allProducts = data.products || [];
+                    const uniqueBrands = new Map();
+                    const logoMap = {
+                        'Zippy Originals': '/images/brands/zippy-logo.jpg',
+                        'Street Tech': '/images/brands/street-tech-logo.jpg',
+                        'Future Wear': '/images/brands/future-wear-logo.jpg',
+                        'Neon Nights': '/images/brands/neon-nights-logo.jpg'
+                    };
 
-                displayBrands(brands);
+                    allProducts.forEach(p => {
+                        const name = p.brand;
+                        if (!name) return;
+                        if (!uniqueBrands.has(name)) {
+                            uniqueBrands.set(name, {
+                                name,
+                                logo: logoMap[name] || '',
+                                description: '',
+                                founded: '—',
+                                location: '—',
+                                style: '',
+                                collections: new Set(),
+                                story: ''
+                            });
+                        }
+                        const entry = uniqueBrands.get(name);
+                        entry.collections.add(p.category);
+                    });
+
+                    brandDetails = {};
+                    const brands = Array.from(uniqueBrands.values()).map(b => {
+                        const collections = Array.from(b.collections).filter(Boolean);
+                        const prettyCollections = collections.map(c => String(c).replace(/\b\w/g, ch => ch.toUpperCase()));
+                        const desc = `${b.name} — ${prettyCollections.length > 0 ? prettyCollections.join(', ') : 'Streetwear'} collections`;
+                        const style = prettyCollections.length > 0 ? prettyCollections.join(' / ') : 'Streetwear';
+                        const story = `${b.name} מציג עיצובים מודרניים בהשראת טכנולוגיה ותרבות אורבנית.`;
+                        const logo = b.logo || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iODAiIGhlaWdodD0iODAiIGZpbGw9IiMwMEZGRkYiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwRkZGRiIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+';
+                        const obj = {
+                            name: b.name,
+                            logo,
+                            description: desc,
+                            founded: b.founded,
+                            location: b.location,
+                            style,
+                            collections: prettyCollections.length ? prettyCollections : ['Core'],
+                            story
+                        };
+                        brandDetails[b.name] = obj;
+                        return obj;
+                    });
+
+                    // expose for global handlers
+                    window.__brandDetails = brandDetails;
+
+                    try {
+                        const statEls = document.querySelectorAll('.hero-stats .stat-item .stat-number');
+                        if (statEls[0]) statEls[0].textContent = String(brands.length);
+                        if (statEls[1]) statEls[1].textContent = String(data.pagination?.total || allProducts.length);
+                    } catch (e) {}
+
+                    displayBrands(brands);
+                } catch (e) {
+                    displayBrands([]);
+                }
             }
 
             function displayBrands(brands) {
@@ -1788,10 +1830,10 @@
                         </div>
                     </div>
                     <div class="brand-actions">
-                        <button class="cyber-btn secondary" onclick="viewBrand('${brand.id}')">
+                        <button class="cyber-btn secondary" onclick="viewBrand('${brand.name.replace(/'/g, "\\'")}')">
                             <i class="fas fa-eye"></i> View Brand
                         </button>
-                        <button class="cyber-btn primary" onclick="shopBrand('${brand.id}')">
+                        <button class="cyber-btn primary" onclick="shopBrand('${brand.name.replace(/'/g, "\\'")}')">
                             <i class="fas fa-shopping-cart"></i> Shop Now
                         </button>
                     </div>
@@ -2024,8 +2066,8 @@
     }
 
         // Global functions for brand interactions
-        function viewBrand(brandId) {
-            console.log('Viewing brand:', brandId);
+        function viewBrand(brandName) {
+            console.log('Viewing brand:', brandName);
             
             // Auto-scroll to top when opening modal
             window.scrollTo({
@@ -2033,65 +2075,16 @@
                 behavior: 'smooth'
             });
             
-            // Brand data with images
-            const brandData = {
-                '1': {
-                    name: 'Zippy Originals',
-                    logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAiIHkxPSIwIiB4Mj0iMTIwIiB5Mj0iMTIwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEZGRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSI1MCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMDAwRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojRkYwMEZGO3N0b3Atb3BhY2l0eToxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzIi8+Cjx0ZXh0IHg9IjYwIiB5PSI2NSIgZm9udC1mYW1pbHk9Ik9yYml0cm9uLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjRkZGRkZGIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5aSVBQWTwvdGV4dD4KPC9zdmc+',
-                    description: 'Futuristic streetwear with neon accents and cyberpunk aesthetics',
-                    founded: '2020',
-                    location: 'Tel Aviv, Israel',
-                    style: 'Cyberpunk',
-                    story: 'נולד מהמהפכה הדיגיטלית, Zippy Originals משלב טכנולוגיה מתקדמת עם תרבות הסטריטוור. המותג מתמחה בעיצובים עתידניים עם אפקטים ניאונים וסגנון סייברפונק ייחודי.'
-                },
-                '2': {
-                    name: 'Street Tech',
-                    logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAiIHkxPSIwIiB4Mj0iMTIwIiB5Mj0iMTIwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEZGRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMDA4MEZGO3N0b3Atb3BhY2l0eToxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPHBhdGggZD0iTTMwIDMwTDUwIDUwTDMwIDcwTTkwIDMwTDcwIDUwTDkwIDcwIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIvPgo8Y2lyY2xlIGN4PSI2MCIgY3k9IjYwIiByPSIyMCIgZmlsbD0iI0ZGRkZGRiIvPgo8dGV4dCB4PSI2MCIgeT0iODAiIGZvbnQtZmFtaWx5PSJPcmJpdHJvbiwgbW9ub3NwYWNlIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI0ZGRkZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEVDSDwvdGV4dD4KPC9zdmc+',
-                    description: 'Urban techwear for the modern digital nomad',
-                    founded: '2019',
-                    location: 'New York, USA',
-                    style: 'Techwear',
-                    story: 'Street Tech נולד מהצטלבות הטכנולוגיה עם תרבות הרחוב. המותג מתמחה בבגדים טכניים עירוניים המותאמים לנומאדים הדיגיטליים של העידן המודרני.'
-                },
-                '3': {
-                    name: 'Future Wear',
-                    logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAiIHkxPSIwIiB4Mj0iMTIwIiB5Mj0iMTIwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEZGRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMDBGRjAwO3N0b3Atb3BhY2l0eToxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxwYXRoIGQ9Ik00NSA0NUw3NSA3NUw0NSA3NUw3NSA0NSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMiIGZpbGw9Im5vbmUiLz4KPHRleHQgeD0iNjAiIHk9IjkwIiBmb250LWZhbWlseT0iT3JiaXRyb24sIG1vbm9zcGFjZSIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNGRkZGRkYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkZVVFVSRTwvdGV4dD4KPC9zdmc+',
-                    description: 'Sustainable fashion meets futuristic design',
-                    founded: '2021',
-                    location: 'Berlin, Germany',
-                    style: 'Sustainable',
-                    story: 'Future Wear חלוץ באופנה בת-קיימא עם טוויסט עתידני. המותג מתמחה בחומרים ידידותיים לסביבה עם עיצובים חדשניים וטכנולוגיות מתקדמות.'
-                },
-                '4': {
-                    name: 'Neon Nights',
-                    logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAiIHkxPSIwIiB4Mj0iMTIwIiB5Mj0iMTIwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNGRjAwRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojRkY4MDAwO3N0b3Atb3BhY2l0eToxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxwYXRoIGQ9Ik0zMCA0MEw5MCA4MEwzMCA4MEw5MCA0MCIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMiIGZpbGw9Im5vbmUiLz4KPHRleHQgeD0iNjAiIHk9IjkwIiBmb250LWZhbWlseT0iT3JiaXRyb24sIG1vbm9zcGFjZSIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNGRkZGRkYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk5FT048L3RleHQ+Cjwvc3ZnPg==',
-                    description: 'Bold neon designs for the nightlife scene',
-                    founded: '2018',
-                    location: 'Los Angeles, USA',
-                    style: 'Neon',
-                    story: 'Neon Nights לוכד את האנרגיה של העיר אחרי החשיכה. המותג מתמחה בעיצובים ניאונים בולטים המותאמים לסצנת חיי הלילה התוססת.'
-                },
-                '5': {
-                    name: 'Cyber Street',
-                    logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAiIHkxPSIwIiB4Mj0iMTIwIiB5Mj0iMTIwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEZGRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojRkYwMEZGO3N0b3Atb3BhY2l0eToxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPHBhdGggZD0iTTIwIDQwTDUwIDYwTDIwIDgwTTEwMCA0MEw3MCA2MEwxMDAgODAiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzIiBmaWxsPSJub25lIi8+CjxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjE1IiBmaWxsPSIjRkZGRkZGIi8+Cjx0ZXh0IHg9IjYwIiB5PSI5MCIgZm9udC1mYW1pbHk9Ik9yYml0cm9uLCBtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjRkZGRkZGIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DWVBFUjwvdGV4dD4KPC9zdmc+',
-                    description: 'Cyberpunk streetwear with Japanese influences',
-                    founded: '2022',
-                    location: 'Tokyo, Japan',
-                    style: 'Cyberpunk',
-                    story: 'Cyber Street משלב אסתטיקה יפנית מסורתית עם עיצוב עתידני. המותג מתמחה בסטריטוור סייברפונק עם השפעות יפניות ייחודיות.'
-                },
-                '6': {
-                    name: 'Urban Hologram',
-                    logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAiIHkxPSIwIiB4Mj0iMTIwIiB5Mj0iMTIwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEZGRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSI1MCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNGRkZGRkY7c3RvcC1vcGFjaXR5OjEiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojRkYwMEZGO3N0b3Atb3BhY2l0eToxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPHBhdGggZD0iTTMwIDMwTDUwIDUwTDMwIDcwTTkwIDMwTDcwIDUwTDkwIDcwIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIvPgo8Y2lyY2xlIGN4PSI2MCIgY3k9IjYwIiByPSIyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIiLz4KPHRleHQgeD0iNjAiIHk9IjkwIiBmb250LWZhbWlseT0iT3JiaXRyb24sIG1vbm9zcGFjZSIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNGRkZGRkYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkhPTE88L3RleHQ+Cjwvc3ZnPg==',
-                    description: 'Holographic fashion for the future city',
-                    founded: '2023',
-                    location: 'London, UK',
-                    style: 'Holographic',
-                    story: 'Urban Hologram מביא את העתיד לאופנה העירונית. המותג מתמחה בעיצובים הולוגרפיים מתקדמים המותאמים לעיר העתיד.'
-                }
+            const details = (window.__brandDetails && window.__brandDetails[brandName]) ? window.__brandDetails[brandName] : null;
+            const brand = details || {
+                name: brandName || 'Brand',
+                logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIGZpbGw9InVybCgjZ3JhZGllbnQpIi8+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAiIHkxPSIwIiB4Mj0iMTIwIiB5Mj0iMTIwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzAwRkZGRjtzdG9wLW9wYWNpdHk6MSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I0ZGMDBGRjtzdG9wLW9wYWNpdHk6MSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjQwIiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPjwvc3ZnPg==',
+                description: '',
+                founded: '—',
+                location: '—',
+                style: '—',
+                story: ''
             };
-            
-            const brand = brandData[brandId] || brandData['1'];
             
             // Update modal content
             document.getElementById('brandModalTitle').textContent = brand.name;
@@ -2121,10 +2114,10 @@
             }
         }
 
-        function shopBrand(brandId) {
-            console.log('Shopping brand:', brandId);
+        function shopBrand(brandName) {
+            console.log('Shopping brand:', brandName);
             // Navigate to brand's products
-            window.location.href = `/products?brand=${brandId}`;
+            window.location.href = `/products?brand=${encodeURIComponent(brandName)}`;
         }
 
         function readStory(storyId) {
