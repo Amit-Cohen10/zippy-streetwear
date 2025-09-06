@@ -93,14 +93,14 @@ router.get('/', async (req, res) => {
     
     let products = await persist.readData(persist.productsFile);
     
-    // Search functionality (prefix search)
+    // Search functionality (prefix search on title/description)
     if (search) {
-      const searchTerm = search.toLowerCase();
-      products = products.filter(product => 
-        product.title.toLowerCase().includes(searchTerm) ||
-        product.description.toLowerCase().includes(searchTerm) ||
-        product.brand.toLowerCase().includes(searchTerm)
-      );
+      const searchTerm = String(search).toLowerCase();
+      products = products.filter(product => {
+        const title = String(product.title || '').toLowerCase();
+        const description = String(product.description || '').toLowerCase();
+        return title.startsWith(searchTerm) || description.startsWith(searchTerm);
+      });
     }
     
     // Filter by category
@@ -365,10 +365,11 @@ router.get('/search/suggestions', async (req, res) => {
     const searchTerm = q.toLowerCase();
     
     const suggestions = products
-      .filter(product => 
-        product.title.toLowerCase().includes(searchTerm) ||
-        product.brand.toLowerCase().includes(searchTerm)
-      )
+      .filter(product => {
+        const title = String(product.title || '').toLowerCase();
+        const description = String(product.description || '').toLowerCase();
+        return title.startsWith(searchTerm) || description.startsWith(searchTerm);
+      })
       .slice(0, 5)
       .map(product => ({
         id: product.id,

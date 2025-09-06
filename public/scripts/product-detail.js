@@ -368,6 +368,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function addToCart() {
         if (!currentProduct) return;
+        // Require login before adding to cart
+        try {
+            const savedUser = localStorage.getItem('currentUser');
+            if (!savedUser) {
+                if (typeof window.openAuthModal === 'function') {
+                    window.openAuthModal();
+                } else {
+                    alert('Please log in to add items to cart');
+                }
+                return;
+            }
+        } catch (_) {}
 
         const cartItem = {
             id: currentProduct.id,
@@ -422,6 +434,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function buyNow() {
         if (!currentProduct) return;
+        // Require login before buy now
+        try {
+            const savedUser = localStorage.getItem('currentUser');
+            if (!savedUser) {
+                if (typeof window.openAuthModal === 'function') {
+                    window.openAuthModal();
+                } else {
+                    alert('Please log in to continue');
+                }
+                return;
+            }
+        } catch (_) {}
 
         const cartItem = {
             id: currentProduct.id,

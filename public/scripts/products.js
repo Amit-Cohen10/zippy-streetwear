@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 products = (data.products || []).map(product => ({
                     id: product.id,
                     name: product.title,
+                    description: product.description || '',
                     price: product.price,
                     category: product.category,
                     image: product.images && product.images.length > 0 ? product.images[0] : '/images/placeholder.jpg',
@@ -320,6 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 const brandParam = urlParams.get('brand');
+                const searchParam = urlParams.get('search');
                 if (brandParam) {
                     const brandFilterEl = document.getElementById('brandFilter');
                     if (brandFilterEl) {
@@ -327,6 +329,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Narrow initial dataset to selected brand
                         filteredProducts = products.filter(p => p.brand === brandParam);
                     }
+                }
+                // Apply prefix search on name/description if 'search' exists
+                if (searchParam) {
+                    const term = String(searchParam).toLowerCase();
+                    filteredProducts = filteredProducts.filter(p => {
+                        const name = String(p.name || '').toLowerCase();
+                        const desc = String(p.description || '').toLowerCase();
+                        return name.startsWith(term) || desc.startsWith(term);
+                    });
                 }
             } catch (e) {}
             requestAnimationFrame(() => {

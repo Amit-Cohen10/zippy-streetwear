@@ -603,6 +603,18 @@ window.ZippyApp = {
         function addToCartAndClose() {
             console.log('addToCartAndClose called. window.currentProduct:', window.currentProduct);
             if (window.currentProduct) {
+                // Require login before adding to cart via modal
+                try {
+                    const savedUser = localStorage.getItem('currentUser');
+                    if (!savedUser) {
+                        if (typeof window.openAuthModal === 'function') {
+                            window.openAuthModal();
+                        } else {
+                            alert('Please log in to add items to cart');
+                        }
+                        return;
+                    }
+                } catch (_) {}
                 try {
                     addToCartLocal(window.currentProduct);
                     closeAddToCartModal();
@@ -624,6 +636,18 @@ window.ZippyApp = {
         }
 
         function addToCartLocal(product) {
+            // Require login before adding to cart (fallback paths)
+            try {
+                const savedUser = localStorage.getItem('currentUser');
+                if (!savedUser) {
+                    if (typeof window.openAuthModal === 'function') {
+                        window.openAuthModal();
+                    } else {
+                        alert('Please log in to add items to cart');
+                    }
+                    return;
+                }
+            } catch (_) {}
             if (!window.cartItems) {
                 window.cartItems = [];
             }
