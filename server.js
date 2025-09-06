@@ -77,8 +77,9 @@ app.get('/llm.html', (req, res) => {
 // Protected routes - authentication required (users must be logged in)
 // These routes use the requireAuth middleware to check if user is logged in
 // If not logged in, they get redirected to login page as per requirements
-app.get('/products', requireAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'products.html')); // Store screen
+// Note: products page is public per assignment requirements
+app.get('/products', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'products.html')); // Store screen (public)
 });
 
 app.get('/product/:id', requireAuth, (req, res) => {
