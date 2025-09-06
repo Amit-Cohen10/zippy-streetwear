@@ -156,6 +156,9 @@
             userMenu.style.display = 'block';
             usernameDisplay.textContent = username;
             
+            // Inject required extra links once (Checkout + Readme)
+            ensureExtraLinks(userDropdown);
+
             // Show/hide admin activity link based on user role
             const adminActivityLink = document.getElementById('adminActivityLink');
             if (adminActivityLink) {
@@ -218,6 +221,35 @@
                 positionDropdownBelowButton();
             }
         });
+    }
+
+    // Ensure Checkout and Readme links exist in dropdown with the exact styling provided
+    function ensureExtraLinks(userDropdown) {
+        if (!userDropdown) return;
+        // Find divider to insert before; otherwise append at end
+        const divider = userDropdown.querySelector('.dropdown-divider');
+        const insertBeforeNode = divider || null;
+
+        // Helper to create a styled anchor if missing
+        function addLinkOnce(id, href, iconClass, text) {
+            if (userDropdown.querySelector(`#${id}`)) return;
+            const a = document.createElement('a');
+            a.id = id;
+            a.href = href;
+            a.className = 'dropdown-item';
+            a.setAttribute('style', 'display: block !important; padding: 12px 16px !important; color: #00ffff !important; text-decoration: none !important; border-bottom: 1px solid rgba(0,255,255,0.3) !important; transition: all 0.3s ease !important; font-size: 14px !important; background: transparent;');
+            a.setAttribute('onmouseover', "this.style.background='rgba(0,255,255,0.1)'");
+            a.setAttribute('onmouseout', "this.style.background='transparent'");
+            const i = document.createElement('i');
+            i.className = `fas ${iconClass}`;
+            i.setAttribute('style', 'margin-right: 10px; width: 16px;');
+            a.appendChild(i);
+            a.appendChild(document.createTextNode(' ' + text));
+            userDropdown.insertBefore(a, insertBeforeNode);
+        }
+
+        addLinkOnce('checkoutLink', '/checkout.html', 'fa-credit-card', 'Checkout');
+        addLinkOnce('readmeLink', '/readme.html', 'fa-file-alt', 'Readme');
     }
     
     function positionDropdownBelowButton() {

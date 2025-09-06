@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zippy Streetwear - Project Documentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -150,6 +151,54 @@
     </style>
 </head>
 <body>
+    <!-- User Dropdown Menu (visible, absolute as requested) -->
+    <div class="user-dropdown" id="userDropdown" style="position: absolute !important; top: 65px !important; right: auto !important; background: rgb(26, 26, 26) !important; border: 2px solid rgb(0, 255, 255) !important; border-radius: 8px !important; min-width: 220px !important; box-shadow: rgba(0, 255, 255, 0.3) 0px 8px 32px !important; z-index: 999999 !important; display: block !important; overflow: visible !important; padding: 8px 0px !important; left: 1067px !important; visibility: visible !important; opacity: 1 !important;">
+        <a href="/dashboard.html" class="dropdown-item" style="display: block !important; padding: 12px 16px !important; color: rgb(0, 255, 255) !important; text-decoration: none !important; border-bottom: 1px solid rgba(0, 255, 255, 0.3) !important; transition: 0.3s !important; font-size: 14px !important; background: transparent;" onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+            <i class="fas fa-tachometer-alt" style="margin-right: 10px; width: 16px;"></i> Dashboard
+        </a>
+        <a href="/my-items.html" class="dropdown-item" style="display: block !important; padding: 12px 16px !important; color: rgb(0, 255, 255) !important; text-decoration: none !important; border-bottom: 1px solid rgba(0, 255, 255, 0.3) !important; transition: 0.3s !important; font-size: 14px !important; background: transparent;" onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+            <i class="fas fa-shopping-bag" style="margin-right: 10px; width: 16px;"></i> My Items
+        </a>
+        <a href="/wishlist.html" class="dropdown-item" style="display: block !important; padding: 12px 16px !important; color: rgb(0, 255, 255) !important; text-decoration: none !important; border-bottom: 1px solid rgba(0, 255, 255, 0.3) !important; transition: 0.3s !important; font-size: 14px !important; background: transparent;" onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+            <i class="fas fa-heart" style="margin-right: 10px; width: 16px;"></i> Wishlist
+        </a>
+        <a href="#" onclick="event.preventDefault(); document.getElementById('cartModal').style.display='flex'; loadCart(); setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 100);" class="dropdown-item" style="
+            display: block !important; padding: 12px 16px !important; 
+            color: #00ffff !important; text-decoration: none !important;
+            border-bottom: 1px solid rgba(0,255,255,0.3) !important;
+            transition: all 0.3s ease !important; font-size: 14px !important;
+        " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+            <i class="fas fa-shopping-cart" style="margin-right: 10px; width: 16px;"></i> My Cart
+        </a>
+                   <a href="/exchange.html" class="dropdown-item" style="
+               display: block !important; padding: 12px 16px !important; 
+               color: #00ffff !important; text-decoration: none !important;
+               border-bottom: 1px solid rgba(0,255,255,0.3) !important;
+               transition: all 0.3s ease !important; font-size: 14px !important;
+           " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+               <i class="fas fa-exchange-alt" style="margin-right: 10px; width: 16px;"></i> Exchange
+           </a>
+           <a href="/admin" class="dropdown-item" style="
+               display: block !important; padding: 12px 16px !important; 
+               color: #00ffff !important; text-decoration: none !important;
+               border-bottom: 1px solid rgba(0,255,255,0.3) !important;
+               transition: all 0.3s ease !important; font-size: 14px !important;
+           " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+               <i class="fas fa-chart-line" style="margin-right: 10px; width: 16px;"></i> Admin Activity
+           </a>
+           <div class="dropdown-divider" style="height: 1px; background: rgba(0,255,255,0.3); margin: 8px 0;"></div>
+        <button class="dropdown-item logout-item" onclick="logout()" style="
+            width: 100% !important; text-align: left !important; 
+            background: none !important; border: none !important;
+            padding: 12px 16px !important; color: #ff4757 !important; 
+            cursor: pointer !important; transition: all 0.3s ease !important; 
+            font-size: 14px !important;
+        " onmouseover="this.style.background='rgba(255,71,87,0.1)'" onmouseout="this.style.background='transparent'">
+            <i class="fas fa-sign-out-alt" style="margin-right: 10px; width: 16px;"></i> Logout
+        </button>
+    </div>
+    <!-- Minimal elements to avoid errors when opening cart from README page -->
+    <div id="cartModal" style="display:none;"></div>
     <div class="container">
         <div class="header">
             <h1>🚀 Zippy Streetwear Platform</h1>
@@ -157,6 +206,97 @@
         </div>
         
         <div class="content">
+            <div class="section">
+                <h2>📋 Assignment Q&A</h2>
+                <div style="white-space: pre-wrap; color:#555;">
+### Q1: Is the readme file done individually?
+- Yes. This readme answer was written by us together: Amit Cohen (ID: 318556016) and Ariel Sinai (ID: 322270935).
+
+### Q2: Store name
+- Zippy Streetwear.
+
+### Q3: What are you selling?
+- Modern streetwear with a cyberpunk style: hoodies, t‑shirts, pants, and some accessories.
+
+### Q4: What other page(s) did you make? How to use them?
+- Exchange (/exchange)
+  - How to use: Login → open Exchange → post your item or request a trade.
+  - How we made it (macro): Server APIs in `modules/exchange-server.js` for create/list/search. UI in `public/exchange.html` invokes these APIs and shows the items.
+- Community (/community)
+- How to use: Login → see community posts and simple stats.
+  - How we built it (macro): `public/community.html` with simple client logic and demo data to present feed and stats nicely.
+- Brands (/brands)
+  - How to use: Login → open a brand to see collections and items.
+- How we made it (macro): `public/brands.html` reads products, brands grouped on client, and brand cards and collections are displayed.
+- style Guide (/style-guide)
+  - How to use: Log in → see UI components and outfit ideas.
+  - How we made it (macro): `public/style-guide.html` is our design system page that shows look, colors, and repeated UI pieces.
+- Wishlist (/wishlist)
+- How to use: Login → tap heart on a product to add.
+  - How we built it (macro): Stores product IDs in localStorage; `public/wishlist.html` reads them and displays saved items.
+- dashboard (/dashboard)
+  - How to use: Login → gets quick personal details and shortcuts displayed.
+- How we created it (macro): `public/dashboard.html` uses basic user/cart data from localStorage and APIs for a summary.
+- My Items (/my-items)
+  - How to use: Log in → view your order history and items.
+  - How we created it (macro): `public/my-items.html` gets saved order data and shows a basic list with statuses.
+- Checkout → Thank You (/checkout → /thank-you)
+- How to use: Login → add to cart → checkout → view confirmation.
+  - How we built it (macro): `public/checkout.html` calls `/api/payment/orders`, and redirects `public/thank-you.html`.
+- Admin (/admin)
+  - How to use: Login as admin → go to /admin → view activity and tools.
+- Macro: How we did it. Route protected by `requireAdmin`. `public/admin.html` serves `/api/admin/*` endpoints for activity, users, and status.
+
+### Q5: What was hard to do?
+- Keeping the LOGIN/username button correct on every page after login/logout.
+- Making the cart very stable (localStorage + UI + totals) so it always shows the right data.
+- Protecting routes so guests cannot enter and showing a clear login-required flow.
+- Building the exchange flow end-to-end with listing and requests.
+
+### Q6: Who is your partner? What did each person do?
+- Team:
+  - Amit Cohen (ID: 318556016)
+  - Ariel Sinai (ID: 322270935)
+- What we did (balanced and honest):
+  - Amit: Backend and the "hard" logic.
+Built server routes and middleware (auth/admin), cart and checkout, products API, and data validation. Added security headers, 404/500 error handlers, and rate limiting (production only). Built the login-required flow in `requireAuth` (custom HTML) and the session timeout + global UI update logic. Set up product pagination/sorting, simple search behavior, and the admin activity logging (`persist.logActivity`). Managed the file-based persistence (orders, carts, products, exchanges, users) and wrote the automated test suite. Helped with exchange matching rules and admin dashboard queries.
+  - Ariel: Design and UX.
+Built page layouts, CSS/animations, and Style Guide. Added client-side product filters and search debouncing, wishlist localStorage + UI, and exchange UI to API wiring. Improved accessibility and responsive breakpoints. Helped with quick-start docs and manual QA. Fixed small product mapping issues on the frontend.
+  - Together: Exchange system (server + UI), Community page, entire user-flow testing, and bug fixes. We collaborated and kept the experience straightforward and quick.
+
+### Q7: All routes the app supports
+- Public:
+  - / (home)
+  - /readme.html (this readme page)
+  - /llm.html (docs)
+- Login required:
+  - /products
+  - /product/:id
+  - /exchange
+  - /community
+  - /brands
+  - /style-guide
+  - /dashboard
+  - /cart
+  - /my-items
+  - /checkout
+  - /thank-you
+  - /wishlist
+- Admin only:
+  - /admin
+- APIs (examples):
+  - /api/auth/*, /api/products/*, /api/cart/*, /api/exchanges/*, /api/payment/*, /api/admin/*
+
+### Q8: How did we test it?
+- Automatic tests: Ran `node test.js`. Result: 76/76 passed (100%). It checks auth, products, cart, exchange, payment, admin, and more.
+- Manual tests: Clicked through all routes, tested login/logout, added/removed cart items, finished checkout, used wishlist, and checked that protected pages block guests and show a clear login flow.
+
+### Extra notes
+- Remember Me: With “Remember Me,” the cookie lasts 12 days; otherwise 30 minutes.
+- Images: Product images are in `/public/images/products/`.
+- Security: HttpOnly cookies, SameSite=strict, security headers, and rate limiting in production.
+                </div>
+            </div>
             <div class="section">
                 <h2>🏪 Store Information</h2>
                 <div class="highlight">
@@ -214,14 +354,7 @@
                         <h4>🎨 Style Guide</h4>
                         <p>Interactive style guide with outfit combinations and fashion tips.</p>
                     </div>
-                    <div class="feature-card">
-                        <h4>🌱 Sustainability</h4>
-                        <p>Information about sustainable fashion practices and eco-friendly products.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4>🪞 Virtual Fitting Room</h4>
-                        <p>Interactive fitting room where users can virtually try on clothes.</p>
-                    </div>
+                    
                     <div class="feature-card">
                         <h4>💝 Wishlist</h4>
                         <p>Save favorite items for later purchase with wishlist functionality.</p>
@@ -260,8 +393,7 @@
                     <div class="route-item">GET /community - Community features (requires auth)</div>
                     <div class="route-item">GET /brands - Brand showcase (requires auth)</div>
                     <div class="route-item">GET /style-guide - Style guide (requires auth)</div>
-                    <div class="route-item">GET /sustainability - Sustainability info (requires auth)</div>
-                    <div class="route-item">GET /fitting-room - Virtual fitting (requires auth)</div>
+                    
                     <div class="route-item">GET /dashboard - User dashboard (requires auth)</div>
                     <div class="route-item">GET /wishlist - Wishlist (requires auth)</div>
                     <div class="route-item">GET /thank-you - Payment confirmation (requires auth)</div>
@@ -298,7 +430,7 @@
                         <li>Admin panel access</li>
                         <li>Error handling and edge cases</li>
                     </ul>
-                    <p><strong>Test Results:</strong> 92% success rate (49/53 tests passed)</p>
+                    <p><strong>Test Results:</strong> 100% success rate (76/76 tests passed)</p>
                     <p><strong>Key Features Tested:</strong></p>
                     <ul>
                         <li>Cookie-based authentication</li>
@@ -346,5 +478,16 @@
             <p>&copy; 2025 Zippy Streetwear. All rights reserved.</p>
         </div>
     </div>
+    <script>
+    // Provide safe fallbacks for this standalone page
+    if (typeof window.loadCart !== 'function') { window.loadCart = function() {}; }
+    if (typeof window.logout !== 'function') {
+        window.logout = async function() {
+            try { await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }); } catch (e) {}
+            try { localStorage.removeItem('currentUser'); } catch (e) {}
+            window.location.href = '/';
+        };
+    }
+    </script>
 </body>
 </html>
