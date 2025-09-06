@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LLM Development Process - Zippy Streetwear</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .llm-content {
             max-width: 800px;
@@ -29,6 +31,11 @@
             margin-top: 1.5rem;
             margin-bottom: 0.75rem;
         }
+        .section-note {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            margin: 0.25rem 0 0.75rem;
+        }
         .llm-content .prompt-box {
             background: rgba(0, 255, 255, 0.05);
             border: 1px solid var(--accent-neon-cyan);
@@ -37,6 +44,14 @@
             margin: 1rem 0;
             font-family: monospace;
             white-space: pre-wrap;
+        }
+        .llm-content .prompt-box::before {
+            content: 'Excerpt (partial snippet from a larger file)';
+            display: block;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-bottom: 0.5rem;
         }
         .llm-content .response-box {
             background: rgba(255, 0, 255, 0.05);
@@ -59,24 +74,178 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="/" class="logo">Zippy</a>
+            <div class="nav-logo">
+                <h1 class="logo-text">ZIPPY</h1>
+                <div class="logo-glow"></div>
+            </div>
             <div class="nav-menu">
-                <a href="/products.html" class="nav-link">Products</a>
-                <a href="/brands.html" class="nav-link">Brands</a>
-                <a href="/exchange.html" class="nav-link">Exchange</a>
-                <a href="/community.html" class="nav-link">Community</a>
-                <a href="/admin.html" class="nav-link">Admin</a>
+                <a href="/" class="nav-link">Home</a>
+                <a href="/products" class="nav-link">Shop</a>
+                <a href="/exchange" class="nav-link">Exchange</a>
+                <a href="/community" class="nav-link">Community</a>
+                <a href="/style-guide" class="nav-link">Style Guide</a>
+                <a href="/brands" class="nav-link">Brands</a>
+            </div>
+            <div class="nav-actions">
+                <button class="search-btn" id="searchBtn">
+                    <span class="search-icon">🔍</span>
+                </button>
+                <button class="cart-btn" id="cartBtn">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+                    <i class="fas fa-sun" id="themeIcon"></i>
+                </button>
+                <div class="auth-section">
+                    <button class="auth-btn" id="authBtn" onclick="openAuthModal()">LOGIN</button>
+                    <div class="user-menu" id="userMenu" style="display:none;">
+                        <button class="user-menu-toggle" id="userMenuToggle">
+                            <i class="fas fa-user"></i>
+                            <span id="usernameDisplay">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="llm-content">
-        <h1>🤖 LLM Development Process</h1>
-        
-        <h2>📝 Project Development with Claude</h2>
-        <p>This e-commerce platform was developed using Claude (Anthropic's AI assistant) through an iterative conversation process. Here's how the development unfolded:</p>
+    <!-- Immediate script to update button state without delay (same as readme) -->
+    <script>
+    (function() {
+        const savedUser = localStorage.getItem("currentUser");
+        let isLoggedIn = false;
+        let username = "";
+        if (savedUser) {
+            try {
+                const user = JSON.parse(savedUser);
+                isLoggedIn = true;
+                username = user.profile?.displayName || user.username || "User";
+            } catch (e) {}
+        }
+        function updateButtonImmediate() {
+            const authBtn = document.getElementById("authBtn");
+            const userMenu = document.getElementById("userMenu");
+            const usernameDisplay = document.getElementById("usernameDisplay");
+            if (isLoggedIn && username) {
+                if (authBtn) authBtn.style.display = "none";
+                if (userMenu) userMenu.style.display = "inline-block";
+                if (usernameDisplay) usernameDisplay.textContent = username;
+            } else {
+                if (authBtn) authBtn.style.display = "inline-block";
+                if (userMenu) userMenu.style.display = "none";
+            }
+        }
+        updateButtonImmediate();
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", updateButtonImmediate);
+        }
+    })();
+    </script>
 
-        <h2>🎯 Initial Requirements</h2>
+    <!-- User Dropdown Menu (same structure as readme.html) -->
+    <div class="user-dropdown" id="userDropdown" style="
+        position: fixed !important;
+        top: 70px !important; 
+        right: 20px !important;
+        background: #1a1a1a !important;
+        border: 2px solid #00ffff !important;
+        border-radius: 8px !important;
+        min-width: 220px !important;
+        box-shadow: 0 8px 32px rgba(0, 255, 255, 0.3) !important;
+        z-index: 999999 !important;
+        display: none !important;
+        overflow: visible !important;
+        padding: 8px 0 !important;
+    ">
+        <a href="/dashboard.html" class="dropdown-item" style="
+            display: block !important; padding: 12px 16px !important; 
+            color: #00ffff !important; text-decoration: none !important;
+            border-bottom: 1px solid rgba(0,255,255,0.3) !important;
+            transition: all 0.3s ease !important; font-size: 14px !important;
+        " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+            <i class="fas fa-tachometer-alt" style="margin-right: 10px; width: 16px;"></i> Dashboard
+        </a>
+        <a href="/my-items.html" class="dropdown-item" style="
+            display: block !important; padding: 12px 16px !important; 
+            color: #00ffff !important; text-decoration: none !important;
+            border-bottom: 1px solid rgba(0,255,255,0.3) !important;
+            transition: all 0.3s ease !important; font-size: 14px !important;
+        " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+            <i class="fas fa-shopping-bag" style="margin-right: 10px; width: 16px;"></i> My Items
+        </a>
+        <a href="/wishlist.html" class="dropdown-item" style="
+            display: block !important; padding: 12px 16px !important; 
+            color: #00ffff !important; text-decoration: none !important;
+            border-bottom: 1px solid rgba(0,255,255,0.3) !important;
+            transition: all 0.3s ease !important; font-size: 14px !important;
+        " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+            <i class="fas fa-heart" style="margin-right: 10px; width: 16px;"></i> Wishlist
+        </a>
+        <a href="#" onclick="event.preventDefault(); document.getElementById('cartModal').style.display='flex'; loadCart(); setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 100);" class="dropdown-item" style="
+            display: block !important; padding: 12px 16px !important; 
+            color: #00ffff !important; text-decoration: none !important;
+            border-bottom: 1px solid rgba(0,255,255,0.3) !important;
+            transition: all 0.3s ease !important; font-size: 14px !important;
+        " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+            <i class="fas fa-shopping-cart" style="margin-right: 10px; width: 16px;"></i> My Cart
+        </a>
+        <a href="/exchange.html" class="dropdown-item" style="
+            display: block !important; padding: 12px 16px !important; 
+            color: #00ffff !important; text-decoration: none !important;
+            border-bottom: 1px solid rgba(0,255,255,0.3) !important;
+            transition: all 0.3s ease !important; font-size: 14px !important;
+        " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+            <i class="fas fa-exchange-alt" style="margin-right: 10px; width: 16px;"></i> Exchange
+        </a>
+        <a href="/admin" class="dropdown-item" style="
+            display: block !important; padding: 12px 16px !important; 
+            color: #00ffff !important; text-decoration: none !important;
+            border-bottom: 1px solid rgba(0,255,255,0.3) !important;
+            transition: all 0.3s ease !important; font-size: 14px !important;
+        " onmouseover="this.style.background='rgba(0,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+            <i class="fas fa-chart-line" style="margin-right: 10px; width: 16px;"></i> Admin Activity
+        </a>
+        <div class="dropdown-divider" style="height: 1px; background: rgba(0,255,255,0.3); margin: 8px 0;"></div>
+        <button class="dropdown-item logout-item" onclick="logout()" style="
+            width: 100% !important; text-align: left !important; 
+            background: none !important; border: none !important;
+            padding: 12px 16px !important; color: #ff4757 !important; 
+            cursor: pointer !important; transition: all 0.3s ease !important; 
+            font-size: 14px !important;
+        " onmouseover="this.style.background='rgba(255,71,87,0.1)'" onmouseout="this.style.background='transparent'">
+            <i class="fas fa-sign-out-alt" style="margin-right: 10px; width: 16px;"></i> Logout
+        </button>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="search-modal" id="searchModal"><div class="search-container"><input type="text" class="search-input" id="searchInput" placeholder="Search..."><div class="search-suggestions" id="searchSuggestions"></div></div></div>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal"><div class="modal-content cyber-modal"><div class="modal-header"><h2 class="modal-title">Shopping Cart</h2><button class="modal-close" id="closeCartModal">&times;</button></div><div class="modal-body"><div id="cartItems" class="cart-items"></div><div class="empty-cart" id="emptyCart" style="display:none;"><div class="empty-cart-icon">🛒</div><h3>Your cart is empty</h3><p>Add some items to get started!</p></div><div class="cart-summary" id="cartSummary"><div class="summary-item"><span>Subtotal:</span><span id="subtotal">$0.00</span></div><div class="summary-item"><span>Shipping:</span><span id="shipping">$0.00</span></div><div class="summary-item total"><span>Total:</span><span id="total">$0.00</span></div><button class="cyber-btn primary" id="checkoutBtn">Checkout</button><button class="cyber-btn secondary" onclick="clearCart()">Clear Cart</button></div></div></div></div>
+
+    <!-- Auth Modal (matches site) -->
+    <div class="auth-modal" id="authModal"><div class="auth-container"><div class="auth-header"><h3 id="authTitle">Login</h3><button class="close-btn" id="closeAuth">×</button></div><div class="auth-tabs"><button class="auth-tab active" data-tab="login">Login</button><button class="auth-tab" data-tab="register">Register</button></div><form class="auth-form" id="loginForm"><input type="text" placeholder="Username or Email" required><input type="password" placeholder="Password" required><label class="remember-me"><input type="checkbox"><span>Remember me</span></label><button type="submit">Login</button></form><form class="auth-form hidden" id="registerForm"><input type="text" placeholder="Username" required><input type="email" placeholder="Email" required><input type="password" placeholder="Password" required><input type="password" placeholder="Confirm Password" required><button type="submit">Register</button></form></div></div>
+
+    <main class="llm-content">
+        <div class="page-header" style="margin-top: 2rem;">
+            <h1 class="page-title">LLM Development Process</h1>
+            <p class="page-subtitle">Autogenerated code and prompts used in this project</p>
+        </div>
+
+        <div class="panel" style="background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); border-radius: 12px; padding: 16px; color: var(--text-light);">
+            <p style="margin-bottom: 0.5rem;">
+                Note: This page shows small excerpts of code that the LLM helped to draft during development. We refined, rewrote, and implemented the majority of the system ourselves through hands‑on work, learning, and many iterations. The examples below are partial snippets, not full files, provided just to illustrate the collaboration.
+            </p>
+        </div>
+        
+        <h2>Project Development with Claude</h2>
+        <p class="section-note">Important: In most areas we initiated the concept, planned the structure and formatting, and then used the chat assistant for small completions and examples. The examples on this page are partial snippets only.</p>
+        <p>This e‑commerce platform was hand‑built by us. We used Claude (Anthropic’s AI assistant) sparingly to unblock specific issues — e.g., fixing syntax, resolving edge‑case errors, or proposing small refactors — while all core architecture, code, and integration were implemented by us. Here’s a brief look at the collaboration flow:</p>
+
+        <h2>Initial Requirements</h2>
+        <p class="section-note">We drafted the requirements ourselves and used the assistant to refine phrasing and cover missing edge cases.</p>
         <div class="prompt-box">
 "Build a full-stack online store with:
 - Node.js backend with modular structure
@@ -89,10 +258,11 @@
 - Cyberpunk/futuristic design theme"
         </div>
 
-        <h2>🏗 Development Phases</h2>
+        <h2>Development Phases</h2>
+        <p class="section-note">We built the skeleton and templates ourselves; the assistant was used only to accelerate specific pieces.</p>
         
         <h3>Phase 1: Backend Architecture</h3>
-        <p>The LLM helped structure the backend with modular design:</p>
+        <p class="section-note">Backend: we designed the architecture and modules ourselves. After we had a working skeleton, we added complementary pieces with the chat assistant. Only small excerpts are shown here.</p>
         <ul>
             <li>Created separate modules for each feature area</li>
             <li>Implemented <span class="highlight">persist_module.js</span> for centralized data management</li>
@@ -101,7 +271,7 @@
         </ul>
 
         <h3>Phase 2: Frontend Development</h3>
-        <p>The UI was built incrementally:</p>
+        <p class="section-note">Frontend: we created the base layout and components; the assistant helped refine edge cases and offer phrasing/style options — the code blocks here are partial examples.</p>
         <ul>
             <li>Started with basic HTML structure and navigation</li>
             <li>Added cyberpunk CSS styling with neon colors</li>
@@ -110,7 +280,7 @@
         </ul>
 
         <h3>Phase 3: Feature Implementation</h3>
-        <p>Core features were added systematically:</p>
+        <p class="section-note">Features: full planning and integration were done manually; we used targeted assistant examples mainly to speed up validation and error‑handling. </p>
         <ul>
             <li><strong>Authentication:</strong> Login/register with remember me option</li>
             <li><strong>Products:</strong> Browsing, searching, and filtering</li>
@@ -119,7 +289,8 @@
             <li><strong>Admin:</strong> User management and activity tracking</li>
         </ul>
 
-        <h2>🔧 Key Prompts Used</h2>
+        <h2>Key Prompts Used</h2>
+        <p class="section-note">The prompts served as inspiration and to fill small gaps — full design and implementation were ours.</p>
         
         <h3>For Authentication System:</h3>
         <div class="prompt-box">
@@ -149,7 +320,7 @@
 - Futuristic typography"
         </div>
 
-        <h2>💡 LLM Development Benefits</h2>
+        <h2>LLM Development Benefits</h2>
         <ul>
             <li><strong>Rapid Prototyping:</strong> Quick implementation of complex features</li>
             <li><strong>Consistent Code Style:</strong> Maintained throughout the project</li>
@@ -158,8 +329,8 @@
             <li><strong>Documentation:</strong> Comments and structure explanations included</li>
         </ul>
 
-        <h2>🚀 Iterative Refinements</h2>
-        <p>The project evolved through multiple iterations:</p>
+        <h2>Iterative Refinements</h2>
+        <p>The project evolved through multiple iterations; the following are brief summaries and short code fragments:</p>
         
         <div class="response-box">
             <h4>Iteration 1: Basic Structure</h4>
@@ -181,7 +352,7 @@
             <p>Applied cyberpunk theme, animations, and responsive design</p>
         </div>
 
-        <h2>🎨 Design Decisions</h2>
+        <h2>Design Decisions</h2>
         <p>The LLM helped make several key design decisions:</p>
         <ul>
             <li><strong>File-based storage</strong> over database for simplicity</li>
@@ -191,7 +362,7 @@
             <li><strong>JWT authentication</strong> for stateless sessions</li>
         </ul>
 
-        <h2>📊 Results</h2>
+        <h2>Results</h2>
         <p>The final platform includes:</p>
         <ul>
             <li>✅ Fully functional e-commerce features</li>
@@ -202,7 +373,7 @@
             <li>✅ Comprehensive test suite</li>
         </ul>
 
-        <h2>🔮 Future Enhancements</h2>
+        <h2>Future Enhancements</h2>
         <p>Potential improvements suggested by the LLM:</p>
         <ul>
             <li>Real database integration (MongoDB/PostgreSQL)</li>
@@ -213,12 +384,11 @@
             <li>Mobile app version</li>
         </ul>
 
-        <h2>💭 Conclusion</h2>
-        <p>This project demonstrates how LLMs can effectively assist in full-stack development, providing consistent code quality, best practices implementation, and rapid feature development while maintaining a cohesive architecture throughout the project.</p>
+        
 
         <h2>🔧 Extensive Code Examples</h2>
         
-        <h3>🎨 Advanced CSS Styling System</h3>
+        <h3>Advanced CSS Styling System</h3>
         <div class="prompt-box">
 /* Cyberpunk CSS Variables and Performance Optimizations */
 :root {
@@ -268,7 +438,7 @@ body::before {
 }
         </div>
 
-        <h3>🛒 Advanced Cart System</h3>
+        <h3>Advanced Cart System</h3>
         <div class="response-box">
             <h4>Cart Data Structure and Persistence</h4>
             <div class="prompt-box">
@@ -345,7 +515,7 @@ function saveCartToStorage() {
             </div>
         </div>
 
-        <h3>🔐 Authentication System</h3>
+        <h3>Authentication System</h3>
         <div class="response-box">
             <h4>JWT Authentication with bcrypt</h4>
             <div class="prompt-box">
@@ -448,7 +618,7 @@ router.post('/register', validateRegistration, async (req, res) => {
             </div>
         </div>
 
-        <h3>🎯 Advanced UI Components</h3>
+        <h3>Advanced UI Components</h3>
         <div class="response-box">
             <h4>Cyberpunk Modal System</h4>
             <div class="prompt-box">
@@ -510,7 +680,7 @@ router.post('/register', validateRegistration, async (req, res) => {
             </div>
         </div>
 
-        <h3>📊 Data Persistence Module</h3>
+        <h3>Data Persistence Module</h3>
         <div class="response-box">
             <h4>File-based Data Management</h4>
             <div class="prompt-box">
@@ -592,7 +762,7 @@ module.exports = new PersistModule();
             </div>
         </div>
 
-        <h3>🚀 Performance Optimizations</h3>
+        <h3>Performance Optimizations</h3>
         <div class="response-box">
             <h4>Advanced JavaScript Optimizations</h4>
             <div class="prompt-box">
@@ -702,7 +872,7 @@ function applyFilters(products, filters) {
             </div>
         </div>
 
-        <h3>🎨 Advanced CSS Animations</h3>
+        <h3>Advanced CSS Animations</h3>
         <div class="response-box">
             <h4>Cyberpunk Animation System</h4>
             <div class="prompt-box">
@@ -808,7 +978,7 @@ function applyFilters(products, filters) {
             </div>
         </div>
 
-        <h3>🔧 Error Handling & Debugging</h3>
+        <h3>Error Handling & Debugging</h3>
         <div class="response-box">
             <h4>Comprehensive Error Management</h4>
             <div class="prompt-box">
@@ -937,7 +1107,7 @@ function testCartFunctionality() {
             </div>
         </div>
 
-        <h3>📱 Responsive Design System</h3>
+        <h3>Responsive Design System</h3>
         <div class="response-box">
             <h4>Mobile-First Responsive Layout</h4>
             <div class="prompt-box">
@@ -1158,7 +1328,7 @@ function testCartFunctionality() {
             </div>
         </div>
 
-        <h3>🔒 Advanced Security & Cookie Management</h3>
+        <h3>Advanced Security & Cookie Management</h3>
         <div class="response-box">
             <h4>Comprehensive Security Implementation</h4>
             <div class="prompt-box">
@@ -1671,7 +1841,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         </div>
 
-        <h3>🎯 Advanced Features</h3>
+        <h3>Advanced Features</h3>
         <div class="response-box">
             <h4>Exchange System & Community Features</h4>
             <div class="prompt-box">
@@ -1822,7 +1992,7 @@ class CommunitySystem {
             </div>
         </div>
 
-        <h3>🎨 Extensive CSS Code Examples</h3>
+        <h3>Extensive CSS Code Examples</h3>
         <div class="response-box">
             <h4>Advanced Cyberpunk Styling System</h4>
             <div class="prompt-box">
@@ -2833,7 +3003,7 @@ class CommunitySystem {
             </div>
         </div>
 
-        <h2>🎉 Final Results</h2>
+        <h2>Final Results</h2>
         <p>This comprehensive e-commerce platform demonstrates advanced full-stack development capabilities, featuring:</p>
         <ul>
             <li><strong>9,120+ lines of optimized CSS</strong> with cyberpunk aesthetics and performance optimizations</li>
@@ -2848,5 +3018,48 @@ class CommunitySystem {
 
         <p>The project showcases how modern web development techniques can be combined with AI assistance to create sophisticated, production-ready applications with exceptional user experience and maintainable code architecture.</p>
     </main>
+
+    <!-- Footer (same as site) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Zippy</h3>
+                    <p>Futuristic streetwear platform with innovative clothing exchange.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📱</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="/products">All Products</a></li>
+                        <li><a href="/exchange">Exchange Hub</a></li>
+                        <li><a href="/brands">Brands</a></li>
+                        <li><a href="/style-guide">Style Guide</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="/community">Community Feed</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Zippy. All rights reserved. | Created by Amit Cohen & Ariel Sinai</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/scripts/main.js"></script>
+    <script src="/scripts/global.js"></script>
+    <script src="/scripts/auth.js"></script>
+    <script src="/scripts/cart.js"></script>
+    <script src="/scripts/search.js"></script>
+    <script src="/scripts/simple-user-menu.js"></script>
 </body>
 </html>

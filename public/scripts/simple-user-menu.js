@@ -250,6 +250,7 @@
 
         addLinkOnce('checkoutLink', '/checkout.html', 'fa-credit-card', 'Checkout');
         addLinkOnce('readmeLink', '/readme.html', 'fa-file-alt', 'Readme');
+        addLinkOnce('llmLink', '/llm.html', 'fa-robot', 'LLM Docs');
     }
     
     function positionDropdownBelowButton() {
